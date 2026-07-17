@@ -79,7 +79,43 @@ class SetAmountTenderedEvent extends BillingEvent {
 
 class ProcessCashCheckoutEvent extends BillingEvent {}
 
-class CreatePaymentIntentEvent extends BillingEvent {}
+class CreatePaymentIntentEvent extends BillingEvent {
+  final String method;
+  const CreatePaymentIntentEvent({this.method = 'card'});
+  @override
+  List<Object> get props => [method];
+}
+
+class CardScannedEvent extends BillingEvent {
+  final String last4;
+  final String? expiry;
+  const CardScannedEvent(this.last4, this.expiry);
+  @override
+  List<Object> get props => <Object>[last4, expiry ?? ''];
+}
+
+class MoMoProviderSelectedEvent extends BillingEvent {
+  final MoMoProvider provider;
+  const MoMoProviderSelectedEvent(this.provider);
+  @override
+  List<Object> get props => [provider];
+}
+
+class MoMoPhoneEnteredEvent extends BillingEvent {
+  final String phone;
+  const MoMoPhoneEnteredEvent(this.phone);
+  @override
+  List<Object> get props => [phone];
+}
+
+class RequestMoMoCheckoutEvent extends BillingEvent {}
+
+class MoMoChargePolledEvent extends BillingEvent {
+  final String intentId;
+  const MoMoChargePolledEvent(this.intentId);
+  @override
+  List<Object> get props => [intentId];
+}
 
 class CheckPaymentStatusEvent extends BillingEvent {
   final String intentId;
