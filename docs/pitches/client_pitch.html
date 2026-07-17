@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LedgerMind OS — Client Pitch</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0B0F0E; --bg-2:#121815; --surface:#161E1B; --surface-2:#1E2823;
+  --emerald:#10B981; --emerald-bright:#34D399; --gold:#E8B339; --gold-soft:#F5D27A;
+  --text:#F2F5F3; --muted:#9AA8A2; --danger:#EF4444; --line:rgba(255,255,255,.08);
+  --grad:linear-gradient(135deg,#10B981 0%,#34D399 45%,#E8B339 100%);
+  --grad-soft:linear-gradient(135deg,rgba(16,185,129,.18),rgba(232,179,57,.12));
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;overflow:hidden}
+.slide-deck{position:relative;width:100vw;height:100vh;overflow:hidden}
+@media(min-width:769px){.slide-deck{max-width:calc(100vh*16/9);max-height:calc(100vw*9/16);margin:auto;position:absolute;inset:0}}
+.slide{position:absolute;width:100%;height:100%;display:flex;flex-direction:column;justify-content:center;padding:64px 72px;opacity:0;visibility:hidden;transition:opacity .45s ease;background:var(--bg);overflow:hidden}
+.slide.active{opacity:1;visibility:visible}
+.slide.active .reveal{animation:fadeUp .6s ease-out both}
+.slide.active .reveal:nth-child(2){animation-delay:.08s}
+.slide.active .reveal:nth-child(3){animation-delay:.16s}
+.slide.active .reveal:nth-child(4){animation-delay:.24s}
+.slide.active .reveal:nth-child(5){animation-delay:.32s}
+.slide.active .reveal:nth-child(6){animation-delay:.40s}
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+h1,h2,h3{font-family:'Space Grotesk',sans-serif;line-height:1.08}
+.eyebrow{font-family:'Space Grotesk',sans-serif;font-size:13px;letter-spacing:.22em;text-transform:uppercase;color:var(--emerald-bright);font-weight:600}
+.title{font-size:clamp(34px,5.4vw,68px);font-weight:700;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1.04;max-width:1100px}
+.headline{font-size:clamp(22px,3vw,40px);font-weight:600;color:var(--text);max-width:1000px;margin-top:6px}
+.sub{color:var(--muted);font-size:clamp(15px,1.5vw,20px);max-width:900px}
+ul.bullets{list-style:none;display:flex;flex-direction:column;gap:18px;max-width:1000px;margin-top:14px}
+ul.bullets li{display:flex;gap:14px;font-size:clamp(15px,1.55vw,21px);line-height:1.45;color:var(--text)}
+ul.bullets li::before{content:"";flex:0 0 auto;width:8px;height:8px;margin-top:11px;border-radius:2px;background:var(--grad);transform:rotate(45deg)}
+ul.bullets b{color:var(--gold-soft);font-weight:600}
+.tag{display:inline-flex;align-items:center;gap:8px;padding:7px 16px;border:1px solid var(--line);border-radius:999px;background:var(--surface);font-size:13px;color:var(--muted);font-family:'Space Grotesk',sans-serif}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--emerald)}
+.grid{display:grid;gap:20px;width:100%;max-width:1100px}
+.cols-2{grid-template-columns:1fr 1fr}
+.cols-3{grid-template-columns:repeat(3,1fr)}
+.cols-4{grid-template-columns:repeat(4,1fr)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:26px 24px;display:flex;flex-direction:column;gap:10px}
+.card .ico{width:42px;height:42px;border-radius:11px;background:var(--grad-soft);display:flex;align-items:center;justify-content:center;font-size:22px}
+.card h3{font-size:clamp(16px,1.5vw,21px);color:var(--text)}
+.card p{color:var(--muted);font-size:clamp(13px,1.2vw,16px);line-height:1.5}
+.metric{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(34px,4.6vw,58px);background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1}
+.metric-lbl{color:var(--muted);font-size:clamp(12px,1.1vw,15px);margin-top:6px}
+.price{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(30px,3.6vw,46px);color:var(--emerald-bright)}
+.price .per{font-size:.42em;color:var(--muted);font-weight:500}
+.tier-feat{color:var(--muted);font-size:clamp(12px,1.1vw,15px);line-height:1.55}
+.recommended{border-color:var(--emerald);box-shadow:0 0 0 1px var(--emerald),0 18px 60px -20px rgba(16,185,129,.5);position:relative}
+.recommended .badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--grad);color:#06120D;font-size:11px;font-weight:700;letter-spacing:.1em;padding:5px 14px;border-radius:999px;font-family:'Space Grotesk',sans-serif}
+.cmp{width:100%;max-width:1100px;border-collapse:collapse;font-size:clamp(12px,1.25vw,16px)}
+.cmp th,.cmp td{padding:14px 16px;text-align:center;border-bottom:1px solid var(--line)}
+.cmp th{color:var(--muted);font-weight:600;font-family:'Space Grotesk',sans-serif;font-size:.92em}
+.cmp th.us{color:var(--emerald-bright)}
+.cmp td.feat{text-align:left;color:var(--text);font-weight:500}
+.yes{color:var(--emerald-bright);font-size:1.15em}
+.no{color:var(--danger);opacity:.6}
+.timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:1100px;width:100%}
+.step{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px 18px;position:relative}
+.step .when{font-family:'Space Grotesk',sans-serif;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+.step .who{font-size:13px;color:var(--emerald-bright);margin-top:4px;font-weight:600}
+.step p{margin-top:10px;color:var(--text);font-size:clamp(13px,1.25vw,16px);line-height:1.45}
+.step .before{color:var(--muted);font-size:12px;margin-top:8px;border-top:1px dashed var(--line);padding-top:8px}
+.cta{display:inline-flex;align-items:center;gap:12px;background:var(--grad);color:#06120D;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(15px,1.5vw,20px);padding:16px 30px;border-radius:999px;margin-top:24px}
+.contact{color:var(--muted);font-size:clamp(13px,1.3vw,17px);margin-top:18px}
+.contact b{color:var(--emerald-bright);font-weight:600}
+.foot{position:absolute;bottom:22px;left:72px;right:72px;display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:12px;font-family:'Space Grotesk',sans-serif;letter-spacing:.08em}
+.brand{display:flex;align-items:center;gap:10px;font-weight:600;color:var(--text)}
+.brand .mark{width:22px;height:22px;border-radius:6px;background:var(--grad)}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--grad);transition:width .3s;z-index:1000}
+.nav-controls{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:16px;z-index:1000}
+.nav-btn{background:rgba(255,255,255,.08);border:1px solid var(--line);color:#fff;width:38px;height:38px;border-radius:50%;cursor:pointer;font-size:16px}
+.nav-btn:hover{background:rgba(16,185,129,.25)}
+.slide-counter{color:var(--muted);font-size:13px;font-family:'Space Grotesk',sans-serif}
+.split{display:grid;grid-template-columns:1.1fr 1fr;gap:48px;align-items:center;width:100%;max-width:1150px}
+.pain{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--danger);border-radius:14px;padding:20px 22px;display:flex;flex-direction:column;gap:6px}
+.pain .h{font-weight:600;color:var(--text);font-size:clamp(15px,1.5vw,19px)}
+.pain p{color:var(--muted);font-size:clamp(13px,1.2vw,16px);line-height:1.5}
+.chart-wrap{width:100%;max-width:680px;height:clamp(220px,34vh,360px)}
+.arch{display:flex;align-items:center;justify-content:center;gap:0;max-width:1150px;width:100%}
+.arch .node{flex:1;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px 18px;text-align:center}
+.arch .node h3{font-size:clamp(15px,1.4vw,19px);color:var(--emerald-bright);margin-bottom:8px}
+.arch .node p{color:var(--muted);font-size:clamp(12px,1.1vw,15px);line-height:1.45}
+.arch .arrow{flex:0 0 60px;color:var(--gold);font-size:28px;display:flex;align-items:center;justify-content:center}
+.arch .arrow .off{font-size:10px;color:var(--muted);display:block;letter-spacing:.1em}
+@media(max-width:900px){.cols-3,.cols-4,.timeline,.split,.arch{grid-template-columns:1fr 1fr;display:grid}.arch{flex-direction:column}.arch .arrow{transform:rotate(90deg)}}
+@media(max-width:600px){.cols-2,.cols-3,.cols-4,.timeline,.split{grid-template-columns:1fr}.slide{padding:40px 24px}}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<div class="slide-deck">
+
+<!-- 1 TITLE -->
+<div class="slide active">
+  <div class="slide-content" style="display:flex;flex-direction:column;align-items:flex-start;gap:22px">
+    <span class="tag reveal"><span class="dot"></span> Built in Ghana, for Ghana</span>
+    <h1 class="title reveal">LedgerMind OS</h1>
+    <p class="headline reveal">Sell offline. See everything. Decide before it's too late.</p>
+    <p class="sub reveal">The AI-powered retail operating system for Ghanaian chains — offline mobile checkout, a live multi-branch dashboard, and an AI assistant that predicts your next stockout. Payments, inventory, and compliance, unified.</p>
+    <div class="reveal" style="display:flex;gap:12px;margin-top:8px">
+      <span class="tag">Offline-first POS</span><span class="tag">Ledmi AI</span><span class="tag">Paystack payments</span><span class="tag">GRA-ready</span>
+    </div>
+  </div>
+  <div class="foot"><div class="brand"><div class="mark"></div>LedgerMind OS</div><div>Client Pitch · 2026</div></div>
+</div>
+
+<!-- 2 PROBLEM -->
+<div class="slide">
+  <div class="slide-content" style="align-items:flex-start;gap:18px">
+    <span class="eyebrow reveal">The Problem</span>
+    <h1 class="title reveal" style="font-size:clamp(28px,4vw,52px)">Running a chain in Ghana shouldn't mean flying blind</h1>
+    <p class="headline reveal" style="font-size:clamp(18px,2.4vw,30px)">You lose sales, stock, and sleep — every single day.</p>
+    <div class="grid cols-2 reveal" style="margin-top:12px">
+      <div class="pain"><div class="h">Lost offline sales</div><p>When MTN data drops, your POS stops. Customers walk out — and you never even see the lost revenue.</p></div>
+      <div class="pain"><div class="h">Blind inventory</div><p>You call 5 managers every evening just to know what's selling and what's out of stock. By then, it's too late.</p></div>
+      <div class="pain"><div class="h">Reactive decisions</div><p>Your current system tells you what happened yesterday. It never tells you what to do tomorrow.</p></div>
+      <div class="pain"><div class="h">Payment chaos</div><p>Cashiers juggle cash, MoMo, cards, and transfers with no single checkout — slow lines, missed money, reconciliation nightmares.</p></div>
+    </div>
+  </div>
+  <div class="foot"><div class="brand"><div class="mark"></div>LedgerMind OS</div><div>02 / 10</div></div>
+</div>
+
+<!-- 3 COST -->
+<div class="slide">
+  <div class="slide-content" style="align-items:flex-start;gap:18px">
+    <span class="eyebrow reveal">The cost of "good enough"</span>
+    <h1 class="title reveal" style="font-size:clamp(28px,4vw,52px)">The cheapest system is the one that loses you the most money</h1>
+    <div class="split reveal" style="margin-top:8px">
+      <ul class="bullets">
+        <li>A single stockout on a fast-moving product can cost you <b>more than a month of POS subscription</b> — and you have stockouts every week you don't know about.</li>
+        <li><b>Oval POS</b> charges $120–150 per outlet per month (GHS 1,800+) — and it still stops working when the internet drops.</li>
+        <li><b>SellarPro</b> is affordable, but can't give you cross-branch intelligence, AI predictions, or GRA compliance.</li>
+        <li>You're paying for software that records history. <b>You need software that shapes the future.</b></li>
+      </ul>
+      <div class="chart-wrap"><canvas id="costChart"></canvas></div>
+    </div>
+  </div>
+  <div class="foot"><div class="brand"><div class="mark"></div>LedgerMind OS</div><div>03 / 10</div></div>
+</div>
+
+<!-- 4 SOLUTION -->
+<div class="slide">
+  <div class="slide-content" style="align-items:flex-start;gap:18px">
+    <span class="eyebrow reveal">The Solution</span>
+    <h1 class="title reveal" style="font-size:clamp(28px,4vw,52px)">One system. Every branch. Always on.</h1>
+    <p class="headline reveal" style="font-size:clamp(18px,2.4vw,28px)">The AI-powered retail OS built for chains like yours.</p>
+    <div class="arch reveal" style="margin-top:14px">
+      <div class="node"><h3>Flutter POS</h3><p>Offline checkout, barcode scan, Bluetooth receipts. Cash + MoMo + card in one flow.</p></div>
+      <div class="arrow">→<span class="off">sync</span></div>
+      <div class="node"><h3>Supabase Cloud</h3><p>Multi-tenant, RLS-secured, real-time. Idempotent sync — no lost sales, no duplicates.</p></div>
+      <div class="arrow">→<span class="off">insight</span></div>
+      <div class="node"><h3>Dashboard + Ledmi AI</h3><p>Live revenue, stock & margins across branches. AI predicts stockouts 3 days early.</p></div>
+    </div>
+    <ul class="bullets reveal" style="margin-top:14px;max-width:1100px">
+      <li><b>Offline-first POS:</b> sell, scan, and print even when the internet is down. Syncs automatically the moment you're back — no lost data, no duplicates.</li>
+      <li><b>Paystack payments:</b> cash, MTN MoMo, Vodafone Cash, AirtelTigo, and card — one checkout, one reconciliation.</li>
+    </ul>
+  </div>
+  <div class="foot"><div class="brand"><div class="mark"></div>LedgerMind OS</div><div>04 / 10</div></div>
+</div>
+
+<!-- 5 DAY IN LIFE -->
+<div class="slide">
+  <div class="slide-content" style="align-items:flex-start;gap:16px">
+    <span class="eyebrow reveal">A day in your branches</span>
+    <h1 class="title reveal" style="font-size:clamp(28px,4vw,52px)">From chaos to control, in one day</h1>
+    <div class="timeline reveal" style="margin-top:12px">
+      <div class="step"><div class="when">Morning</div><div class="who">Adjoa · Cashier</div><p>Opens shift, scans a product, completes checkout in under 10 seconds — even with no data. Receipt prints via Bluetooth.</p><div class="before">Before: "no network" panic, lost sales</div></div>
+      <div class="step"><div class="when">Midday</div><div class="who">Kofi · Manager</div><p>Gets a Ledmi alert: "Cooking Oil at Spintex will stock out in 3 days. Reorder 48 units from Supplier X." Approves in one tap.</p><div class="before">Before: stockout discovered too late</div></div>
+      <div class="step"><div class="when">Evening</div><div class="who">Ama · Owner</div><p>Opens the dashboard — consolidated revenue, margins, and stock across all branches. No phone calls, no spreadsheets.</p><div class="before">Before: 5 manager calls every night</div></div>
+      <div class="step"><div class="when">Month-end</div><div class="who">Daniel · Accountant</div><p>Exports the GRA-ready sales ledger in one click. Audit trail intact. No all-night reconciliation.</p><div class="before">Before: days of manual reconciliation</div></div>
+    </div>
+  </div>
+  <div class="foot"><div class="brand"><div class="mark"></div>LedgerMind OS</div><div>05 / 10</div></div>
+</div>
+
+<!-- 6 DIFFERENTIATION -->
+<div class="slide">
+  <div class="slide-content" style="align-items:flex-start;gap:16px">
+    <span class="eyebrow reveal">Why this is different</span>
+    <h1 class="title reveal" style="font-size:clamp(28px,4vw,50px)">Not just another POS — your operating system</h1>
+    <p class="headline reveal" style="font-size:clamp(16px,2vw,26px)">Everyone else sells software. We sell operational intelligence.</p>
+    <table class="cmp reveal" style="margin-top:12px">
+      <tr><th class="feat" style="text-align:left">Capability</th><th class="us">LedgerMind OS</th><th>Oval POS</th><th>SellarPro</th><th>Generic POS</th></tr>
+      <tr><td class="feat">Offline-first POS</td><td class="yes">✓</td><td class="no">✕</td><td class="yes">✓</td><td class="yes">~</td></tr>
+      <tr><td class="feat">Mobile app (Android/iOS)</td><td class="yes">✓</td><td class="no">✕</td><td class="yes">✓</td><td class="yes">~</td></tr>
+      <tr><td class="feat">Multi-branch AI insights</td><td class="yes">✓</td><td class="no">✕</td><td class="no">✕</td><td class="no">✕</td></tr>
+      <tr><td class="feat">GRA E-VAT ready</td><td class="yes">✓</td><td class="yes">✓</td><td class="no">✕</td><td class="no">✕</td></tr>
+      <tr><td class="feat">Card-scanning checkout</td><td class="yes">✓</td><td class="no">✕</td><td class="no">✕</td><td class="no">✕</td></tr>
+      <tr><td class="feat">Price / outlet / month</td><td class="us"><b>from GHS 99</b></td><td>$120–150</td><td>GHS 99–250</td><td>varies</td></tr>
+    </table>
+    <p class="sub reveal" style="margin-top:10px">The card-scanning checkout: your cashier scans a customer's card with the phone camera — Paystack tokenizes it instantly. <b>No one else in Ghana does this.</b></p>
+  </div>
+  <div class="foot"><div class="brand"><div class="mark"></div>LedgerMind OS</div><div>06 / 10</div></div>
+</div>
+
+<!-- 7 PROOF METRICS -->
+<div class="slide">
+  <div class="slide-content" style="align-items:flex-start;gap:16px">
+    <span class="eyebrow reveal">Proof it works</span>
+    <h1 class="title reveal" style="font-size:clamp(28px,4vw,50px)">Built to the metrics that matter</h1>
+    <p class="headline reveal" style="font-size:clamp(16px,2vw,26px)">We don't just promise. We measure.</p>
+    <div class="grid cols-4 reveal" style="margin-top:14px">
+      <div class="card"><div class="metric">&lt;10s</div><div class="metric-lbl">Checkout time — even offline. Your lines move faster.</div></div>
+      <div class="card"><div class="metric">99.5%</div><div class="metric-lbl">Offline sync success — no lost sales, no duplicates.</div></div>
+      <div class="card"><div class="metric">3+</div><div class="metric-lbl">AI insights / week / business — reorders, anomalies, margin.</div></div>
+      <div class="card"><div class="metric">99.9%</div><div class="metric-lbl">Uptime — your system is always ready to sell.</div></div>
+    </div>
+    <p class="sub reveal" style="margin-top:14px;font-size:clamp(13px,1.3vw,17px)">Targets from the locked PRD. Pilot results replace these with real numbers from named Accra chains.</p>
+  </div>
+  <div class="foot"><div class="brand"><div class="mark"></div>LedgerMind OS</div><div>07 / 10</div></div>
+</div>
+
+<!-- 8 PRICING -->
+<div class="slide">
+  <div class="slide-content" style="align-items:flex-start;gap:16px">
+    <span class="eyebrow reveal">Pricing</span>
+    <h1 class="title reveal" style="font-size:clamp(28px,4vw,50px)">Enterprise power. Local price.</h1>
+    <p class="headline reveal" style="font-size:clamp(16px,2vw,26px)">From GHS 99 per outlet per month — less than your weekly stockout losses.</p>
+    <div class="grid cols-3 reveal" style="margin-top:16px">
+      <div class="card"><h3>Starter</h3><div class="price">GHS 99<span class="per"> /outlet/mo</span></div><p class="tier-feat">Offline POS, payments, basic inventory. For 1–2 outlets.</p></div>
+      <div class="card recommended"><span class="badge">RECOMMENDED</span><h3>Growth</h3><div class="price">GHS 199<span class="per"> /outlet/mo</span></div><p class="tier-feat">Full multi-branch dashboard + Ledmi AI + roles. For 3–10 outlets. Most chains start here.</p></div>
+      <div class="card"><h3>Chain</h3><div class="price">GHS 299<span class="per"> /outlet/mo</span></div><p class="tier-feat">Everything + GRA E-VAT + advanced AI + priority support. For 11–20+ outlets.</p></div>
+    </div>
+    <p class="sub reveal" style="margin-top:14px"><b>No setup fees. No hardware lock-in. Cancel anytime.</b> Bring any Android phone or tablet and a Bluetooth printer. Oval POS charges $120–150/outlet/mo — we deliver more for GHS 199.</p>
+  </div>
+  <div class="foot"><div class="brand"><div class="mark"></div>LedgerMind OS</div><div>08 / 10</div></div>
+</div>
+
+<!-- 9 PILOT OFFER -->
+<div class="slide">
+  <div class="slide-content" style="align-items:flex-start;gap:16px">
+    <span class="eyebrow reveal">The pilot offer</span>
+    <h1 class="title reveal" style="font-size:clamp(28px,4vw,50px)">See it in your business — free for 14 days</h1>
+    <p class="headline reveal" style="font-size:clamp(16px,2vw,26px)">Don't take our word for it. Run it in one of your outlets.</p>
+    <div class="timeline reveal" style="grid-template-columns:repeat(3,1fr);margin-top:16px">
+      <div class="step"><div class="when">Step 1</div><p>Pick an outlet. Choose 1–3 branches to pilot.</p></div>
+      <div class="step"><div class="when">Step 2</div><p>We set it up free — data import, hardware pairing, on-site cashier training.</p></div>
+      <div class="step"><div class="when">Step 3</div><p>You see the results in 14 days: checkout time, stockouts caught, reconciliation hours saved.</p></div>
+    </div>
+    <ul class="bullets reveal" style="margin-top:14px">
+      <li><b>14-day free pilot</b> on 1–3 outlets. We handle setup, data import, and on-site training — at no cost.</li>
+      <li>We measure your baseline and show you the impact after 14 days. <b>If you're not convinced, you walk away</b> — no charge, no obligation.</li>
+      <li>If you are, you roll out to all branches at the Growth tier — with <b>locked-in pilot pricing for 12 months</b>.</li>
+    </ul>
+  </div>
+  <div class="foot"><div class="brand"><div class="mark"></div>LedgerMind OS</div><div>09 / 10</div></div>
+</div>
+
+<!-- 10 CLOSE -->
+<div class="slide">
+  <div class="slide-content" style="align-items:flex-start;gap:18px">
+    <span class="eyebrow reveal">Let's begin</span>
+    <h1 class="title reveal" style="font-size:clamp(30px,4.4vw,56px)">Let's run your chain the way it should be run</h1>
+    <p class="headline reveal" style="font-size:clamp(18px,2.4vw,30px)">Your competitors are still guessing. You won't have to.</p>
+    <ul class="bullets reveal" style="margin-top:8px">
+      <li>You've built a real business — multiple branches, loyal customers, hard-earned growth.</li>
+      <li>The tools you've had so far were built for smaller shops or foreign budgets. <b>LedgerMind OS is built for you.</b></li>
+      <li>Let's get one outlet live this week. You'll see the difference by next Friday.</li>
+    </ul>
+    <div class="cta reveal">Start your free 14-day pilot →</div>
+    <p class="contact reveal">Call Kojo directly: <b>+233 [number]</b> · WhatsApp <b>[number]</b> · <b>kojo@ledgermind.os</b></p>
+  </div>
+  <div class="foot"><div class="brand"><div class="mark"></div>LedgerMind OS</div><div>10 / 10</div></div>
+</div>
+
+</div>
+<div class="nav-controls">
+  <button class="nav-btn" onclick="prevSlide()" aria-label="Previous">←</button>
+  <span class="slide-counter"><span id="current">1</span> / <span id="total">10</span></span>
+  <button class="nav-btn" onclick="nextSlide()" aria-label="Next">→</button>
+</div>
+<script>
+let current=1;const total=document.querySelectorAll('.slide').length;document.getElementById('total').textContent=total;
+function showSlide(n){if(n<1)n=1;if(n>total)n=total;current=n;document.querySelectorAll('.slide').forEach((s,i)=>s.classList.toggle('active',i===n-1));document.getElementById('current').textContent=n;document.getElementById('progressBar').style.width=(n/total*100)+'%';}
+function nextSlide(){showSlide(current+1)}function prevSlide(){showSlide(current-1)}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();nextSlide()}if(e.key==='ArrowLeft'){e.preventDefault();prevSlide()}});
+document.addEventListener('click',e=>{if(!e.target.closest('.nav-controls'))nextSlide()});
+showSlide(1);
+// Cost comparison chart (slide 3)
+window.addEventListener('load',()=>{const c=document.getElementById('costChart');if(!c)return;
+new Chart(c,{type:'bar',data:{labels:['Hidden cost of stockouts + lost offline sales','Oval POS subscription','SellarPro subscription','LedgerMind OS'],datasets:[{data:[100,42,18,8],backgroundColor:['#EF4444','#9AA8A2','#9AA8A2','#10B981'],borderRadius:8,barThickness:'flex'}]},
+options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.raw+' (relative cost index)'}}},
+scales:{x:{grid:{color:'rgba(255,255,255,.05)'},ticks:{color:'#9AA8A2'}},y:{grid:{display:false},ticks:{color:'#F2F5F3',font:{size:11}}}}}});});
+</script>
+</body>
+</html>

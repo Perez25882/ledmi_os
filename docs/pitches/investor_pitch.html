@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LedgerMind OS — Investor Pitch</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#070A0A; --bg-2:#0E1413; --surface:#121A18; --surface-2:#1A2421;
+  --emerald:#10B981; --emerald-bright:#34D399; --gold:#E8B339; --gold-soft:#F5D27A;
+  --text:#F2F5F3; --muted:#8FA098; --danger:#EF4444; --line:rgba(255,255,255,.07);
+  --grad:linear-gradient(135deg,#10B981 0%,#34D399 45%,#E8B339 100%);
+  --grad-soft:linear-gradient(135deg,rgba(16,185,129,.16),rgba(232,179,57,.10));
+}
+*{margin:0;padding:0;box-sizing:border-box}html,body{height:100%}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;overflow:hidden}
+.slide-deck{position:relative;width:100vw;height:100vh;overflow:hidden}
+@media(min-width:769px){.slide-deck{max-width:calc(100vh*16/9);max-height:calc(100vw*9/16);margin:auto;position:absolute;inset:0}}
+.slide{position:absolute;width:100%;height:100%;display:flex;flex-direction:column;justify-content:center;padding:60px 72px;opacity:0;visibility:hidden;transition:opacity .45s ease;background:var(--bg);overflow:hidden}
+.slide.active{opacity:1;visibility:visible}
+.slide.active .reveal{animation:fadeUp .6s ease-out both}
+.slide.active .reveal:nth-child(2){animation-delay:.08s}.slide.active .reveal:nth-child(3){animation-delay:.16s}
+.slide.active .reveal:nth-child(4){animation-delay:.24s}.slide.active .reveal:nth-child(5){animation-delay:.32s}
+.slide.active .reveal:nth-child(6){animation-delay:.40s}.slide.active .reveal:nth-child(7){animation-delay:.48s}
+@keyframes fadeUp{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:translateY(0)}}
+h1,h2,h3{font-family:'Space Grotesk',sans-serif;line-height:1.08}
+.eyebrow{font-family:'Space Grotesk',sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--emerald-bright);font-weight:600}
+.title{font-size:clamp(32px,5vw,62px);font-weight:700;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1.05;max-width:1100px}
+.headline{font-size:clamp(20px,2.7vw,36px);font-weight:600;color:var(--text);max-width:1050px;margin-top:6px}
+.sub{color:var(--muted);font-size:clamp(14px,1.45vw,19px);max-width:980px}
+ul.bullets{list-style:none;display:flex;flex-direction:column;gap:14px;max-width:1050px;margin-top:12px}
+ul.bullets li{display:flex;gap:13px;font-size:clamp(14px,1.45vw,19px);line-height:1.45;color:var(--text)}
+ul.bullets li::before{content:"";flex:0 0 auto;width:7px;height:7px;margin-top:10px;border-radius:2px;background:var(--grad);transform:rotate(45deg)}
+ul.bullets b{color:var(--gold-soft);font-weight:600}
+.tag{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border:1px solid var(--line);border-radius:999px;background:var(--surface);font-size:12px;color:var(--muted);font-family:'Space Grotesk',sans-serif}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--emerald)}
+.grid{display:grid;gap:18px;width:100%;max-width:1100px}
+.cols-2{grid-template-columns:1fr 1fr}.cols-3{grid-template-columns:repeat(3,1fr)}.cols-4{grid-template-columns:repeat(4,1fr)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px 20px;display:flex;flex-direction:column;gap:8px}
+.card .ico{width:38px;height:38px;border-radius:10px;background:var(--grad-soft);display:flex;align-items:center;justify-content:center;font-size:19px}
+.card h3{font-size:clamp(15px,1.4vw,19px);color:var(--text)}
+.card p{color:var(--muted);font-size:clamp(12px,1.15vw,15px);line-height:1.5}
+.bignum{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(40px,5.6vw,76px);background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1}
+.bignum-lbl{color:var(--muted);font-size:clamp(12px,1.15vw,16px);margin-top:6px;max-width:280px}
+.split{display:grid;grid-template-columns:1.05fr 1fr;gap:40px;align-items:center;width:100%;max-width:1150px}
+.chart-wrap{width:100%;max-width:560px;height:clamp(220px,34vh,340px)}
+.chart-wrap.tall{height:clamp(260px,40vh,380px)}
+.arch{display:flex;align-items:stretch;justify-content:center;gap:0;max-width:1150px;width:100%}
+.arch .node{flex:1;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 16px;text-align:center}
+.arch .node .n{font-family:'Space Grotesk',sans-serif;font-size:11px;color:var(--gold);letter-spacing:.14em}
+.arch .node h3{font-size:clamp(14px,1.3vw,18px);color:var(--emerald-bright);margin:6px 0}
+.arch .node p{color:var(--muted);font-size:clamp(11px,1.05vw,14px);line-height:1.4}
+.arch .arrow{flex:0 0 48px;color:var(--emerald);font-size:22px;display:flex;align-items:center;justify-content:center}
+.cmp{width:100%;max-width:1100px;border-collapse:collapse;font-size:clamp(11px,1.15vw,15px)}
+.cmp th,.cmp td{padding:12px 14px;text-align:center;border-bottom:1px solid var(--line)}
+.cmp th{color:var(--muted);font-weight:600;font-family:'Space Grotesk',sans-serif;font-size:.9em}
+.cmp th.us{color:var(--emerald-bright)}
+.cmp td.feat{text-align:left;color:var(--text);font-weight:500}
+.yes{color:var(--emerald-bright);font-size:1.1em}.no{color:var(--danger);opacity:.55}
+.timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;max-width:1100px;width:100%}
+.step{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 16px}
+.step .n{font-family:'Space Grotesk',sans-serif;font-size:11px;color:var(--gold);letter-spacing:.14em}
+.step h3{font-size:clamp(14px,1.3vw,18px);color:var(--emerald-bright);margin:6px 0}
+.step p{color:var(--muted);font-size:clamp(11px,1.1vw,14px);line-height:1.45}
+.fund{display:grid;grid-template-columns:1.1fr 1fr;gap:36px;align-items:center;width:100%;max-width:1100px}
+.fund-list{display:flex;flex-direction:column;gap:12px}
+.fund-row{display:flex;align-items:center;gap:14px}
+.fund-row .pct{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(20px,2.4vw,30px);color:var(--emerald-bright);width:78px;flex:0 0 auto}
+.fund-row .lbl{color:var(--text);font-size:clamp(13px,1.3vw,17px)}
+.fund-row .lbl span{display:block;color:var(--muted);font-size:.78em;margin-top:2px}
+.team{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:1100px;width:100%}
+.member{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px 18px;display:flex;flex-direction:column;gap:6px}
+.member .av{width:46px;height:46px;border-radius:12px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:700;color:#06120D;font-size:18px;margin-bottom:6px}
+.member h3{font-size:clamp(15px,1.4vw,19px);color:var(--text)}
+.member .role{font-size:12px;color:var(--emerald-bright);font-family:'Space Grotesk',sans-serif;letter-spacing:.06em}
+.member p{color:var(--muted);font-size:clamp(12px,1.1vw,15px);line-height:1.45;margin-top:4px}
+.year-arc{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:1100px;width:100%}
+.year{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px 18px;position:relative}
+.year .y{font-family:'Space Grotesk',sans-serif;font-size:12px;color:var(--gold);letter-spacing:.14em}
+.year h3{font-size:clamp(18px,2vw,26px);color:var(--emerald-bright);margin:6px 0}
+.year p{color:var(--muted);font-size:clamp(12px,1.15vw,15px);line-height:1.5}
+.year .arr{position:absolute;top:50%;right:-12px;color:var(--emerald);font-size:22px;transform:translateY(-50%);z-index:2}
+.cta{display:inline-flex;align-items:center;gap:12px;background:var(--grad);color:#06120D;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(14px,1.4vw,18px);padding:14px 26px;border-radius:999px;margin-top:18px}
+.foot{position:absolute;bottom:18px;left:72px;right:72px;display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:11px;font-family:'Space Grotesk',sans-serif;letter-spacing:.08em}
+.brand{display:flex;align-items:center;gap:9px;font-weight:600;color:var(--text)}
+.brand .mark{width:20px;height:20px;border-radius:5px;background:var(--grad)}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--grad);transition:width .3s;z-index:1000}
+.nav-controls{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:14px;z-index:1000}
+.nav-btn{background:rgba(255,255,255,.08);border:1px solid var(--line);color:#fff;width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:15px}
+.nav-btn:hover{background:rgba(16,185,129,.25)}
+.slide-counter{color:var(--muted);font-size:12px;font-family:'Space Grotesk',sans-serif}
+.pain{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--danger);border-radius:12px;padding:16px 18px;display:flex;flex-direction:column;gap:5px}
+.pain .h{font-weight:600;color:var(--text);font-size:clamp(14px,1.4vw,18px)}
+.pain p{color:var(--muted);font-size:clamp(12px,1.15vw,15px);line-height:1.45}
+@media(max-width:900px){.cols-3,.cols-4,.timeline,.split,.arch,.fund,.team,.year-arc{grid-template-columns:1fr 1fr;display:grid}.arch{flex-direction:column}.arch .arrow{transform:rotate(90deg)}}
+@media(max-width:600px){.cols-2,.cols-3,.cols-4,.timeline,.split,.fund,.team,.year-arc{grid-template-columns:1fr}.slide{padding:36px 22px}}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<div class="slide-deck">
+
+<!-- 1 TITLE -->
+<div class="slide active">
+  <div class="slide-content" style="display:flex;flex-direction:column;align-items:flex-start;gap:20px">
+    <span class="tag reveal"><span class="dot"></span> Seed / Series A · Ghana beachhead → Africa</span>
+    <h1 class="title reveal">LedgerMind OS</h1>
+    <p class="headline reveal">The AI-powered retail operating system for African chains.</p>
+    <p class="sub reveal">Offline-first mobile POS + live multi-branch dashboard + predictive AI + embedded Paystack payments. Ghana beachhead, then Nigeria and Kenya.</p>
+    <div class="reveal" style="display:flex;gap:10px;margin-top:6px">
+      <span class="tag">Offline-first</span><span class="tag">Ledmi AI</span><span class="tag">Paystack</span><span class="tag">GRA-ready</span><span class="tag">$500B+ TAM</span>
+    </div>
+    <p class="sub reveal" style="margin-top:8px;font-size:clamp(13px,1.3vw,17px)">Seed round: raising $[X] to land 100 paid chains and prove unit economics.</p>
+  </div>
+  <div class="foot"><div class="brand"><div class="mark"></div>LedgerMind OS</div><div>Investor Pitch · Confidential · 2026</div></div>
+</div>
+
+<!-- 2 PROBLEM -->
+<div class="slide">
+  <div class="slide-content" style="align-items:flex-start;gap:16px">
+    <span class="eyebrow reveal">The Problem</span>
+    <h1 class="title reveal" style="font-size:clamp(28px,4.2vw,54px)">$500B+ in African retail is managed with guesswork</h1>
+    <div class="split reveal" style="margin-top:8px">
+      <div class="grid cols-2" style="max-width:560px">
+        <div class="pain"><div class="h">Unreliable connectivity</div><p>Cloud-only POS systems stop working when data drops — lost sales, every day, across the continent.</p></div>
+        <div class="pain"><div class="h">No multi-branch visibility</div><p>Chain owners can't see stock, sales, or margins across outlets in real time. Decisions are days late.</p></div>
+        <div class="pain"><div class="h">No predictive intelligence</div><p>Existing "AI" in African POS is dashboards and low-stock alerts. No one predicts stockouts or recommends reorders.</p></div>
+        <div class="pain"><div class="h">Pricing mismatch</div><p>Market split between too-simple (SellarPro, GHS 99/mo) and too-expensive (Oval POS, $120–150/outlet/mo). Mid-market chain underserved.</p></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px;align-items:flex-start">
+        <div><div class="bignum">$500B+</div><div class="bignum-lbl">African retail sector — managed largely on paper, basic registers, and cloud-only POS that fails offline.</div></div>
+        <p class="sub" style="font-size:clamp(11px,1.1vw,14px)">Sources: AFDB retail sector estimates; RESEARCH.md competitive analysis.</p>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><div class="brand"><div class="mark"></div>LedgerMind OS</div><div>02 / 12</div></div>
+</div>
+
+<!-- 3 SOLUTION -->
+<div class="slide">
+  <div class="slide-content" style="align-items:flex-start;gap:16px">
+    <span class="eyebrow reveal">The Solution</span>
+    <h1 class="title reveal" style="font-size:clamp(28px,4.2vw,54px)">One operating system for the entire chain</h1>
+    <p class="headline reveal" style="font-size:clamp(17px,2.2vw,28px)">Offline POS. Live dashboard. Predictive AI. Embedded payments.</p>
+    <div class="arch reveal" style="margin-top:14px">
+      <div class="node"><div class="n">LAYER 1</div><h3>Flutter POS</h3><p>Offline checkout in &lt;10s. Barcode scan, Bluetooth receipts. Cash + MoMo + card in one flow.</p></div>
+      <div class="arrow">→</div>
+      <div class="node"><div class="n">LAYER 2</div><h3>Supabase Backend</h3><p>Multi-tenant, RLS-secured, real-time. Idempotent sync — 99.5%+ reliability, no duplicates.</p></div>
+      <div class="arrow">→</div>
+      <div class="node"><div class="n">LAYER 3</div><h3>Dashboard + Ledmi AI</h3><p>Live revenue, stock & margins across branches. AI predicts stockouts 3 days early. NVIDIA NIM.</p></div>
+      <div class="arrow">+</div>
+      <div class="node"><div class="n">LAYER 4</div><h3>Paystack + GRA</h3><p>Embedded payments. Ghana E-VAT-ready. One system, end to end.</p></div>
+    </div>
+    <ul class="bullets reveal" style="margin-top:12px">
+      <li><b>Offline-first:</b> cashiers sell, scan, and print in under 10 seconds — with or without internet. Syncs automatically, 99.5%+ reliability.</li>
+      <li><b>Grounded AI:</b> Ledmi cites real sales/inventory numbers — reorder suggestions, anomaly detection, margin optimization. No hallucinated claims.</li>
+    </ul>
+  </div>
+  <div class="foot"><div class="brand"><div class="mark"></div>LedgerMind OS</div><div>03 / 12</div></div>
+</div>
+
+<!-- 4 MARKET -->
+<div class="slide">
+  <div class="slide-content" style="align-items:flex-start;gap:16px">
+    <span class="eyebrow reveal">Market Opportunity</span>
+    <h1 class="title reveal" style="font-size:clamp(28px,4.2vw,52px)">Ghana beachhead. Africa scale.</h1>
+    <p class="headline reveal" style="font-size:clamp(16px,2vw,26px)">Start where the pain is sharpest and the competition is weakest.</p>
+    <div class="split reveal" style="margin-top:10px">
+      <div class="chart-wrap tall"><canvas id="funnelChart"></canvas></div>
+      <ul class="bullets" style="max-width:520px">
+        <li><b>TAM:</b> ~$500B+ African retail; ~$2B+ addressable software/payments opportunity across Ghana, Nigeria, Kenya retail chains.</li>
+        <li><b>Ghana SAM:</b> ~5,000+ chains with 3–20 branches; ~15,000+ outlets. At GHS 199/outlet/mo ≈ GHS 35M+/mo (~$2.3M/mo) SaaS alone, before transaction share.</li>
+        <li><b>Beachhead:</b> Greater Accra — densest ICP concentration, shortest sales cycles, on-site support feasible.</li>
+        <li><b>Expansion:</b> Nigeria (10x Ghana's retail, same Paystack rails) and Kenya (M-Pesa) in Year 2–3.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot"><div class="brand"><div class="mark"></div>LedgerMind OS</div><div>04 / 12</div></div>
+</div>
+
+<!-- 5 PRODUCT DEMO LOOP -->
+<div class="slide">
+  <div class="slide-content" style="align-items:flex-start;gap:16px">
+    <span class="eyebrow reveal">Product · the closed loop</span>
+    <h1 class="title reveal" style="font-size:clamp(28px,4.2vw,52px)">See the loop close</h1>
+    <p class="headline reveal" style="font-size:clamp(16px,2vw,26px)">Offline sale → payment → inventory → dashboard → AI insight.</p>
+    <div class="timeline reveal" style="margin-top:14px">
+      <div class="step"><div class="n">STEP 1</div><h3>Cashier (offline)</h3><p>Scan product, accept MoMo + cash, print Bluetooth receipt. Internet is off. Sale queued locally.</p></div>
+      <div class="step"><div class="n">STEP 2</div><h3>Sync</h3><p>Connectivity returns. Sale syncs to Supabase with idempotency key. Inventory updates across all branches. No duplicates.</p></div>
+      <div class="step"><div class="n">STEP 3</div><h3>Dashboard</h3><p>Owner sees the sale reflected in real-time revenue, stock levels, and margins — across every branch.</p></div>
+      <div class="step"><div class="n">STEP 4</div><h3>Ledmi AI</h3><p>"Cooking Oil at Spintex will stock out in 3 days. Reorder 48 units." Owner approves in one tap.</p></div>
+    </div>
+    <p class="sub reveal" style="margin-top:14px;font-size:clamp(13px,1.3vw,17px)">This is the moat: every transaction feeds the intelligence layer. The more a chain sells, the smarter Ledmi gets — and the harder it is to leave.</p>
+  </div>
+  <div class="foot"><div class="brand"><div class="mark"></div>LedgerMind OS</div><div>05 / 12</div></div>
+</div>
+
+<!-- 6 TRACTION / PILOT PLAN -->
+<div class="slide">
+  <div class="slide-content" style="align-items:flex-start;gap:16px">
+    <span class="eyebrow reveal">Traction & pilot plan</span>
+    <h1 class="title reveal" style="font-size:clamp(28px,4.2vw,52px)">10 Accra chains prove the model in 90 days</h1>
+    <div class="split reveal" style="margin-top:8px">
+      <ul class="bullets" style="max-width:560px">
+        <li><b>Phase A (Days 1–15):</b> build pipeline — 80–100 Accra ICP chains scored, 15 demos booked.</li>
+        <li><b>Phase B (Days 16–40):</b> 10 pilot agreements signed (14-day free, 1–3 outlets each).</li>
+        <li><b>Phase C (Days 41–70):</b> 7-day onboarding per chain, on-site first-day support, baseline metrics captured.</li>
+        <li><b>Phase D (Days 71–90):</b> Ledmi insights shared with each owner, 90-day impact report, convert 8/10 to paid, 3 reference case studies.</li>
+      </ul>
+      <div class="chart-wrap"><canvas id="pilotChart"></canvas></div>
+    </div>
+    <p class="sub reveal" style="margin-top:10px;font-size:clamp(12px,1.2vw,16px)">Pilot success metrics tied directly to the locked PRD: &lt;10s checkout, &gt;99.5% sync, &gt;60% dashboard DAU, &gt;25% AI action rate, &lt;5% churn. Target: 80% pilot-to-paid conversion.</p>
+  </div>
+  <div class="foot"><div class="brand"><div class="mark"></div>LedgerMind OS</div><div>06 / 12</div></div>
+</div>
+
+<!-- 7 BUSINESS MODEL & UNIT ECONOMICS -->
+<div class="slide">
+  <div class="slide-content" style="align-items:flex-start;gap:16px">
+    <span class="eyebrow reveal">Business model & unit economics</span>
+    <h1 class="title reveal" style="font-size:clamp(28px,4.2vw,52px)">SaaS + payments share. ~90% gross margin.</h1>
+    <div class="split reveal" style="margin-top:8px">
+      <ul class="bullets" style="max-width:540px">
+        <li><b>SaaS:</b> GHS 99 / 199 / 299 per outlet/mo (Starter / Growth / Chain). Growth is the core ICP tier.</li>
+        <li><b>Payments share:</b> 15–25% of Paystack fees on transactions we route — pure margin, costs the merchant nothing extra.</li>
+        <li><b>Optional platform fee:</b> GHS 0.10/non-cash txn, capped at GHS 50/outlet/mo. No fee on cash.</li>
+        <li><b>5-outlet chain (illustrative):</b> ~GHS 3,245/mo (~$216) total revenue; marginal cost &lt;GHS 300; <b>~90%+ gross margin</b>; CAC payback 1–2 months.</li>
+      </ul>
+      <div class="chart-wrap"><canvas id="econChart"></canvas></div>
+    </div>
+    <p class="sub reveal" style="margin-top:8px;font-size:clamp(12px,1.2vw,16px)">A 5-outlet chain pays Oval POS $600–750/mo. They pay us ~$216/mo for more capability. The switch is a no-brainer.</p>
+  </div>
+  <div class="foot"><div class="brand"><div class="mark"></div>LedgerMind OS</div><div>07 / 12</div></div>
+</div>
+
+<!-- 8 COMPETITIVE MOAT -->
+<div class="slide">
+  <div class="slide-content" style="align-items:flex-start;gap:16px">
+    <span class="eyebrow reveal">Competitive moat</span>
+    <h1 class="title reveal" style="font-size:clamp(28px,4.2vw,50px)">No competitor owns all four</h1>
+    <p class="headline reveal" style="font-size:clamp(15px,1.9vw,24px)">Offline + AI + multi-branch + affordable. We win on the intersection.</p>
+    <table class="cmp reveal" style="margin-top:12px">
+      <tr><th class="feat" style="text-align:left">Moat layer</th><th class="us">LedgerMind OS</th><th>Oval POS</th><th>SellarPro</th><th>CliqPOS/BPC</th><th>Generic mobile</th></tr>
+      <tr><td class="feat">Offline-first POS</td><td class="yes">✓</td><td class="no">✕</td><td class="yes">✓</td><td class="no">✕</td><td class="yes">~</td></tr>
+      <tr><td class="feat">Predictive AI (reorder/anomaly/margin)</td><td class="yes">✓</td><td class="no">✕</td><td class="no">✕</td><td class="no">✕</td><td class="no">✕</td></tr>
+      <tr><td class="feat">True multi-branch intelligence</td><td class="yes">✓</td><td class="yes">✓</td><td class="no">~</td><td class="yes">✓</td><td class="no">✕</td></tr>
+      <tr><td class="feat">Affordable for Accra chains</td><td class="yes">✓</td><td class="no">✕</td><td class="yes">✓</td><td class="no">✕</td><td class="yes">✓</td></tr>
+      <tr><td class="feat">Embedded Paystack + GRA E-VAT</td><td class="yes">✓</td><td class="yes">✓</td><td class="no">✕</td><td class="yes">~</td><td class="no">✕</td></tr>
+      <tr><td class="feat">Card-scanning checkout</td><td class="yes">✓</td><td class="no">✕</td><td class="no">✕</td><td class="no">✕</td><td class="no">✕</td></tr>
+    </table>
+    <p class="sub reveal" style="margin-top:10px;font-size:clamp(12px,1.2vw,16px)">Data network effect compounds the moat: every transaction makes Ledmi smarter and the platform harder to leave.</p>
+  </div>
+  <div class="foot"><div class="brand"><div class="mark"></div>LedgerMind OS</div><div>08 / 12</div></div>
+</div>
+
+<!-- 9 GO-TO-MARKET -->
+<div class="slide">
+  <div class="slide-content" style="align-items:flex-start;gap:16px">
+    <span class="eyebrow reveal">Go-to-market</span>
+    <h1 class="title reveal" style="font-size:clamp(28px,4.2vw,50px)">Capital-efficient field sales, then partnerships</h1>
+    <div class="timeline reveal" style="margin-top:12px">
+      <div class="step"><div class="n">PHASE 1 · M1–3</div><h3>Direct · Accra</h3><p>2 field reps, 10 pilot chains, white-glove onboarding. Target: 8 paid chains.</p></div>
+      <div class="step"><div class="n">PHASE 2 · M4–9</div><h3>Kumasi/Takoradi + resellers</h3><p>3–5 hardware resellers (15–20% rev share). GUTA member-benefit program. Target: 25 paid chains.</p></div>
+      <div class="step"><div class="n">PHASE 3 · M10–18</div><h3>Associations + referral</h3><p>Pharmacy/supermarket associations, referral program, WhatsApp funnels. Target: 100 paid chains, ~500 outlets.</p></div>
+      <div class="step"><div class="n">CAPITAL</div><h3>No paid ads Y1</h3><p>Every dollar to field sales, onboarding, and product. CAC payback &lt;3 months.</p></div>
+    </div>
+    <p class="sub reveal" style="margin-top:12px;font-size:clamp(12px,1.2vw,16px)">Channels: direct field sales → hardware reseller bundles → GUTA/pharmacy endorsements → referral. WhatsApp Business is where Ghanaian owners actually live.</p>
+  </div>
+  <div class="foot"><div class="brand"><div class="mark"></div>LedgerMind OS</div><div>09 / 12</div></div>
+</div>
+
+<!-- 10 TEAM -->
+<div class="slide">
+  <div class="slide-content" style="align-items:flex-start;gap:16px">
+    <span class="eyebrow reveal">Team</span>
+    <h1 class="title reveal" style="font-size:clamp(28px,4.2vw,50px)">Built by operators who know the market</h1>
+    <p class="headline reveal" style="font-size:clamp(15px,1.9vw,24px)">Engineering depth meets Ghanaian retail reality.</p>
+    <div class="team reveal" style="margin-top:14px">
+      <div class="member"><div class="av">D</div><h3>Devin</h3><div class="role">CEO / CHIEF ENGINEER</div><p>Leads product and engineering. Technical, product, and AI execution against a locked PRD.</p></div>
+      <div class="member"><div class="av">K</div><h3>Kojo Mensah</h3><div class="role">VP GO-TO-MARKET</div><p>First GTM hire. Owns sales, marketing, partnerships, investor relations. On the ground in Accra.</p></div>
+      <div class="member"><div class="av">7</div><h3>Engineering team</h3><div class="role">7 SPECIALIZED AGENTS</div><p>Backend, payments, security, sync, Flutter POS, dashboard, AI — executing a phased master plan.</p></div>
+    </div>
+    <p class="sub reveal" style="margin-top:14px;font-size:clamp(12px,1.2vw,16px)"><b>Advisors (to be added):</b> targeting a Ghanaian retail operator (e.g., a GUTA board member) and a fintech/payments advisor (Paystack/Hubtel alumni network). Co-CEO: Perez Tegbey.</p>
+  </div>
+  <div class="foot"><div class="brand"><div class="mark"></div>LedgerMind OS</div><div>10 / 12</div></div>
+</div>
+
+<!-- 11 THE ASK -->
+<div class="slide">
+  <div class="slide-content" style="align-items:flex-start;gap:16px">
+    <span class="eyebrow reveal">The ask</span>
+    <h1 class="title reveal" style="font-size:clamp(28px,4.2vw,50px)">Raising $[X] to land 100 chains and prove unit economics</h1>
+    <p class="headline reveal" style="font-size:clamp(15px,1.9vw,24px)">Capital-efficient path to $1M ARR and Series A readiness.</p>
+    <div class="fund reveal" style="margin-top:14px">
+      <div class="chart-wrap"><canvas id="fundsChart"></canvas></div>
+      <div class="fund-list">
+        <div class="fund-row"><div class="pct">45%</div><div class="lbl">Engineering & product<span>Complete MVP, Ledmi AI, GRA E-VAT, offline hardening</span></div></div>
+        <div class="fund-row"><div class="pct">35%</div><div class="lbl">Go-to-market<span>Field sales team, onboarding, pilot support, associations</span></div></div>
+        <div class="fund-row"><div class="pct">15%</div><div class="lbl">Infrastructure & ops<span>Supabase, Paystack, AI inference, dev tools</span></div></div>
+        <div class="fund-row"><div class="pct">5%</div><div class="lbl">Legal, compliance, admin</div></div>
+      </div>
+    </div>
+    <p class="sub reveal" style="margin-top:12px;font-size:clamp(12px,1.2vw,16px)"><b>Raise:</b> $[X] seed (target $500K–$1.5M). <b>Runway:</b> 18–24 months. <b>Series A milestone:</b> 100 paid chains, ~500 outlets, ~$400K–$1M ARR, &lt;5% monthly churn, CAC payback &lt;3 months.</p>
+  </div>
+  <div class="foot"><div class="brand"><div class="mark"></div>LedgerMind OS</div><div>11 / 12</div></div>
+</div>
+
+<!-- 12 VISION -->
+<div class="slide">
+  <div class="slide-content" style="align-items:flex-start;gap:16px">
+    <span class="eyebrow reveal">Vision & milestones</span>
+    <h1 class="title reveal" style="font-size:clamp(30px,4.6vw,56px)">From Accra to Africa — the retail OS layer</h1>
+    <p class="headline reveal" style="font-size:clamp(16px,2vw,26px)">We're not building a POS. We're building the operating system for African retail.</p>
+    <div class="year-arc reveal" style="margin-top:14px">
+      <div class="year"><div class="y">YEAR 1</div><h3>Ghana · 100 chains</h3><p>~500 outlets, $1M ARR, proven unit economics. Ghana product-market fit.</p><div class="arr">→</div></div>
+      <div class="year"><div class="y">YEAR 2</div><h3>+ Nigeria · 500 chains</h3><p>Lagos, Abuja via Paystack rails. Embedded finance (working-capital loans via POS data). $5M ARR.</p><div class="arr">→</div></div>
+      <div class="year"><div class="y">YEAR 3</div><h3>+ Kenya · 2,000+ chains</h3><p>M-Pesa integration. $15M+ ARR. The retail OS layer for Africa.</p></div>
+    </div>
+    <div class="chart-wrap reveal" style="margin-top:14px;max-width:760px;height:clamp(180px,26vh,260px)"><canvas id="arcChart"></canvas></div>
+    <p class="sub reveal" style="margin-top:10px;font-size:clamp(13px,1.3vw,17px)"><b>The bigger picture:</b> every transaction, every stock movement, every AI insight makes the platform more valuable. We become the data and intelligence layer for African retail — the system owners can't run without.</p>
+    <div class="cta reveal">Let's build the operating system for African retail →</div>
+  </div>
+  <div class="foot"><div class="brand"><div class="mark"></div>LedgerMind OS</div><div>12 / 12</div></div>
+</div>
+
+</div>
+<div class="nav-controls">
+  <button class="nav-btn" onclick="prevSlide()" aria-label="Previous">←</button>
+  <span class="slide-counter"><span id="current">1</span> / <span id="total">12</span></span>
+  <button class="nav-btn" onclick="nextSlide()" aria-label="Next">→</button>
+</div>
+<script>
+let current=1;const total=document.querySelectorAll('.slide').length;document.getElementById('total').textContent=total;
+function showSlide(n){if(n<1)n=1;if(n>total)n=total;current=n;document.querySelectorAll('.slide').forEach((s,i)=>s.classList.toggle('active',i===n-1));document.getElementById('current').textContent=n;document.getElementById('progressBar').style.width=(n/total*100)+'%';}
+function nextSlide(){showSlide(current+1)}function prevSlide(){showSlide(current-1)}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();nextSlide()}if(e.key==='ArrowLeft'){e.preventDefault();prevSlide()}});
+document.addEventListener('click',e=>{if(!e.target.closest('.nav-controls'))nextSlide()});
+showSlide(1);
+const G='#10B981',Gb='#34D399',Go='#E8B339',muted='#8FA098',line='rgba(255,255,255,.06)';
+window.addEventListener('load',()=>{
+const mk=(id,fn)=>{const c=document.getElementById(id);if(c)fn(c)};
+// 4 funnel
+mk('funnelChart',c=>new Chart(c,{type:'bar',data:{labels:['TAM\n$500B+ African retail','SAM\n$2B+ software opp. (GH/NG/KE)','SOM Yr1\n100 GH chains · ~$400K ARR'],datasets:[{data:[500,2,0.4],backgroundColor:[muted,Gb,Go],borderRadius:8,barThickness:'flex'}]},
+options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:x=>'$'+x.raw+'B'}}},
+scales:{x:{type:'logarithmic',grid:{color:line},ticks:{color:muted,callback:v=>'$'+v+'B'}},y:{grid:{display:false},ticks:{color:'#F2F5F3',font:{size:11}}}}}}));
+// 6 pilot
+mk('pilotChart',c=>new Chart(c,{type:'line',data:{labels:['Wk1','Wk2','Wk3','Wk4','Wk6','Wk8','Wk10','Wk12','Wk13'],datasets:[{label:'Pilot chains live',data:[0,1,2,3,5,7,9,10,10],borderColor:G,backgroundColor:'rgba(16,185,129,.12)',borderWidth:3,fill:true,tension:.4},{label:'Converted to paid',data:[0,0,0,0,1,2,4,6,8],borderColor:Go,backgroundColor:'rgba(232,179,57,.1)',borderWidth:3,fill:true,tension:.4}]},
+options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:muted,font:{size:11}}}},scales:{x:{grid:{color:line},ticks:{color:muted}},y:{grid:{color:line},ticks:{color:muted},beginAtZero:true}}}}));
+// 7 unit econ
+mk('econChart',c=>new Chart(c,{type:'doughnut',data:{labels:['Gross margin (~90%)','Marginal cost (~10%)'],datasets:[{data:[90,10],backgroundColor:[G,'#3a4641'],borderWidth:0}]},
+options:{responsive:true,maintainAspectRatio:false,cutout:'68%',plugins:{legend:{position:'bottom',labels:{color:muted,font:{size:11},padding:14}}}}}}));
+// 11 funds
+mk('fundsChart',c=>new Chart(c,{type:'doughnut',data:{labels:['Engineering & product 45%','Go-to-market 35%','Infra & ops 15%','Legal/admin 5%'],datasets:[{data:[45,35,15,5],backgroundColor:[G,Gb,Go,'#3a4641'],borderWidth:0}]},
+options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{position:'bottom',labels:{color:muted,font:{size:10},padding:10,boxWidth:12}}}}}}));
+// 12 arc
+mk('arcChart',c=>new Chart(c,{type:'line',data:{labels:['Yr1','Yr2','Yr3'],datasets:[{label:'Chains',data:[100,500,2000],borderColor:G,backgroundColor:'rgba(16,185,129,.12)',borderWidth:3,fill:true,tension:.4,yAxisID:'y'},]},
+options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:muted,font:{size:11}}}},scales:{x:{grid:{color:line},ticks:{color:muted}},y:{grid:{color:line},ticks:{color:muted},beginAtZero:true}}}}));
+});
+</script>
+</body>
+</html>
