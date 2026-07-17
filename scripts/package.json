@@ -1,0 +1,13 @@
+{
+  "name": "ledgermind-migrations",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "apply": "node apply-migrations.js",
+    "verify": "node verify-schema.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "pg": "^8.12.0"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3)",
+      "WebSearch",
+      "Bash(cat > *)",
+      "Bash(cat >> *)"
+    ],
+    "additionalDirectories": [
+      "/Users/adams/Downloads/POS/database_architecture"
+    ]
+  }
+}

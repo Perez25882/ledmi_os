@@ -1,0 +1,104 @@
+# Secrets — never commit
+.env
+.env.*
+!.env.example
+
+# AI agent skill directories (installed via `npx skills add`)
+# Keep only the agent dirs you actually use; ignore the rest so they
+# don't get committed if the skills CLI recreates them.
+/.adal/
+/.aider-desk/
+/.augment/
+/.autohand/
+/.bob/
+/.codeartsdoer/
+/.codebuddy/
+/.codemaker/
+/.codestudio/
+/.commandcode/
+/.continue/
+/.cortex/
+/.crush/
+/.factory/
+/.forge/
+/.goose/
+/.hermes/
+/.iflow/
+/.inferencesh/
+/.jazz/
+/.junie/
+/.kilocode/
+/.kiro/
+/.kode/
+/.lingma/
+/.mcpjam/
+/.moxby/
+/.mux/
+/.neovate/
+/.ona/
+/.openhands/
+/.pi/
+/.pochi/
+/.qoder/
+/.qwen/
+/.reasonix/
+/.roo/
+/.rovodev/
+/.tabnine/
+/.terramind/
+/.tinycloud/
+/.trae/
+/.vibe/
+/.zcode/
+/.zencoder/
+# Generic skill dirs the CLI may create for unnamed agents
+/agent/
+/data/
+/skills/
+
+# Skills lockfile (uncomment if you don't want to track pinned skill versions)
+# skills-lock.json
+
+# OS / editor clutter
+.DS_Store
+Thumbs.db
+*.log
+
+# Supabase local
+/supabase/.temp/
+/infra/supabase/.temp/
+/infra/supabase/supabase/.temp/
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+.vercel/
+*.tsbuildinfo
+
+# Flutter / Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+**/build/
+*.iml
+.gradle/
+android/.gradle/
+android/captures/
+android/local.properties
+ios/Pods/
+ios/.symlinks/
+.flutter/
+
+# Generated lockfiles we DO want to keep (comment out to ignore)
+# package-lock.json
+# pubspec.lock
+
+# IDE
+.idea/
+.vscode/
+*.swp

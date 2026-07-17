@@ -1,0 +1,12 @@
+{
+  // Supabase Edge Function Deno configuration
+  "imports": {
+    "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@2.39.0"
+  },
+  "tasks": {
+    "test": "deno test --allow-net --allow-env test.ts"
+  },
+  "compilerOptions": {
+    "lib": ["deno.window"]
+  }
+}

@@ -1,0 +1,58 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Profiles restrict
+    match /profiles/{userId} {
+      allow read, update: if isOwner(userId);
+      allow create: if isOwner(userId) && request.resource.data.role == "user";
+      allow delete: if false; // Only admins or Cloud Functions can delete users
+    }
+
+    // Inventory Items
+    match /inventory_items/{itemId} {
+      allow read, update, delete: if isAuthenticated() && resource.data.user_id == request.auth.uid;
+      allow create: if isAuthenticated() && request.resource.data.user_id == request.auth.uid;
+    }
+
+    // Categories
+    match /categories/{categoryId} {
+      allow read, update, delete: if isAuthenticated() && resource.data.user_id == request.auth.uid;
+      allow create: if isAuthenticated() && request.resource.data.user_id == request.auth.uid;
+    }
+
+    // Sales
+    match /sales/{saleId} {
+      allow read: if isAuthenticated() && resource.data.user_id == request.auth.uid;
+      allow create: if isAuthenticated() && request.resource.data.user_id == request.auth.uid;
+      allow update, delete: if false; // Immutable ledger
+    }
+
+    // Stock Movements (Audit log)
+    match /stock_movements/{movementId} {
+      allow read: if isAuthenticated() && resource.data.user_id == request.auth.uid;
+      allow create: if isAuthenticated() && request.resource.data.user_id == request.auth.uid;
+      allow update, delete: if false; // Immutable ledger
+    }
+
+    // AI Conversations
+    match /ledmi_conversations/{userId} {
+      allow read, write: if isOwner(userId);
+    }
+    
+    // Admin Logs
+    match /admin_logs/{logId} {
+      allow read, write: if false; // Only accessible via Admin SDK
+    }
+  }
+}
