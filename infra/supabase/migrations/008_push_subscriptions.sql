@@ -22,4 +22,5 @@ DROP POLICY IF EXISTS push_subscriptions_user_access ON push_subscriptions;
 CREATE POLICY push_subscriptions_user_access ON push_subscriptions
     FOR ALL
     TO authenticated
-    USING (user_id = auth.uid());
+    USING (user_id = auth.uid())
+    WITH CHECK (user_id = auth.uid());

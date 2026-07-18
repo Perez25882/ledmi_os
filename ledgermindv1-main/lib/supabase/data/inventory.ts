@@ -1,5 +1,5 @@
 import "server-only"
-import { createServiceClient } from "@/lib/supabase/server"
+import { createServerClientForUser } from "@/lib/supabase/server"
 
 export interface BusinessContext {
   businessId: string
@@ -8,9 +8,9 @@ export interface BusinessContext {
 }
 
 export async function getBusinessContext(userId: string): Promise<BusinessContext | null> {
-  const serviceClient = createServiceClient()
+  const client = await createServerClientForUser()
 
-  const { data: roles, error } = await serviceClient
+  const { data: roles, error } = await client
     .from("user_business_roles")
     .select("business_id, businesses(id, name)")
     .eq("user_id", userId)
@@ -22,7 +22,7 @@ export async function getBusinessContext(userId: string): Promise<BusinessContex
   const primary = roles[0] as any
   const businessId = primary.business_id as string
 
-  const { data: branches, error: branchesError } = await serviceClient
+  const { data: branches, error: branchesError } = await client
     .from("branches")
     .select("id, name")
     .eq("business_id", businessId)
@@ -60,9 +60,9 @@ export async function getInventory(
   businessId: string,
   branchId: string
 ): Promise<InventoryItem[]> {
-  const serviceClient = createServiceClient()
+  const client = await createServerClientForUser()
 
-  const { data, error } = await serviceClient
+  const { data, error } = await client
     .from("products")
     .select(
       `
@@ -109,9 +109,9 @@ export async function getInventory(
 }
 
 export async function getCategories(businessId: string) {
-  const serviceClient = createServiceClient()
+  const client = await createServerClientForUser()
 
-  const { data, error } = await serviceClient
+  const { data, error } = await client
     .from("categories")
     .select("id, name")
     .eq("business_id", businessId)

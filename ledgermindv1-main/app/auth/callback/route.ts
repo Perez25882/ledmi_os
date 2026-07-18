@@ -34,6 +34,23 @@ export async function GET(request: NextRequest) {
       url.searchParams.set("error", error.message)
       return NextResponse.redirect(url)
     }
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+
+    if (user) {
+      const { data: roleRows } = await supabase
+        .from("user_business_roles")
+        .select("custom_roles(name)")
+        .eq("user_id", user.id)
+        .limit(1)
+
+      const roleName = (roleRows as any[])?.[0]?.custom_roles?.name as string | undefined
+      if (roleName === "cashier") {
+        return NextResponse.redirect(new URL("/auth/cashier-redirect", request.url))
+      }
+    }
   }
 
   return NextResponse.redirect(new URL(next, request.url))

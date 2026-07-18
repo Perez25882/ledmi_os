@@ -190,7 +190,9 @@ export async function handleWebhook(
 
   const supabase = options?.supabaseClient ?? createServiceClient();
 
-  // 1. Store the raw webhook receipt (idempotent on provider + event id + type)
+  // 1. Store the raw webhook receipt (idempotent on provider + event id + type).
+  //    business_id is populated in step 3 from the matched payment_intent so
+  //    the RLS policy can scope receipts per business; until then it is NULL.
   const receipt = {
     provider: "paystack",
     provider_event_id: providerEventId,
@@ -200,14 +202,33 @@ export async function handleWebhook(
     raw_payload: payload,
   };
 
-  const { error: receiptErr } = await supabase
+  const { data: receiptRows, error: receiptErr } = await supabase
     .from("webhook_receipts")
     .insert(receipt)
     .select("id");
 
-  if (receiptErr && !isPostgresUniqueViolation(receiptErr)) {
+  let receiptId: string | null = null;
+  if (receiptErr && isPostgresUniqueViolation(receiptErr)) {
+    // Duplicate receipt: fetch the existing id so we can still backfill
+    // business_id for a replay of the same webhook.
+    const { data: existingReceipts, error: existingReceiptErr } = await supabase
+      .from("webhook_receipts")
+      .select("id")
+      .eq("provider", "paystack")
+      .eq("provider_event_id", providerEventId)
+      .eq("event_type", eventType)
+      .limit(1);
+
+    if (existingReceiptErr) {
+      console.error("Failed to resolve duplicate receipt:", existingReceiptErr);
+      return new Response("failed to resolve duplicate receipt", { status: 500 });
+    }
+    receiptId = (existingReceipts?.[0] as { id?: string } | undefined)?.id ?? null;
+  } else if (receiptErr) {
     console.error("Failed to store webhook receipt:", receiptErr);
     return new Response("failed to store receipt", { status: 500 });
+  } else {
+    receiptId = (receiptRows?.[0] as { id?: string } | undefined)?.id ?? null;
   }
 
   // 2. Find the matching payment intent by Paystack reference.
@@ -229,6 +250,18 @@ export async function handleWebhook(
   }
 
   const intent = intents[0];
+
+  // 3. Backfill business_id on the receipt from the matched payment intent so
+  //    the business-scoped RLS policy can govern reads. Best-effort: only
+  //    updates rows where business_id is still NULL, so replays are safe.
+  if (receiptId && intent.business_id) {
+    await supabase
+      .from("webhook_receipts")
+      .update({ business_id: intent.business_id })
+      .eq("id", receiptId)
+      .is("business_id", null);
+  }
+
   const canonicalEventType = mapPaystackEvent(eventType, data);
   const occurredAt =
     String(data.paid_at ?? "") ||
@@ -236,7 +269,7 @@ export async function handleWebhook(
     String(transactionData.paid_at ?? "") ||
     new Date().toISOString();
 
-  // 3. Append the canonical payment event. Duplicate provider_event_id is safe
+  // 4. Append the canonical payment event. Duplicate provider_event_id is safe
   //    because of the partial unique index.
   const eventPayload = {
     payment_intent_id: intent.id,

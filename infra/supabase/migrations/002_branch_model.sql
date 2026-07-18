@@ -146,3 +146,18 @@ ALTER TABLE inventory_logs
 
 CREATE INDEX IF NOT EXISTS idx_inventory_logs_branch ON inventory_logs(branch_id);
 CREATE INDEX IF NOT EXISTS idx_inventory_logs_business_branch ON inventory_logs(business_id, branch_id);
+
+
+-- ============================================================
+-- 7. Activity Logs: optional branch scoping (nullable FK)
+-- ============================================================
+
+ALTER TABLE activity_logs
+    ADD COLUMN IF NOT EXISTS branch_id UUID;
+
+ALTER TABLE activity_logs
+    DROP CONSTRAINT IF EXISTS fk_activity_logs_branch;
+
+ALTER TABLE activity_logs
+    ADD CONSTRAINT fk_activity_logs_branch
+    FOREIGN KEY (branch_id) REFERENCES branches(id) ON DELETE SET NULL;

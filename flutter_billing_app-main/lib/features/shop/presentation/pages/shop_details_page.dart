@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../domain/entities/shop.dart';
 import '../bloc/shop_bloc.dart';
+import '../../../../core/supabase/session_manager.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/app_validators.dart';
 
@@ -21,8 +22,13 @@ class _ShopDetailsPageState extends State<ShopDetailsPage> {
   late TextEditingController _address1Controller;
   late TextEditingController _address2Controller;
   late TextEditingController _phoneController;
-  late TextEditingController _upiController;
+  late TextEditingController _momoController;
+  late TextEditingController _tinController;
+  late TextEditingController _registrationController;
   late TextEditingController _footerController;
+
+  final bool _canEdit = SessionManager.canManageBusiness;
+  String? get _branchId => SessionManager.branchId;
 
   @override
   void initState() {
@@ -31,10 +37,11 @@ class _ShopDetailsPageState extends State<ShopDetailsPage> {
     _address1Controller = TextEditingController();
     _address2Controller = TextEditingController();
     _phoneController = TextEditingController();
-    _upiController = TextEditingController();
+    _momoController = TextEditingController();
+    _tinController = TextEditingController();
+    _registrationController = TextEditingController();
     _footerController = TextEditingController();
 
-    // Load shop data
     context.read<ShopBloc>().add(LoadShopEvent());
   }
 
@@ -44,7 +51,7 @@ class _ShopDetailsPageState extends State<ShopDetailsPage> {
       _address1Controller.text = shop.addressLine1;
       _address2Controller.text = shop.addressLine2;
       _phoneController.text = shop.phoneNumber;
-      _upiController.text = shop.upiId;
+      _momoController.text = shop.upiId;
       _footerController.text = shop.footerText;
     }
   }
@@ -55,7 +62,9 @@ class _ShopDetailsPageState extends State<ShopDetailsPage> {
     _address1Controller.dispose();
     _address2Controller.dispose();
     _phoneController.dispose();
-    _upiController.dispose();
+    _momoController.dispose();
+    _tinController.dispose();
+    _registrationController.dispose();
     _footerController.dispose();
     super.dispose();
   }
@@ -67,7 +76,7 @@ class _ShopDetailsPageState extends State<ShopDetailsPage> {
         addressLine1: _address1Controller.text,
         addressLine2: _address2Controller.text,
         phoneNumber: _phoneController.text,
-        upiId: _upiController.text,
+        upiId: _momoController.text,
         footerText: _footerController.text,
       );
 
@@ -81,7 +90,41 @@ class _ShopDetailsPageState extends State<ShopDetailsPage> {
         appBar: AppBar(
           title: const Text('Shop Details'),
         ),
-        body: BlocConsumer<ShopBloc, ShopState>(
+        body: Column(
+          children: [
+            if (_branchId != null)
+              Container(
+                width: double.infinity,
+                color: AppTheme.primaryColor.withValues(alpha: 0.08),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                child: Row(
+                  children: [
+                    const Icon(Icons.store,
+                        size: 16, color: AppTheme.primaryColor),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        'Branch: $_branchId',
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: AppTheme.primaryColor,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    if (!_canEdit)
+                      Text('Read-only',
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Colors.grey[600],
+                            fontWeight: FontWeight.w600,
+                          )),
+                  ],
+                ),
+              ),
+            Expanded(
+              child: BlocConsumer<ShopBloc, ShopState>(
           listener: (context, state) {
             if (state is ShopLoaded) {
               _updateControllers(state.shop);
@@ -127,35 +170,51 @@ class _ShopDetailsPageState extends State<ShopDetailsPage> {
                     const InputLabel(text: 'Shop Name'),
                     _buildTextField(
                       controller: _nameController,
-                      hint: 'e.g. QuickMart Superstore',
+                      hint: 'e.g. AmaMart Supermarket',
                       validator: AppValidators.required('Required'),
                     ),
                     const SizedBox(height: 15),
                     const InputLabel(text: 'Address Line 1'),
                     _buildTextField(
                       controller: _address1Controller,
-                      hint: 'Samrajpet, Mecheri',
+                      hint: 'Oxford Street, Osu',
                       validator: AppValidators.required('Required'),
                     ),
                     const SizedBox(height: 15),
                     const InputLabel(text: 'Address Line 2 (Optional)'),
                     _buildTextField(
                       controller: _address2Controller,
-                      hint: 'Salem - 636453',
+                      hint: 'Accra - GA-123-4567',
                     ),
                     const SizedBox(height: 15),
                     const InputLabel(text: 'Phone Number'),
                     _buildTextField(
                       controller: _phoneController,
-                      hint: '+91 7010674588',
+                      hint: '+233 24 123 4567',
                       keyboardType: TextInputType.phone,
                       validator: AppValidators.required('Required'),
                     ),
                     const SizedBox(height: 15),
-                    const InputLabel(text: 'UPI ID'),
+                    const InputLabel(text: 'MoMo Number'),
                     _buildTextField(
-                      controller: _upiController,
-                      hint: 'dineshsowndar@oksbi',
+                      controller: _momoController,
+                      hint: 'e.g. MTN 024 123 4567',
+                      keyboardType: TextInputType.phone,
+                    ),
+                    Text('Provider: MTN / Vodafone / AirtelTigo',
+                        style: TextStyle(
+                            fontSize: 11, color: Colors.grey[400])),
+                    const SizedBox(height: 15),
+                    const InputLabel(text: 'GRA TIN (Optional)'),
+                    _buildTextField(
+                      controller: _tinController,
+                      hint: 'e.g. P123456789Z',
+                    ),
+                    const SizedBox(height: 15),
+                    const InputLabel(text: 'Business Registration (Optional)'),
+                    _buildTextField(
+                      controller: _registrationController,
+                      hint: 'e.g. Registrar General\'s Dept. No.',
                     ),
                     const SizedBox(height: 15),
                     Row(
@@ -178,12 +237,18 @@ class _ShopDetailsPageState extends State<ShopDetailsPage> {
               ),
             );
           },
+            ),
+            ),
+          ],
         ),
-        bottomNavigationBar: PrimaryButton(
-          onPressed: _saveShop,
-          icon: Icons.save,
-          label: 'Save Details',
-        ));
+        bottomNavigationBar: _canEdit
+            ? PrimaryButton(
+                onPressed: _saveShop,
+                icon: Icons.save,
+                label: 'Save Details',
+              )
+            : const SizedBox(height: 0),
+      );
   }
 
   Widget _buildTextField({
@@ -201,8 +266,11 @@ class _ShopDetailsPageState extends State<ShopDetailsPage> {
       maxLength: maxLength,
       textCapitalization: TextCapitalization.words,
       validator: validator,
+      readOnly: !_canEdit,
       decoration: InputDecoration(
         hintText: hint,
+        filled: !_canEdit,
+        fillColor: Colors.grey[100],
       ),
     );
   }

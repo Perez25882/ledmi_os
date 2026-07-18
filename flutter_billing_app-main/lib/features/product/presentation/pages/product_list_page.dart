@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import '../bloc/product_bloc.dart';
 import '../../domain/entities/product.dart';
+import '../../../../core/supabase/session_manager.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/app_validators.dart';
+
+String _formatGHS(double value) =>
+    'GHS ${NumberFormat('#,##0.00', 'en_US').format(value)}';
 
 class ProductListPage extends StatefulWidget {
   const ProductListPage({super.key});
@@ -16,6 +21,7 @@ class ProductListPage extends StatefulWidget {
 class _ProductListPageState extends State<ProductListPage> {
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
+  final bool _canManageProducts = SessionManager.hasPermission('manage_products');
 
   @override
   void initState() {
@@ -60,8 +66,8 @@ class _ProductListPageState extends State<ProductListPage> {
               size: 28, color: Theme.of(context).primaryColor),
           onPressed: () => context.pop(),
         ),
-        title: const Text('Product Management',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+        title: Text(_canManageProducts ? 'Product Management' : 'Products',
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
         centerTitle: true,
       ),
       body: Column(
@@ -194,7 +200,7 @@ class _ProductListPageState extends State<ProductListPage> {
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
-                                  '₹${product.price.toStringAsFixed(2)}',
+                                  _formatGHS(product.price),
                                   style: TextStyle(
                                       fontWeight: FontWeight.w500,
                                       color: Colors.grey[600]),
@@ -205,38 +211,44 @@ class _ProductListPageState extends State<ProductListPage> {
                           Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: AppTheme.primaryColor
-                                      .withValues(alpha: 0.1),
-                                  borderRadius: BorderRadius.circular(8),
+                              if (_canManageProducts) ...[
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: AppTheme.primaryColor
+                                        .withValues(alpha: 0.1),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: IconButton(
+                                    icon: const Icon(Icons.edit_rounded,
+                                        color: AppTheme.primaryColor, size: 20),
+                                    constraints: const BoxConstraints(),
+                                    padding: const EdgeInsets.all(8),
+                                    onPressed: () {
+                                      context.push('/products/edit/${product.id}',
+                                          extra: product);
+                                    },
+                                  ),
                                 ),
-                                child: IconButton(
-                                  icon: const Icon(Icons.edit_rounded,
-                                      color: AppTheme.primaryColor, size: 20),
-                                  constraints: const BoxConstraints(),
-                                  padding: const EdgeInsets.all(8),
-                                  onPressed: () {
-                                    context.push('/products/edit/${product.id}',
-                                        extra: product);
-                                  },
+                                const SizedBox(width: 8),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.red.withValues(alpha: 0.1),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: IconButton(
+                                    icon: const Icon(Icons.delete_outline_rounded,
+                                        color: Colors.red, size: 20),
+                                    constraints: const BoxConstraints(),
+                                    padding: const EdgeInsets.all(8),
+                                    onPressed: () =>
+                                        _confirmDelete(context, product),
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(width: 8),
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.red.withValues(alpha: 0.1),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: IconButton(
-                                  icon: const Icon(Icons.delete_outline_rounded,
-                                      color: Colors.red, size: 20),
-                                  constraints: const BoxConstraints(),
-                                  padding: const EdgeInsets.all(8),
-                                  onPressed: () =>
-                                      _confirmDelete(context, product),
-                                ),
-                              ),
+                              ] else
+                                Text(_formatGHS(product.price),
+                                    style: TextStyle(
+                                        fontSize: 13,
+                                        color: Colors.grey[500])),
                             ],
                           )
                         ],
@@ -249,13 +261,15 @@ class _ProductListPageState extends State<ProductListPage> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => context.push('/products/add'),
-        backgroundColor: AppTheme.primaryColor,
-        foregroundColor: Colors.white,
-        shape: const CircleBorder(),
-        child: const Icon(Icons.add, size: 32),
-      ),
+      floatingActionButton: _canManageProducts
+          ? FloatingActionButton(
+              onPressed: () => context.push('/products/add'),
+              backgroundColor: AppTheme.primaryColor,
+              foregroundColor: Colors.white,
+              shape: const CircleBorder(),
+              child: const Icon(Icons.add, size: 32),
+            )
+          : null,
     );
   }
 

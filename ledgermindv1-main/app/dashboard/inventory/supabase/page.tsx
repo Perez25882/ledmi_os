@@ -1,8 +1,7 @@
 import { redirect } from "next/navigation"
-import { createServerClientForUser } from "@/lib/supabase/server"
 import { getInventory, getCategories } from "@/lib/supabase/data/inventory"
-import { getCurrentUserRoleContext } from "@/lib/supabase/data/user-context"
-import { canAccessPage } from "@/lib/supabase/permissions"
+import { requirePageAccess } from "@/lib/supabase/guards"
+import { getScopedBranchFilter } from "@/lib/supabase/permissions"
 import { InventoryRealtime } from "./realtime"
 import {
   Card,
@@ -24,37 +23,13 @@ import { Package, AlertTriangle } from "lucide-react"
 import Link from "next/link"
 
 export default async function SupabaseInventoryPage() {
-  const userClient = await createServerClientForUser()
-  const {
-    data: { user },
-    error: userError,
-  } = await userClient.auth.getUser()
+  const context = await requirePageAccess("inventory")
 
-  if (userError || !user) {
-    redirect("/auth/login")
-  }
-
-  const context = await getCurrentUserRoleContext()
-  if (!context) {
-    return (
-      <div className="space-y-6">
-        <h1 className="text-2xl font-bold">Inventory</h1>
-        <p className="text-muted-foreground">
-          No business context found.{" "}
-          <Link href="/api/onboarding/seed-demo" className="text-primary underline">
-            Seed demo data
-          </Link>
-        </p>
-      </div>
-    )
-  }
-
-  if (!canAccessPage(context.roleName, "inventory")) {
-    redirect("/dashboard/overview")
-  }
+  const { branchId: scopedBranchId } = getScopedBranchFilter(context)
+  const effectiveBranchId = scopedBranchId ?? context.branchId
 
   const [items, categories] = await Promise.all([
-    getInventory(context.businessId, context.branchId),
+    getInventory(context.businessId, effectiveBranchId),
     getCategories(context.businessId),
   ])
 

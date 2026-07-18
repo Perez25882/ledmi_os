@@ -1,5 +1,5 @@
 import "server-only"
-import { createServiceClient } from "@/lib/supabase/server"
+import { createServerClientForUser } from "@/lib/supabase/server"
 
 export interface RefundableItem {
   id: string
@@ -11,9 +11,9 @@ export interface RefundableItem {
 }
 
 export async function getSaleItemsForRefund(businessId: string, saleId: string): Promise<RefundableItem[]> {
-  const serviceClient = createServiceClient()
+  const client = await createServerClientForUser()
 
-  const { data, error } = await serviceClient
+  const { data, error } = await client
     .from("sale_items")
     .select(
       `
@@ -30,7 +30,7 @@ export async function getSaleItemsForRefund(businessId: string, saleId: string):
     throw new Error(error.message)
   }
 
-  const { data: refundsData, error: refundsError } = await serviceClient
+  const { data: refundsData, error: refundsError } = await client
     .from("refund_items")
     .select("sale_item_id, quantity, refunds!inner(sale_id, status)")
     .eq("refunds.sale_id", saleId)
@@ -63,14 +63,14 @@ export interface RefundInput {
 }
 
 export async function createRefund(businessId: string, branchId: string, cashierId: string, input: RefundInput) {
-  const serviceClient = createServiceClient()
+  const client = await createServerClientForUser()
 
   const itemsJson = input.items.map((item) => ({
     sale_item_id: item.saleItemId,
     quantity: item.quantity,
   }))
 
-  const { data, error } = await serviceClient.rpc("process_refund", {
+  const { data, error } = await client.rpc("process_refund", {
     p_business_id: businessId,
     p_branch_id: branchId,
     p_cashier_id: cashierId,
@@ -97,9 +97,9 @@ export interface RefundListItem {
 }
 
 export async function getRefunds(businessId: string, branchId?: string): Promise<RefundListItem[]> {
-  const serviceClient = createServiceClient()
+  const client = await createServerClientForUser()
 
-  let query = serviceClient
+  let query = client
     .from("refunds")
     .select(
       `

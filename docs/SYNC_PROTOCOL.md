@@ -198,7 +198,7 @@ SELECT * FROM process_checkout_cash(
   p_cashier_id UUID,
   p_idempotency_key UUID,
   p_items JSONB,
-  p_total_amount DECIMAL(12, 2)
+  p_total_amount BIGINT
 );
 ```
 
@@ -211,7 +211,7 @@ SELECT * FROM create_checkout_intent(
   p_cashier_id UUID,
   p_idempotency_key UUID,
   p_items JSONB,
-  p_total_amount DECIMAL(12, 2),
+  p_total_amount BIGINT,
   p_method TEXT DEFAULT 'card'
 );
 ```
@@ -232,9 +232,9 @@ SELECT * FROM create_checkout_intent(
 ]
 ```
 
-#### Cash payload (`p_total_amount`)
+#### Amount payload (`p_total_amount`)
 
-A plain decimal representing the total amount in the smallest currency unit. For GHS this is pesewas (e.g. `2500` for GHS 25.00). The server recomputes the total from current prices and rejects mismatches.
+A plain integer representing the total amount in the smallest currency unit (pesewas for GHS, e.g. `2500` for GHS 25.00). This applies to both `process_checkout_cash` and `create_checkout_intent`. The server recomputes the total from current product prices (stored as GHS decimals) and compares in pesewas, rejecting any mismatch. Note: `p_items.unit_price` and `p_items.subtotal` remain GHS decimals for client display; the server ignores them and re-resolves prices from `products.selling_price`.
 
 #### Paystack payload (`p_method`)
 
@@ -428,7 +428,7 @@ The event-sourced tables are the source of truth:
      p_business_id, p_branch_id, p_cashier_id, p_idempotency_key,
      p_items, p_total_amount, p_method
    )`.
-2. The RPC creates an `ACTIVE` cart, `cart_items`, and a `payment_intent` with `provider = 'paystack'` and `status = 'pending'`.
+2. The RPC creates an `ACTIVE` cart, `cart_items`, and a `payment_intent` with `provider = 'paystack'` and `status = 'initiated'`.
 3. App initializes Paystack charge (card or MoMo) using `PAYSTACK_PUBLIC_KEY`.
 4. Paystack returns a reference (e.g., `TRX_abc123`).
 5. App updates the `payment_intent` with `provider_reference = TRX_abc123`.

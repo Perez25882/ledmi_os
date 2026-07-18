@@ -61,6 +61,8 @@ DECLARE
     v_sale_id UUID;
     v_invoice_number VARCHAR;
     v_seq INT;
+    v_channel TEXT;
+    v_method VARCHAR(50);
 BEGIN
     -- Fetch and lock the intent.
     SELECT * INTO v_pi
@@ -137,12 +139,34 @@ BEGIN
     END IF;
 
     -- Create the legacy payment record. We deliberately NEVER store full PAN or CVV.
-    -- Paystack Ghana uses the same charge channel for cards and mobile money;
-    -- a channel column on payment_intents should be added in a later migration.
+    -- Derive the legacy method from the Paystack channel captured on the
+    -- payment_captured event payload (Paystack sends data.channel: card,
+    -- mobile_money, ussd, bank_transfer, bank, ...). This prevents MoMo and
+    -- bank-transfer payments from being misreported as CARD on dashboards.
+    -- payments.method is VARCHAR(50) with no CHECK constraint (see 001), so we
+    -- map to the legacy CARD/MOMO/BANK_TRANSFER values without widening anything.
+    SELECT COALESCE(
+        NULLIF(payload->'data'->>'channel', ''),
+        NULLIF(payload->>'channel', '')
+    ) INTO v_channel
+    FROM payment_events
+    WHERE payment_intent_id = p_payment_intent_id
+      AND event_type = 'payment_captured'
+    ORDER BY occurred_at DESC
+    LIMIT 1;
+
+    v_method := CASE
+        WHEN v_channel = 'card'              THEN 'CARD'
+        WHEN v_channel = 'mobile_money'      THEN 'MOMO'
+        WHEN v_channel = 'ussd'              THEN 'MOMO'
+        WHEN v_channel IN ('bank_transfer', 'bank', 'bank_account') THEN 'BANK_TRANSFER'
+        ELSE 'CARD'
+    END;
+
     INSERT INTO payments (
         business_id, cashier_id, method, amount, status, provider_reference
     ) VALUES (
-        v_pi.business_id, v_pi.created_by, 'CARD', v_pi.amount, 'SUCCESS', v_pi.provider_reference
+        v_pi.business_id, v_pi.created_by, v_method, v_pi.amount, 'SUCCESS', v_pi.provider_reference
     ) RETURNING id INTO v_payment_id;
 
     -- Link the legacy payment and mark the intent completed.

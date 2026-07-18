@@ -8,6 +8,7 @@ const publicPaths = [
   "/auth/sign-up",
   "/auth/sign-up-success",
   "/auth/error",
+  "/auth/cashier-redirect",
   "/pricing",
 ]
 
@@ -74,6 +75,21 @@ export async function updateSession(request: NextRequest) {
     const url = request.nextUrl.clone()
     url.pathname = "/dashboard"
     return NextResponse.redirect(url)
+  }
+
+  if (user && pathname.startsWith("/dashboard")) {
+    const { data: roleRows } = await supabase
+      .from("user_business_roles")
+      .select("custom_roles(name)")
+      .eq("user_id", user.id)
+      .limit(1)
+
+    const roleName = (roleRows as any[])?.[0]?.custom_roles?.name as string | undefined
+    if (roleName === "cashier") {
+      const url = request.nextUrl.clone()
+      url.pathname = "/auth/cashier-redirect"
+      return NextResponse.redirect(url)
+    }
   }
 
   return response

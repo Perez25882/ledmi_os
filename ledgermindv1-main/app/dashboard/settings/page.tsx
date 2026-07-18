@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation"
-import { getCurrentUserRoleContext } from "@/lib/supabase/data/user-context"
+import { requirePageAccess } from "@/lib/supabase/guards"
 import { createServiceClient } from "@/lib/supabase/server"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -7,10 +7,7 @@ import { Label } from "@/components/ui/label"
 import { Settings, User, Building2 } from "lucide-react"
 
 export default async function SettingsPage() {
-  const context = await getCurrentUserRoleContext()
-  if (!context) {
-    redirect("/onboarding")
-  }
+  const context = await requirePageAccess("settings")
 
   const serviceClient = createServiceClient()
   const { data: business } = await serviceClient

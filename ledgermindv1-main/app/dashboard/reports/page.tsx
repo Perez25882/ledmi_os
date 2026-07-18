@@ -9,20 +9,21 @@ import {
   Package,
   AlertTriangle,
 } from "lucide-react"
-import { getCurrentUserRoleContext } from "@/lib/supabase/data/user-context"
+import { requirePageAccess } from "@/lib/supabase/guards"
+import { getScopedBranchFilter } from "@/lib/supabase/permissions"
 import { getSalesOverview } from "@/lib/supabase/data/sales"
 import { getInventory } from "@/lib/supabase/data/inventory"
 import { getCategories } from "@/lib/supabase/data/catalog"
 
 export default async function ReportsPage() {
-  const context = await getCurrentUserRoleContext()
-  if (!context) {
-    redirect("/onboarding")
-  }
+  const context = await requirePageAccess("reports")
+
+  const { branchId: scopedBranchId } = getScopedBranchFilter(context)
+  const effectiveBranchId = scopedBranchId ?? context.branchId
 
   const [overview, inventory, categories] = await Promise.all([
     getSalesOverview(context.businessId),
-    getInventory(context.businessId, context.branchId),
+    getInventory(context.businessId, effectiveBranchId),
     getCategories(context.businessId),
   ])
 

@@ -1,8 +1,7 @@
 import { redirect } from "next/navigation"
-import { createServerClientForUser } from "@/lib/supabase/server"
 import { getSales } from "@/lib/supabase/data/sales"
-import { getCurrentUserRoleContext } from "@/lib/supabase/data/user-context"
-import { canAccessPage } from "@/lib/supabase/permissions"
+import { requirePageAccess } from "@/lib/supabase/guards"
+import { getScopedBranchFilter } from "@/lib/supabase/permissions"
 import {
   Card,
   CardContent,
@@ -28,33 +27,15 @@ export default async function SalesPage({
 }: {
   searchParams?: { branch?: string; from?: string; to?: string }
 }) {
-  const userClient = await createServerClientForUser()
-  const {
-    data: { user },
-    error: userError,
-  } = await userClient.auth.getUser()
+  const context = await requirePageAccess("sales")
 
-  if (userError || !user) {
-    redirect("/auth/login")
-  }
-
-  const context = await getCurrentUserRoleContext()
-  if (!context) {
-    return (
-      <div className="space-y-6">
-        <h1 className="text-2xl font-bold">Sales Ledger</h1>
-        <p className="text-muted-foreground">No business context found.</p>
-      </div>
-    )
-  }
-
-  if (!canAccessPage(context.roleName, "sales")) {
-    redirect("/dashboard/overview")
-  }
+  const { branchId: scopedBranchId, allBranches } = getScopedBranchFilter(context)
+  const requestedBranch = allBranches ? searchParams?.branch : scopedBranchId
+  const effectiveBranchId = allBranches ? requestedBranch : scopedBranchId
 
   const sales = await getSales(
     context.businessId,
-    searchParams?.branch,
+    effectiveBranchId,
     searchParams?.from,
     searchParams?.to
   )

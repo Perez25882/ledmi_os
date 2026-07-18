@@ -1,5 +1,6 @@
 import "server-only"
-import { createServiceClient } from "@/lib/supabase/server"
+import { createServerClientForUser } from "@/lib/supabase/server"
+import { resolveCashierEmails } from "./sales"
 
 export interface Shift {
   id: string
@@ -15,9 +16,9 @@ export interface Shift {
 }
 
 export async function getShifts(businessId: string, branchId?: string): Promise<Shift[]> {
-  const serviceClient = createServiceClient()
+  const client = await createServerClientForUser()
 
-  let query = serviceClient
+  let query = client
     .from("shifts")
     .select(
       `
@@ -46,7 +47,10 @@ export async function getShifts(businessId: string, branchId?: string): Promise<
     throw new Error(error.message)
   }
 
-  return (data as any[]).map((s) => ({
+  const rows = data as any[]
+  const cashierEmails = await resolveCashierEmails(rows.map((s) => s.cashier_id as string))
+
+  return rows.map((s) => ({
     id: s.id,
     opened_at: s.opened_at,
     closed_at: s.closed_at,
@@ -56,6 +60,6 @@ export async function getShifts(businessId: string, branchId?: string): Promise<
     discrepancy: s.discrepancy,
     status: s.status,
     notes: s.notes,
-    cashier_email: "-",
+    cashier_email: cashierEmails.get(s.cashier_id) || "Unknown",
   }))
 }

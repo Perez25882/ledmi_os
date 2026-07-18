@@ -13,16 +13,16 @@ function generateTempPassword() {
   return result
 }
 
-async function verifyManagerOrOwner() {
+async function verifyOwner() {
   const context = await getCurrentUserRoleContext()
-  if (!context || !["owner", "manager"].includes(context.roleName)) {
+  if (!context || context.roleName !== "owner") {
     throw new Error("Unauthorized")
   }
   return context
 }
 
 export async function inviteUser(formData: { email: string; roleId: string; businessId: string }) {
-  const context = await verifyManagerOrOwner()
+  const context = await verifyOwner()
   if (context.businessId !== formData.businessId) {
     throw new Error("Unauthorized")
   }
@@ -76,7 +76,7 @@ export async function inviteUser(formData: { email: string; roleId: string; busi
 }
 
 export async function updateMemberRole(userId: string, roleId: string, businessId: string) {
-  const context = await verifyManagerOrOwner()
+  const context = await verifyOwner()
   if (context.businessId !== businessId) {
     throw new Error("Unauthorized")
   }
@@ -113,7 +113,7 @@ export async function updateMemberRole(userId: string, roleId: string, businessI
 }
 
 export async function removeMember(userId: string, businessId: string) {
-  const context = await verifyManagerOrOwner()
+  const context = await verifyOwner()
   if (context.businessId !== businessId) {
     throw new Error("Unauthorized")
   }
@@ -137,3 +137,4 @@ export async function removeMember(userId: string, businessId: string) {
   revalidatePath("/dashboard/users")
   return { success: true }
 }
+

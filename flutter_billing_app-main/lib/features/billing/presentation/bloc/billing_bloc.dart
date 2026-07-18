@@ -31,6 +31,11 @@ class BillingBloc extends Bloc<BillingEvent, BillingState> {
     on<SetAmountTenderedEvent>(_onSetAmountTendered);
     on<ProcessCashCheckoutEvent>(_onProcessCashCheckout);
     on<CreatePaymentIntentEvent>(_onCreatePaymentIntent);
+    on<CardScannedEvent>(_onCardScanned);
+    on<MoMoProviderSelectedEvent>(_onMoMoProviderSelected);
+    on<MoMoPhoneEnteredEvent>(_onMoMoPhoneEntered);
+    on<RequestMoMoCheckoutEvent>(_onRequestMoMoCheckout);
+    on<MoMoChargePolledEvent>(_onMoMoChargePolled);
     on<CheckPaymentStatusEvent>(_onCheckPaymentStatus);
     on<CompleteCheckoutEvent>(_onCompleteCheckout);
     on<ResetCheckoutEvent>(_onResetCheckout);
@@ -179,8 +184,13 @@ class BillingBloc extends Bloc<BillingEvent, BillingState> {
       final intent = await checkoutService.createCheckoutIntent(
         items: state.cartItems,
         discount: state.discountAmount,
+        method: event.method,
       );
-      final init = await checkoutService.initiatePaystackCharge(intent.intentId);
+      final init = await checkoutService.initiatePaystackCharge(
+        intent.intentId,
+        momoProviderCode: _momoProviderCode(state.momoProvider),
+        momoPhone: state.momoPhone,
+      );
 
       emit(state.copyWith(
         isProcessing: false,
@@ -196,6 +206,43 @@ class BillingBloc extends Bloc<BillingEvent, BillingState> {
     } on Exception catch (e) {
       emit(state.copyWith(isProcessing: false, error: e.toString()));
     }
+  }
+
+  void _onCardScanned(
+      CardScannedEvent event, Emitter<BillingState> emit) {
+    emit(state.copyWith(
+      cardLast4: event.last4,
+      cardExpiry: event.expiry,
+      error: null,
+    ));
+  }
+
+  void _onMoMoProviderSelected(
+      MoMoProviderSelectedEvent event, Emitter<BillingState> emit) {
+    emit(state.copyWith(momoProvider: event.provider, error: null));
+  }
+
+  void _onMoMoPhoneEntered(
+      MoMoPhoneEnteredEvent event, Emitter<BillingState> emit) {
+    emit(state.copyWith(momoPhone: event.phone, error: null));
+  }
+
+  Future<void> _onRequestMoMoCheckout(
+      RequestMoMoCheckoutEvent event, Emitter<BillingState> emit) async {
+    if (state.momoProvider == null) {
+      emit(state.copyWith(error: 'Select a MoMo provider'));
+      return;
+    }
+    if (state.momoPhone == null || state.momoPhone!.trim().isEmpty) {
+      emit(state.copyWith(error: 'Enter customer MoMo phone number'));
+      return;
+    }
+    add(const CreatePaymentIntentEvent(method: 'momo'));
+  }
+
+  Future<void> _onMoMoChargePolled(
+      MoMoChargePolledEvent event, Emitter<BillingState> emit) async {
+    add(CheckPaymentStatusEvent(event.intentId));
   }
 
   Future<void> _onCheckPaymentStatus(
@@ -240,6 +287,19 @@ class BillingBloc extends Bloc<BillingEvent, BillingState> {
       return saved.toString();
     }
     return 'LedgerMind Store';
+  }
+
+  String? _momoProviderCode(MoMoProvider? provider) {
+    switch (provider) {
+      case MoMoProvider.mtn:
+        return 'mtn';
+      case MoMoProvider.vodafone:
+        return 'vod';
+      case MoMoProvider.airteltigo:
+        return 'atl';
+      case null:
+        return null;
+    }
   }
 
   Future<void> _printReceipt(

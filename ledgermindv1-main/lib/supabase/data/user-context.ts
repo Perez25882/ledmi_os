@@ -1,7 +1,14 @@
 import "server-only"
 import { createServerClientForUser, createServiceClient } from "@/lib/supabase/server"
 import { getBusinessContext } from "./inventory"
-import { type UserRoleContext } from "@/lib/supabase/permissions"
+import {
+  type UserRoleContext,
+  type RoleName,
+  isCashier,
+  canAccessAllBranches,
+  getScopedBranchIds,
+  getScopedBranchFilter,
+} from "@/lib/supabase/permissions"
 export { type UserRoleContext } from "@/lib/supabase/permissions"
 
 export async function getCurrentUserRoleContext(): Promise<UserRoleContext | null> {
@@ -38,7 +45,9 @@ export async function getCurrentUserRoleContext(): Promise<UserRoleContext | nul
     businessId: businessContext.businessId,
     branchId: businessContext.branchId,
     roleId: data.role_id as string,
-    roleName: (data as any).custom_roles?.name as string,
+    roleName: (data as any).custom_roles?.name as RoleName,
     branches: businessContext.branches,
   }
 }
+
+export { isCashier, canAccessAllBranches, getScopedBranchIds, getScopedBranchFilter }

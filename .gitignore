@@ -102,3 +102,12 @@ ios/.symlinks/
 .idea/
 .vscode/
 *.swp
+
+# Transient build/lint output captured at repo root
+/*_output.txt
+/*_build_*.txt
+/*_analyze_*.txt
+
+# Agent task-report dotfiles (kept locally for review, not committed)
+/**/.*_task_report.md
+/**/.task_*.md

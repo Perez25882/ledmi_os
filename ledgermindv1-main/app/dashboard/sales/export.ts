@@ -1,15 +1,17 @@
 "use server"
 
 import { getCurrentUserRoleContext } from "@/lib/supabase/data/user-context"
-import { canAccessPage } from "@/lib/supabase/permissions"
+import { canAccessPage, getScopedBranchFilter } from "@/lib/supabase/permissions"
 import { getSales } from "@/lib/supabase/data/sales"
 
 export async function exportSalesCsv(from?: string, to?: string) {
   const context = await getCurrentUserRoleContext()
   if (!context) throw new Error("Unauthorized")
+  if (context.roleName === "cashier") throw new Error("Forbidden")
   if (!canAccessPage(context.roleName, "sales")) throw new Error("Forbidden")
 
-  const sales = await getSales(context.businessId, context.branchId, from, to)
+  const { branchId: scopedBranchId } = getScopedBranchFilter(context)
+  const sales = await getSales(context.businessId, scopedBranchId, from, to)
 
   const rows = [
     ["Invoice", "Date", "Cashier", "Method", "Total", "Items"],

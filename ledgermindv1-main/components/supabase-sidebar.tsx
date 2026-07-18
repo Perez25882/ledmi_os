@@ -23,6 +23,10 @@ import {
   LogOut,
   RotateCcw,
   Clock,
+  FileText,
+  ScrollText,
+  CreditCard,
+  Server,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
@@ -59,9 +63,13 @@ export function SupabaseSidebar({
     { page: "refunds", href: "/dashboard/refunds", label: "Refunds", icon: RotateCcw },
     { page: "shifts", href: "/dashboard/shifts", label: "Shifts", icon: Clock },
     { page: "catalog", href: "/dashboard/catalog", label: "Catalog", icon: BarChart3 },
+    { page: "reports", href: "/dashboard/reports", label: "Reports", icon: FileText },
+    { page: "logs", href: "/dashboard/logs", label: "Audit Logs", icon: ScrollText },
     { page: "ai", href: "/dashboard/ai-insights/supabase", label: "Ledmi AI", icon: Sparkles },
     { page: "users", href: "/dashboard/users", label: "Users", icon: Users },
     { page: "settings", href: "/dashboard/settings", label: "Settings", icon: Settings },
+    { page: "subscription", href: "/dashboard/subscription", label: "Subscription", icon: CreditCard },
+    { page: "system", href: "/dashboard/system", label: "System", icon: Server },
   ] as const
 
   return (

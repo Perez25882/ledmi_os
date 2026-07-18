@@ -153,7 +153,7 @@ CREATE INDEX IF NOT EXISTS idx_inventory_business ON inventory(business_id);
 CREATE TABLE IF NOT EXISTS inventory_logs (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     business_id UUID NOT NULL REFERENCES businesses(id) ON DELETE CASCADE,
-    branch_id UUID REFERENCES branches(id) ON DELETE SET NULL,
+    branch_id UUID,
     product_id UUID NOT NULL REFERENCES products(id) ON DELETE CASCADE,
     old_quantity INT NOT NULL,
     new_quantity INT NOT NULL,
@@ -295,7 +295,7 @@ CREATE INDEX IF NOT EXISTS idx_sale_items_product ON sale_items(product_id);
 CREATE TABLE IF NOT EXISTS activity_logs (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     business_id UUID NOT NULL REFERENCES businesses(id) ON DELETE CASCADE,
-    branch_id UUID REFERENCES branches(id) ON DELETE SET NULL,
+    branch_id UUID,
     actor_id UUID REFERENCES auth.users(id),
     action VARCHAR(255) NOT NULL,
     entity_table VARCHAR(100),

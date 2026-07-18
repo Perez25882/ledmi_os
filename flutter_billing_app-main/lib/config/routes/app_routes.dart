@@ -18,6 +18,59 @@ import '../../features/product/domain/entities/product.dart';
 
 final _authService = AuthService();
 
+/// Routes a cashier must never reach. Cashiers (Adjoa) are restricted to
+/// checkout + their own shift — they cannot manage products, edit shop
+/// details, or open settings beyond printer pairing (handled in-page).
+const _cashierBlocked = <String>{
+  '/products/add',
+  '/shop',
+};
+
+/// Routes restricted to owner/manager. Mirrors the dashboard `canAccessPage`
+/// helper for catalog/users/settings pages (permissions.ts).
+const _managementOnly = <String>{
+  '/products/add',
+};
+
+/// Path prefixes that require manage_products permission. Cashiers can view
+/// the product list (read-only) but cannot add or edit.
+const _manageProductsPrefixes = <String>{
+  '/products/add',
+  '/products/edit/',
+};
+
+bool _isCashierBlocked(String location) {
+  if (SessionManager.isCashier) {
+    for (final blocked in _cashierBlocked) {
+      if (location == blocked || location.startsWith('$blocked/')) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+bool _isManagementOnlyBlocked(String location) {
+  if (!SessionManager.canManageBusiness) {
+    for (final restricted in _managementOnly) {
+      if (location == restricted || location.startsWith('$restricted/')) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+bool _isManageProductsBlocked(String location) {
+  if (SessionManager.hasPermission('manage_products')) return false;
+  for (final prefix in _manageProductsPrefixes) {
+    if (location == prefix || location.startsWith(prefix)) {
+      return true;
+    }
+  }
+  return false;
+}
+
 String? _authRedirect(BuildContext context, GoRouterState state) {
   final isAuthenticated = _authService.isAuthenticated;
   final hasBranch = SessionManager.businessId != null && SessionManager.branchId != null;
@@ -33,6 +86,14 @@ String? _authRedirect(BuildContext context, GoRouterState state) {
 
   if (isAuthenticated && hasBranch && (location == '/login' || location == '/branch-selection')) {
     return '/';
+  }
+
+  if (isAuthenticated && hasBranch) {
+    if (_isCashierBlocked(location) ||
+        _isManagementOnlyBlocked(location) ||
+        _isManageProductsBlocked(location)) {
+      return '/';
+    }
   }
 
   return null;

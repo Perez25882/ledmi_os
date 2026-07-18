@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:app_settings/app_settings.dart';
 
+import '../../../../core/supabase/session_manager.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../shop/presentation/bloc/shop_bloc.dart';
 import '../bloc/printer_bloc.dart';
@@ -17,10 +18,11 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  final bool _canManageBusiness = SessionManager.canManageBusiness;
+
   @override
   void initState() {
     super.initState();
-    // Re-initialize printer state whenever settings page opens
     context.read<PrinterBloc>().add(InitPrinterEvent());
   }
 
@@ -97,29 +99,31 @@ class _SettingsPageState extends State<SettingsPage> {
 
             const SizedBox(height: 24),
 
-            // Management Section
-            _buildSectionHeader('Management'),
-            _buildListGroup(
-              children: [
-                _buildListItem(
-                  icon: Icons.qr_code_scanner,
-                  title: 'Products',
-                  subtitle: 'Manage stock and barcodes',
-                  onTap: () => context.push('/products'),
-                ),
-                _buildDivider(),
-                _buildListItem(
-                  icon: Icons.storefront,
-                  title: 'Shop Details',
-                  subtitle: 'Edit business info & address',
-                  onTap: () => context.push('/shop'),
-                ),
-              ],
-            ),
+            // Management Section — owner/manager only. Cashiers are limited to
+            // printer pairing + profile (Option A RBAC decision).
+            if (_canManageBusiness) ...[
+              _buildSectionHeader('Management'),
+              _buildListGroup(
+                children: [
+                  _buildListItem(
+                    icon: Icons.qr_code_scanner,
+                    title: 'Products',
+                    subtitle: 'Manage stock and barcodes',
+                    onTap: () => context.push('/products'),
+                  ),
+                  _buildDivider(),
+                  _buildListItem(
+                    icon: Icons.storefront,
+                    title: 'Shop Details',
+                    subtitle: 'Edit business info & address',
+                    onTap: () => context.push('/shop'),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 24),
+            ],
 
-            const SizedBox(height: 24),
-
-            // Hardware Section
+            // Hardware Section — available to all roles (cashier printer pairing).
             _buildSectionHeader('Hardware'),
             BlocConsumer<PrinterBloc, PrinterState>(
               listener: (context, state) {

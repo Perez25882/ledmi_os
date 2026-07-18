@@ -1,114 +1,170 @@
 "use client"
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Brain, TrendingUp, AlertTriangle, Lightbulb, BarChart3, Eye, EyeOff } from "lucide-react"
-import { useState } from "react"
+import {
+  Brain,
+  TrendingUp,
+  AlertTriangle,
+  BarChart3,
+  Package,
+  FileText,
+  Check,
+  X,
+  Clock,
+} from "lucide-react"
+import { useState, type ReactNode } from "react"
 
-interface AIInsight {
+export type LedmiInsightType = "reorder" | "anomaly" | "margin" | "brief" | "trend"
+export type LedmiInsightStatus = "pending" | "actioned" | "dismissed" | "snoozed"
+
+export interface LedmiInsight {
   id: string
-  insight_type: "forecast" | "anomaly" | "recommendation" | "trend"
+  business_id: string
+  branch_id: string | null
+  insight_type: LedmiInsightType
   title: string
   description: string
-  confidence_score?: number
+  confidence_score: number | null
+  priority: string
+  status: LedmiInsightStatus
   is_read: boolean
+  push_eligible: boolean
+  data: Record<string, unknown>
+  generated_at: string
+  actioned_at: string | null
+  dismissed_at: string | null
+  actor_id: string | null
   created_at: string
-  data?: Record<string, unknown>
+  updated_at: string
 }
 
 interface AIInsightCardProps {
-  insight: AIInsight
-  onMarkAsRead?: (id: string) => void
+  insight: LedmiInsight
+  onStatusChange?: (id: string, status: LedmiInsightStatus) => void
 }
 
-export function AIInsightCard({ insight, onMarkAsRead }: AIInsightCardProps) {
-  const [isRead, setIsRead] = useState(insight.is_read)
-  const [isLoading, setIsLoading] = useState(false)
+const TYPE_ICON: Record<LedmiInsightType, ReactNode> = {
+  reorder: <Package className="h-4 w-4 text-primary" />,
+  anomaly: <AlertTriangle className="h-4 w-4 text-destructive" />,
+  margin: <BarChart3 className="h-4 w-4 text-primary" />,
+  brief: <FileText className="h-4 w-4 text-primary" />,
+  trend: <TrendingUp className="h-4 w-4 text-primary" />,
+}
 
-  const getInsightIcon = (type: string) => {
-    switch (type) {
-      case "forecast":
-        return <TrendingUp className="h-4 w-4 text-primary" />
-      case "anomaly":
-        return <AlertTriangle className="h-4 w-4 text-destructive" />
-      case "recommendation":
-        return <Lightbulb className="h-4 w-4 text-primary" />
-      case "trend":
-        return <BarChart3 className="h-4 w-4 text-primary" />
-      default:
-        return <Brain className="h-4 w-4 text-primary" />
-    }
-  }
+const TYPE_LABEL: Record<LedmiInsightType, string> = {
+  reorder: "Reorder",
+  anomaly: "Anomaly",
+  margin: "Margin",
+  brief: "Brief",
+  trend: "Trend",
+}
 
-  const getInsightTypeLabel = (type: string) => {
-    switch (type) {
-      case "forecast":
-        return "Forecast"
-      case "anomaly":
-        return "Anomaly"
-      case "recommendation":
-        return "Recommendation"
-      case "trend":
-        return "Trend"
-      default:
-        return "Insight"
-    }
-  }
+const PRIORITY_VARIANT: Record<string, "default" | "secondary" | "destructive"> = {
+  low: "secondary",
+  medium: "default",
+  high: "default",
+  critical: "destructive",
+}
 
-  const handleMarkAsRead = async () => {
-    if (isRead) return
+export function AIInsightCard({ insight, onStatusChange }: AIInsightCardProps) {
+  const [status, setStatus] = useState<LedmiInsightStatus>(insight.status)
+  const [busy, setBusy] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
-    setIsLoading(true)
+  async function patchStatus(next: LedmiInsightStatus) {
+    setBusy(next)
+    setError(null)
     try {
-      // Mark insight as read via API (TODO: add dedicated endpoint)
-      setIsRead(true)
-      onMarkAsRead?.(insight.id)
-    } catch (error) {
-      console.error("Error marking insight as read:", error)
+      const res = await fetch(`/api/ledmi/insights/${insight.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: next }),
+      })
+      if (!res.ok) {
+        const data = (await res.json().catch(() => ({}))) as { error?: string }
+        throw new Error(data.error || `Request failed (${res.status})`)
+      }
+      setStatus(next)
+      onStatusChange?.(insight.id, next)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err))
     } finally {
-      setIsLoading(false)
+      setBusy(null)
     }
   }
+
+  const isPending = status === "pending"
 
   return (
-    <Card className={`transition-all ${!isRead ? "border-primary/50 bg-primary/5" : ""}`}>
+    <Card className={isPending ? "border-primary/50 bg-primary/5" : ""}>
       <CardHeader className="pb-3">
-        <div className="flex items-start justify-between">
+        <div className="flex items-start justify-between gap-2">
           <div className="flex items-center gap-2">
-            {getInsightIcon(insight.insight_type)}
-            <Badge variant={isRead ? "secondary" : "default"} className="text-xs">
-              {getInsightTypeLabel(insight.insight_type)}
+            {TYPE_ICON[insight.insight_type] ?? <Brain className="h-4 w-4 text-primary" />}
+            <Badge variant={PRIORITY_VARIANT[insight.priority] ?? "default"} className="text-xs">
+              {TYPE_LABEL[insight.insight_type]}
             </Badge>
+            {insight.priority === "critical" && (
+              <Badge variant="destructive" className="text-xs">Critical</Badge>
+            )}
           </div>
-          {!isRead && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleMarkAsRead}
-              disabled={isLoading}
-              className="h-6 px-2 text-xs"
-            >
-              {isLoading ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
-              Mark as read
-            </Button>
+          {isPending && (
+            <div className="flex gap-1">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => patchStatus("actioned")}
+                disabled={busy !== null}
+                className="h-6 px-2 text-xs"
+              >
+                {busy === "actioned" ? "..." : <Check className="h-3 w-3" />}
+                <span className="ml-1">Act</span>
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => patchStatus("snoozed")}
+                disabled={busy !== null}
+                className="h-6 px-2 text-xs"
+              >
+                {busy === "snoozed" ? "..." : <Clock className="h-3 w-3" />}
+                <span className="ml-1">Snooze</span>
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => patchStatus("dismissed")}
+                disabled={busy !== null}
+                className="h-6 px-2 text-xs"
+              >
+                {busy === "dismissed" ? "..." : <X className="h-3 w-3" />}
+                <span className="ml-1">Dismiss</span>
+              </Button>
+            </div>
           )}
         </div>
         <CardTitle className="text-base">{insight.title}</CardTitle>
-        <CardDescription className="text-sm">{insight.description}</CardDescription>
+        <p className="text-sm text-muted-foreground">{insight.description}</p>
       </CardHeader>
-      <CardContent className="pt-0">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <span>{new Date(insight.created_at).toLocaleDateString()}</span>
-            {insight.confidence_score && (
-              <>
-                <span>•</span>
-                <span>{Math.round(insight.confidence_score * 100)}% confidence</span>
-              </>
-            )}
-          </div>
+      <CardContent className="pt-0 space-y-2">
+        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+          <span>{new Date(insight.generated_at).toLocaleDateString()}</span>
+          {insight.confidence_score != null && (
+            <>
+              <span>&bull;</span>
+              <span>{Math.round(insight.confidence_score * 100)}% confidence</span>
+            </>
+          )}
+          {status !== "pending" && (
+            <>
+              <span>&bull;</span>
+              <Badge variant="secondary" className="text-xs capitalize">{status}</Badge>
+            </>
+          )}
         </div>
+        {error && <p className="text-xs text-destructive">{error}</p>}
       </CardContent>
     </Card>
   )

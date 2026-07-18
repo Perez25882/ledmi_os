@@ -1,7 +1,6 @@
-import { redirect } from "next/navigation"
 import { getCurrentUserRoleContext } from "@/lib/supabase/data/user-context"
 import { createServiceClient } from "@/lib/supabase/server"
-import { canAccessPage } from "@/lib/supabase/permissions"
+import { requirePageAccess } from "@/lib/supabase/guards"
 import { UserManagementTable } from "@/components/user-management-table"
 import { InviteUserForm } from "@/components/invite-user-form"
 
@@ -14,14 +13,7 @@ export interface BusinessMember {
 }
 
 export default async function UsersPage() {
-  const context = await getCurrentUserRoleContext()
-  if (!context) {
-    redirect("/onboarding")
-  }
-
-  if (!canAccessPage(context.roleName, "users")) {
-    redirect("/dashboard/overview")
-  }
+  const context = await requirePageAccess("users")
 
   const serviceClient = createServiceClient()
 

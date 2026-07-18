@@ -16,13 +16,15 @@
 -- 1. Cash checkout
 -- ============================================================
 
+-- p_total_amount is in pesewas (integer minor units); tables store GHS decimals.
+DROP FUNCTION IF EXISTS process_checkout_cash(UUID, UUID, UUID, UUID, JSONB, DECIMAL(12, 2));
 CREATE OR REPLACE FUNCTION process_checkout_cash(
     p_business_id UUID,
     p_branch_id UUID,
     p_cashier_id UUID,
     p_idempotency_key UUID,
     p_items JSONB,
-    p_total_amount DECIMAL(12, 2)
+    p_total_amount BIGINT
 ) RETURNS UUID
 LANGUAGE plpgsql
 SECURITY DEFINER
@@ -114,8 +116,9 @@ BEGIN
         END IF;
     END LOOP;
 
-    IF v_computed_total != p_total_amount THEN
-        RAISE EXCEPTION 'Total amount mismatch: computed %, received %', v_computed_total, p_total_amount;
+    -- Compare in pesewas; v_computed_total is GHS decimals, p_total_amount is pesewas.
+    IF ROUND(v_computed_total * 100)::bigint != p_total_amount THEN
+        RAISE EXCEPTION 'Total amount mismatch: computed % pesewas, received %', ROUND(v_computed_total * 100)::bigint, p_total_amount;
     END IF;
 
     -- Persist cart.
@@ -144,7 +147,7 @@ BEGIN
         provider, status, created_by
     )
     VALUES (
-        p_business_id, v_cart_id, p_total_amount, 'GHS', p_idempotency_key,
+        p_business_id, v_cart_id, v_computed_total, 'GHS', p_idempotency_key,
         'cash', 'completed', p_cashier_id
     )
     RETURNING id INTO v_intent_id;
@@ -155,7 +158,7 @@ BEGIN
 
     -- Keep the legacy payment table in sync for receipts and dashboards.
     INSERT INTO payments (business_id, cashier_id, method, amount, status, provider_reference)
-    VALUES (p_business_id, p_cashier_id, 'cash', p_total_amount, 'COMPLETED', p_idempotency_key::text)
+    VALUES (p_business_id, p_cashier_id, 'cash', v_computed_total, 'COMPLETED', p_idempotency_key::text)
     RETURNING id INTO v_payment_id;
 
     UPDATE payment_intents
@@ -212,13 +215,14 @@ $$;
 -- 2. Payment intent creation for Paystack card / MoMo
 -- ============================================================
 
+DROP FUNCTION IF EXISTS create_checkout_intent(UUID, UUID, UUID, UUID, JSONB, DECIMAL(12, 2), TEXT);
 CREATE OR REPLACE FUNCTION create_checkout_intent(
     p_business_id UUID,
     p_branch_id UUID,
     p_cashier_id UUID,
     p_idempotency_key UUID,
     p_items JSONB,
-    p_total_amount DECIMAL(12, 2),
+    p_total_amount BIGINT,
     p_method TEXT DEFAULT 'card'
 ) RETURNS TABLE(intent_id UUID, cart_id UUID, reference TEXT)
 LANGUAGE plpgsql
@@ -302,8 +306,9 @@ BEGIN
         END IF;
     END LOOP;
 
-    IF v_computed_total != p_total_amount THEN
-        RAISE EXCEPTION 'Total amount mismatch: computed %, received %', v_computed_total, p_total_amount;
+    -- Compare in pesewas; v_computed_total is GHS decimals, p_total_amount is pesewas.
+    IF ROUND(v_computed_total * 100)::bigint != p_total_amount THEN
+        RAISE EXCEPTION 'Total amount mismatch: computed % pesewas, received %', ROUND(v_computed_total * 100)::bigint, p_total_amount;
     END IF;
 
     INSERT INTO carts (business_id, branch_id, cashier_id, status)
@@ -331,7 +336,7 @@ BEGIN
         provider, provider_reference, status, created_by
     )
     VALUES (
-        p_business_id, v_cart_id, p_total_amount, 'GHS', p_idempotency_key,
+        p_business_id, v_cart_id, v_computed_total, 'GHS', p_idempotency_key,
         'paystack', v_reference, 'initiated', p_cashier_id
     )
     RETURNING id INTO v_intent_id;

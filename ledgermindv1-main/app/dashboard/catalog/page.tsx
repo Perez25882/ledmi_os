@@ -1,7 +1,5 @@
 import { redirect } from "next/navigation"
-import { createServerClientForUser } from "@/lib/supabase/server"
-import { getCurrentUserRoleContext } from "@/lib/supabase/data/user-context"
-import { canAccessPage } from "@/lib/supabase/permissions"
+import { requirePageAccess } from "@/lib/supabase/guards"
 import { getProducts, getCategories } from "@/lib/supabase/data/catalog"
 import {
   Card,
@@ -31,31 +29,7 @@ import { DeleteButton } from "./delete-button"
 import { Package, Tag } from "lucide-react"
 
 export default async function CatalogPage() {
-  const userClient = await createServerClientForUser()
-  const {
-    data: { user },
-    error: userError,
-  } = await userClient.auth.getUser()
-
-  if (userError || !user) {
-    redirect("/auth/login")
-  }
-
-  const context = await getCurrentUserRoleContext()
-  if (!context) {
-    return (
-      <div className="space-y-6">
-        <h1 className="text-2xl font-bold">Catalog</h1>
-        <p className="text-muted-foreground">
-          No business found. Create a business first.
-        </p>
-      </div>
-    )
-  }
-
-  if (!canAccessPage(context.roleName, "catalog")) {
-    redirect("/dashboard/overview")
-  }
+  const context = await requirePageAccess("catalog")
 
   const [products, categories] = await Promise.all([
     getProducts(context.businessId),

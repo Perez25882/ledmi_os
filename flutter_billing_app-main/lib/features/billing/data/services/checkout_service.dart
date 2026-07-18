@@ -84,7 +84,7 @@ class CheckoutService {
       'p_cashier_id': userId,
       'p_idempotency_key': idempotencyKey,
       'p_items': itemsJson,
-      'p_total_amount': total,
+      'p_total_amount': (total * 100).round(),
     });
 
     if (response.error != null) {
@@ -115,6 +115,7 @@ class CheckoutService {
   Future<CheckoutIntent> createCheckoutIntent({
     required List<CartItem> items,
     required double discount,
+    String method = 'card',
   }) async {
     final businessId = SessionManager.businessId;
     final branchId = SessionManager.branchId;
@@ -133,8 +134,8 @@ class CheckoutService {
       'p_cashier_id': userId,
       'p_idempotency_key': idempotencyKey,
       'p_items': _buildItemsPayload(items),
-      'p_total_amount': total,
-      'p_method': 'card',
+      'p_total_amount': (total * 100).round(),
+      'p_method': method,
     });
 
     if (response.error != null) {
@@ -153,10 +154,22 @@ class CheckoutService {
     );
   }
 
-  Future<PaystackInitResult> initiatePaystackCharge(String intentId) async {
+  Future<PaystackInitResult> initiatePaystackCharge(
+    String intentId, {
+    String? momoProviderCode,
+    String? momoPhone,
+  }) async {
+    final body = <String, dynamic>{'intent_id': intentId};
+    if (momoProviderCode != null) {
+      body['momo_provider'] = momoProviderCode;
+    }
+    if (momoPhone != null && momoPhone.trim().isNotEmpty) {
+      body['momo_phone'] = momoPhone.trim();
+    }
+
     final response = await _client.functions.invoke(
       'paystack-initiate',
-      body: {'intent_id': intentId},
+      body: body,
     );
 
     final data = response.data as Map<String, dynamic>?;

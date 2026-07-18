@@ -10,10 +10,12 @@ export function AISetupGuide() {
     <div className="space-y-6">
       <Alert className="border-green-500 bg-green-50 dark:bg-green-950/20">
         <CheckCircle className="h-4 w-4 text-green-600" />
-        <AlertTitle>AI Powered by Kimi 🎉</AlertTitle>
+        <AlertTitle>AI Powered by Ledmi AI 🎉</AlertTitle>
         <AlertDescription>
-          Your AI assistant is powered by Kimi (Moonshot AI), a state-of-the-art language model
-          fine-tuned for business analytics and inventory management insights.
+          Your AI assistant is powered by NVIDIA NIM, a state-of-the-art inference platform
+          running the {`meta/llama-3.1-8b-instruct`} model for business analytics and inventory
+          management insights. Configure it server-side with the {`NVIDIA_API_KEY`} and
+          {` NVIDIA_MODEL`} environment variables.
         </AlertDescription>
       </Alert>
 
@@ -22,7 +24,7 @@ export function AISetupGuide() {
           <CardTitle className="flex items-center gap-2">
             <Brain className="h-5 w-5 text-green-600" />
             AI Assistant — Active
-            <Badge variant="secondary">Kimi AI</Badge>
+            <Badge variant="secondary">NVIDIA NIM</Badge>
           </CardTitle>
           <CardDescription>
             Your AI assistant has access to advanced capabilities for business intelligence

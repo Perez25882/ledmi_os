@@ -31,6 +31,13 @@ CREATE INDEX IF NOT EXISTS idx_refunds_branch ON refunds(branch_id);
 CREATE INDEX IF NOT EXISTS idx_refunds_sale ON refunds(sale_id);
 CREATE INDEX IF NOT EXISTS idx_refund_items_refund ON refund_items(refund_id);
 
+-- Idempotency: replay-safe refunds. Column + partial unique index so a retried
+-- refund with the same key returns the original row instead of restocking twice.
+ALTER TABLE refunds ADD COLUMN IF NOT EXISTS idempotency_key TEXT;
+CREATE UNIQUE INDEX IF NOT EXISTS uq_refunds_idempotency_key
+    ON refunds (business_id, branch_id, sale_id, idempotency_key)
+    WHERE idempotency_key IS NOT NULL;
+
 -- Helper: quantity already refunded for a sale item
 CREATE OR REPLACE FUNCTION refunded_quantity(p_sale_item_id UUID)
 RETURNS INTEGER AS $$
@@ -46,16 +53,20 @@ BEGIN
 
     RETURN total;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql SECURITY DEFINER
+SET search_path = public, pg_temp;
 
 -- Process a refund. Returns the refund id.
+-- Idempotent: a retried call with the same (business_id, branch_id, sale_id, idempotency_key)
+-- replays the original refund without restocking inventory a second time.
 CREATE OR REPLACE FUNCTION process_refund(
     p_business_id UUID,
     p_branch_id UUID,
     p_cashier_id UUID,
     p_sale_id UUID,
     p_items JSONB,
-    p_reason TEXT DEFAULT NULL
+    p_reason TEXT DEFAULT NULL,
+    p_idempotency_key TEXT DEFAULT NULL
 )
 RETURNS UUID AS $$
 DECLARE
@@ -70,6 +81,7 @@ DECLARE
     v_subtotal NUMERIC(12,2);
     v_already_refunded INTEGER;
     v_old_quantity INTEGER;
+    v_existing_refund_id UUID;
 BEGIN
     -- Authorization and ownership checks
     IF NOT user_belongs_to_business(p_business_id) THEN
@@ -90,9 +102,25 @@ BEGIN
         RAISE EXCEPTION 'Sale not found in branch';
     END IF;
 
+    -- Idempotency replay: if a refund already exists for this key, return it
+    -- without re-processing items or restocking inventory.
+    IF p_idempotency_key IS NOT NULL THEN
+        SELECT id INTO v_existing_refund_id
+        FROM refunds
+        WHERE business_id = p_business_id
+          AND branch_id = p_branch_id
+          AND sale_id = p_sale_id
+          AND idempotency_key = p_idempotency_key
+        LIMIT 1;
+
+        IF v_existing_refund_id IS NOT NULL THEN
+            RETURN v_existing_refund_id;
+        END IF;
+    END IF;
+
     -- Create refund record
-    INSERT INTO refunds (business_id, branch_id, sale_id, cashier_id, reason, total_amount)
-    VALUES (p_business_id, p_branch_id, p_sale_id, p_cashier_id, p_reason, 0)
+    INSERT INTO refunds (business_id, branch_id, sale_id, cashier_id, reason, total_amount, idempotency_key)
+    VALUES (p_business_id, p_branch_id, p_sale_id, p_cashier_id, p_reason, 0, p_idempotency_key)
     RETURNING id INTO v_refund_id;
 
     -- Process each item
@@ -165,13 +193,19 @@ DROP POLICY IF EXISTS refunds_business_access ON refunds;
 CREATE POLICY refunds_business_access ON refunds
     FOR ALL
     TO authenticated
-    USING (user_belongs_to_business(business_id));
+    USING (user_belongs_to_business(business_id))
+    WITH CHECK (user_belongs_to_business(business_id));
 
 DROP POLICY IF EXISTS refund_items_business_access ON refund_items;
 CREATE POLICY refund_items_business_access ON refund_items
     FOR ALL
     TO authenticated
     USING (EXISTS (
+        SELECT 1 FROM refunds r
+        WHERE r.id = refund_items.refund_id
+          AND user_belongs_to_business(r.business_id)
+    ))
+    WITH CHECK (EXISTS (
         SELECT 1 FROM refunds r
         WHERE r.id = refund_items.refund_id
           AND user_belongs_to_business(r.business_id)

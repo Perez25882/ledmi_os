@@ -2,6 +2,8 @@ part of 'billing_bloc.dart';
 
 enum PaymentMethod { cash, momo, card }
 
+enum MoMoProvider { mtn, vodafone, airteltigo }
+
 class BillingState extends Equatable {
   final List<CartItem> cartItems;
   final PaymentMethod paymentMethod;
@@ -16,6 +18,10 @@ class BillingState extends Equatable {
   final String? error;
   final bool isPrinting;
   final bool printSuccess;
+  final String? cardLast4;
+  final String? cardExpiry;
+  final MoMoProvider? momoProvider;
+  final String? momoPhone;
 
   const BillingState({
     this.cartItems = const [],
@@ -31,6 +37,10 @@ class BillingState extends Equatable {
     this.error,
     this.isPrinting = false,
     this.printSuccess = false,
+    this.cardLast4,
+    this.cardExpiry,
+    this.momoProvider,
+    this.momoPhone,
   });
 
   double get subtotal => cartItems.fold(0, (sum, item) => sum + item.total);
@@ -54,6 +64,10 @@ class BillingState extends Equatable {
     bool clearError = false,
     bool? isPrinting,
     bool? printSuccess,
+    String? cardLast4,
+    String? cardExpiry,
+    MoMoProvider? momoProvider,
+    String? momoPhone,
   }) {
     return BillingState(
       cartItems: cartItems ?? this.cartItems,
@@ -69,6 +83,10 @@ class BillingState extends Equatable {
       error: clearError ? null : (error ?? this.error),
       isPrinting: isPrinting ?? this.isPrinting,
       printSuccess: printSuccess ?? this.printSuccess,
+      cardLast4: cardLast4 ?? this.cardLast4,
+      cardExpiry: cardExpiry ?? this.cardExpiry,
+      momoProvider: momoProvider ?? this.momoProvider,
+      momoPhone: momoPhone ?? this.momoPhone,
     );
   }
 
@@ -89,5 +107,9 @@ class BillingState extends Equatable {
         error,
         isPrinting,
         printSuccess,
+        cardLast4,
+        cardExpiry,
+        momoProvider,
+        momoPhone,
       ];
 }

@@ -1,44 +1,21 @@
-import '../../../../core/data/hive_database.dart';
-import '../../../../core/supabase/session_manager.dart';
-import '../../../../core/supabase/supabase_client.dart';
-import '../../../product/data/models/product_model.dart';
+import 'delta_sync_client.dart';
 
+/// Catalog sync facade preserved for existing callers (auth flow, DI).
+///
+/// Delta sync, Realtime subscription, polling fallback, and cart-in-conflict
+/// signals are implemented in [DeltaSyncClient] per SYNC_PROTOCOL §4.3/§4.4.
 class SupabaseSyncService {
-  final _client = SupabaseClientManager.client;
+  final DeltaSyncClient _delta = DeltaSyncClient();
 
-  Future<void> syncCatalog() async {
-    final businessId = SessionManager.businessId;
-    final branchId = SessionManager.branchId;
+  /// Full sync on first login (no cursor), delta sync otherwise.
+  Future<void> syncCatalog() => _delta.syncCatalog();
 
-    if (businessId == null || branchId == null) {
-      throw Exception('Business and branch must be selected before syncing');
-    }
+  /// Realtime + 60s polling fallback. Call once the session is established.
+  void startBackgroundSync() => _delta.startBackgroundSync();
 
-    final response = await _client
-        .from('products')
-        .select('''
-          id,
-          name,
-          barcode,
-          selling_price,
-          inventory!inner(quantity)
-        ''')
-        .eq('business_id', businessId)
-        .eq('inventory.branch_id', branchId)
-        .isFilter('deleted_at', null);
+  void stopBackgroundSync() => _delta.stopBackgroundSync();
 
-    final rows = response as List<dynamic>;
-
-    final productBox = HiveDatabase.productBox;
-    await productBox.clear();
-
-    for (final row in rows) {
-      final product = row as Map<String, dynamic>;
-      final inventory = product['inventory'] as Map<String, dynamic>?;
-      final quantity = (inventory?['quantity'] as num?)?.toInt() ?? 0;
-
-      final model = ProductModel.fromSupabase(product, branchQuantity: quantity);
-      await productBox.put(model.id, model);
-    }
-  }
+  /// Cart-in-conflict signal stream (§4.4). The billing layer should listen
+  /// and cross-reference affected product ids against the active cart.
+  Stream<CatalogConflictEvent> get conflicts => _delta.conflicts;
 }

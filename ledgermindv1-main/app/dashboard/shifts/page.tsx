@@ -1,38 +1,18 @@
 import { redirect } from "next/navigation"
-import { createServerClientForUser } from "@/lib/supabase/server"
-import { getCurrentUserRoleContext } from "@/lib/supabase/data/user-context"
-import { canAccessPage } from "@/lib/supabase/permissions"
+import { requirePageAccess } from "@/lib/supabase/guards"
+import { getScopedBranchFilter } from "@/lib/supabase/permissions"
 import { getShifts } from "@/lib/supabase/data/shifts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 
 export default async function ShiftsPage() {
-  const userClient = await createServerClientForUser()
-  const {
-    data: { user },
-    error: userError,
-  } = await userClient.auth.getUser()
+  const context = await requirePageAccess("shifts")
 
-  if (userError || !user) {
-    redirect("/auth/login")
-  }
+  const { branchId: scopedBranchId } = getScopedBranchFilter(context)
+  const effectiveBranchId = scopedBranchId ?? context.branchId
 
-  const context = await getCurrentUserRoleContext()
-  if (!context) {
-    return (
-      <div className="space-y-6">
-        <h1 className="text-2xl font-bold">Shifts</h1>
-        <p className="text-muted-foreground">No business context found.</p>
-      </div>
-    )
-  }
-
-  if (!canAccessPage(context.roleName, "sales")) {
-    redirect("/dashboard/overview")
-  }
-
-  const shifts = await getShifts(context.businessId, context.branchId)
+  const shifts = await getShifts(context.businessId, effectiveBranchId)
 
   return (
     <div className="space-y-6">

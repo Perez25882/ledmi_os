@@ -3,6 +3,7 @@ import { redirect } from "next/navigation"
 import { LedmiChat } from "@/components/ai-chat"
 import { createServerClientForUser } from "@/lib/supabase/server"
 import { getCurrentUserRoleContext } from "@/lib/supabase/data/user-context"
+import { isCashier } from "@/lib/supabase/permissions"
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar"
 import { SupabaseSidebar } from "@/components/supabase-sidebar"
 
@@ -20,6 +21,10 @@ export default async function DashboardLayout({
   const supabaseContext = await getCurrentUserRoleContext()
   if (!supabaseContext) {
     redirect("/onboarding")
+  }
+
+  if (isCashier(supabaseContext.roleName)) {
+    redirect("/auth/cashier-redirect")
   }
 
   return (

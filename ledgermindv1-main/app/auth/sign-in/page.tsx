@@ -57,6 +57,21 @@ function SignInForm() {
       return
     }
 
+    const { data: session } = await supabase.auth.getUser()
+    if (session.user) {
+      const { data: roleRows } = await supabase
+        .from("user_business_roles")
+        .select("custom_roles(name)")
+        .eq("user_id", session.user.id)
+        .limit(1)
+      const roleName = (roleRows as any[])?.[0]?.custom_roles?.name as string | undefined
+      if (roleName === "cashier") {
+        router.push("/auth/cashier-redirect")
+        router.refresh()
+        return
+      }
+    }
+
     router.push(next)
     router.refresh()
   }

@@ -29,7 +29,8 @@ DROP POLICY IF EXISTS shifts_business_access ON shifts;
 CREATE POLICY shifts_business_access ON shifts
     FOR ALL
     TO authenticated
-    USING (user_belongs_to_business(business_id));
+    USING (user_belongs_to_business(business_id))
+    WITH CHECK (user_belongs_to_business(business_id));
 
 -- Close a shift and compute expected cash from sales during the shift.
 CREATE OR REPLACE FUNCTION close_shift(
@@ -45,6 +46,15 @@ BEGIN
     SELECT * INTO v_shift FROM shifts WHERE id = p_shift_id;
     IF v_shift IS NULL THEN
         RAISE EXCEPTION 'Shift not found';
+    END IF;
+
+    IF NOT user_belongs_to_business(v_shift.business_id) THEN
+        RAISE EXCEPTION 'User does not belong to shift business';
+    END IF;
+
+    IF v_shift.cashier_id <> current_user_id()
+       AND NOT user_has_permission(v_shift.business_id, 'manage_users') THEN
+        RAISE EXCEPTION 'Only the cashier or a manager can close this shift';
     END IF;
 
     IF v_shift.status <> 'open' THEN

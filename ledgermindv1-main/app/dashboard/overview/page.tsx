@@ -1,8 +1,7 @@
 import { redirect } from "next/navigation"
-import { createServerClientForUser } from "@/lib/supabase/server"
 import { getSalesOverview } from "@/lib/supabase/data/sales"
-import { getCurrentUserRoleContext } from "@/lib/supabase/data/user-context"
-import { canAccessPage } from "@/lib/supabase/permissions"
+import { requirePageAccess } from "@/lib/supabase/guards"
+import { getScopedBranchFilter } from "@/lib/supabase/permissions"
 import { getInventory } from "@/lib/supabase/data/inventory"
 import {
   Card,
@@ -27,34 +26,15 @@ import { getInsights } from "@/lib/supabase/data/insights"
 import { generateProactiveInsights } from "@/lib/nvidia-ai"
 
 export default async function OverviewPage() {
-  const userClient = await createServerClientForUser()
-  const {
-    data: { user },
-    error: userError,
-  } = await userClient.auth.getUser()
+  const context = await requirePageAccess("overview")
 
-  if (userError || !user) {
-    redirect("/auth/login")
-  }
-
-  const context = await getCurrentUserRoleContext()
-  if (!context) {
-    return (
-      <div className="space-y-6">
-        <h1 className="text-2xl font-bold tracking-tight">Overview</h1>
-        <p className="text-muted-foreground">No business context found.</p>
-      </div>
-    )
-  }
-
-  if (!canAccessPage(context.roleName, "overview")) {
-    redirect("/onboarding")
-  }
+  const { branchId: scopedBranchId } = getScopedBranchFilter(context)
+  const effectiveBranchId = scopedBranchId ?? context.branchId
 
   const [overview, inventory, insights] = await Promise.all([
     getSalesOverview(context.businessId),
-    getInventory(context.businessId, context.branchId),
-    getInsights(context.businessId, context.branchId),
+    getInventory(context.businessId, effectiveBranchId),
+    getInsights(context.businessId, effectiveBranchId),
   ])
 
   const proactive = await generateProactiveInsights(insights)

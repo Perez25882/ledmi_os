@@ -16,13 +16,13 @@ class CheckoutPage extends StatefulWidget {
 class _CheckoutPageState extends State<CheckoutPage> {
   final _discountController = TextEditingController();
   final _tenderedController = TextEditingController();
-  String? _scannedCardLast4;
-  String? _scannedExpiryDate;
+  final _momoPhoneController = TextEditingController();
 
   @override
   void dispose() {
     _discountController.dispose();
     _tenderedController.dispose();
+    _momoPhoneController.dispose();
     super.dispose();
   }
 
@@ -71,10 +71,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
               context.read<BillingBloc>().add(ResetCheckoutEvent());
             }
             if (state.checkoutSuccess && state.cartItems.isEmpty) {
-              setState(() {
-                _scannedCardLast4 = null;
-                _scannedExpiryDate = null;
-              });
+              _momoPhoneController.clear();
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text('Sale completed'),
@@ -102,6 +99,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         const SizedBox(height: 16),
                         if (billingState.paymentMethod == PaymentMethod.card)
                           _buildCardScannerPanel(billingState),
+                        const SizedBox(height: 16),
+                        if (billingState.paymentMethod == PaymentMethod.momo)
+                          _buildMoMoPanel(billingState),
                         const SizedBox(height: 16),
                         if (billingState.paymentMethod == PaymentMethod.cash)
                           _buildCashInputs(billingState),
@@ -230,25 +230,94 @@ class _CheckoutPageState extends State<CheckoutPage> {
           OutlinedButton.icon(
             onPressed: () async {
               final result = await context.push('/card-scanner');
-              if (result is Map<String, dynamic>) {
-                setState(() {
-                  _scannedCardLast4 = _last4(result['cardNumber'] as String?);
-                  _scannedExpiryDate = result['expiryDate'] as String?;
-                });
+              if (result is Map<String, dynamic> && mounted) {
+                final last4 = _last4(result['cardNumber'] as String?);
+                final expiry = result['expiryDate'] as String?;
+                context.read<BillingBloc>().add(CardScannedEvent(last4, expiry));
               }
             },
             icon: const Icon(Icons.camera_alt),
             label: const Text('Scan Card'),
           ),
-          if (_scannedCardLast4 != null) ...[
+          if (state.cardLast4 != null) ...[
             const SizedBox(height: 12),
             Text(
-              'Card: •••• •••• •••• ${_scannedCardLast4!}',
+              'Card: •••• •••• •••• ${state.cardLast4!}',
               style: const TextStyle(fontWeight: FontWeight.w500),
             ),
-            Text('Expiry: ${_scannedExpiryDate ?? '-'}'),
+            Text('Expiry: ${state.cardExpiry ?? '-'}'),
+            const SizedBox(height: 8),
+            Text(
+              'Card data is sent directly to Paystack over TLS. '
+              'Only last-4 and reference are stored.',
+              style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+            ),
           ],
         ],
+      ),
+    );
+  }
+
+  Widget _buildMoMoPanel(BillingState state) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF8FAFC),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFFE5E5EA)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const Text('MoMo Provider', style: TextStyle(fontWeight: FontWeight.bold)),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              _buildMoMoProviderButton(MoMoProvider.mtn, 'MTN', state),
+              const SizedBox(width: 8),
+              _buildMoMoProviderButton(MoMoProvider.vodafone, 'Vodafone', state),
+              const SizedBox(width: 8),
+              _buildMoMoProviderButton(MoMoProvider.airteltigo, 'AT', state),
+            ],
+          ),
+          const SizedBox(height: 16),
+          TextField(
+            controller: _momoPhoneController,
+            decoration: const InputDecoration(
+              labelText: 'Customer Phone Number',
+              border: OutlineInputBorder(),
+              prefixText: '+233 ',
+              hintText: 'e.g. 24XXXXXXX',
+            ),
+            keyboardType: TextInputType.phone,
+            onChanged: (value) {
+              context.read<BillingBloc>().add(MoMoPhoneEnteredEvent(value));
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMoMoProviderButton(
+      MoMoProvider provider, String label, BillingState state) {
+    final selected = state.momoProvider == provider;
+    return Expanded(
+      child: OutlinedButton(
+        onPressed: () => context.read<BillingBloc>().add(
+              MoMoProviderSelectedEvent(provider),
+            ),
+        style: OutlinedButton.styleFrom(
+          backgroundColor: selected ? Theme.of(context).primaryColor : Colors.white,
+          side: BorderSide(
+            color: selected ? Theme.of(context).primaryColor : const Color(0xFFE5E5EA),
+          ),
+          padding: const EdgeInsets.symmetric(vertical: 12),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(color: selected ? Colors.white : Colors.black87),
+        ),
       ),
     );
   }
@@ -314,9 +383,17 @@ class _CheckoutPageState extends State<CheckoutPage> {
           PrimaryButton(
             onPressed: state.paymentIntentId == null
                 ? null
-                : () => context.read<BillingBloc>().add(
-                      CheckPaymentStatusEvent(state.paymentIntentId!),
-                    ),
+                : () {
+                    if (state.paymentMethod == PaymentMethod.momo) {
+                      context.read<BillingBloc>().add(
+                            MoMoChargePolledEvent(state.paymentIntentId!),
+                          );
+                    } else {
+                      context.read<BillingBloc>().add(
+                            CheckPaymentStatusEvent(state.paymentIntentId!),
+                          );
+                    }
+                  },
             label: 'Check Payment Status',
             icon: Icons.refresh,
             isLoading: state.isProcessing,
@@ -404,8 +481,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
   void _confirmPayment(BuildContext context, BillingState state) {
     if (state.paymentMethod == PaymentMethod.cash) {
       context.read<BillingBloc>().add(ProcessCashCheckoutEvent());
+    } else if (state.paymentMethod == PaymentMethod.momo) {
+      context.read<BillingBloc>().add(RequestMoMoCheckoutEvent());
     } else {
-      context.read<BillingBloc>().add(CreatePaymentIntentEvent());
+      context.read<BillingBloc>().add(const CreatePaymentIntentEvent(method: 'card'));
     }
   }
 

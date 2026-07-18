@@ -7,10 +7,7 @@ class CardScannerPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScannerPage(
-      onCardScanned: (cardNumber, expiryDate) {
-        // The scanner page pops itself and returns the scanned data.
-        // This callback is available for callers that need synchronous notification.
-      },
+      onCardScanned: (_, __) {},
     );
   }
 }

@@ -12,7 +12,7 @@
 2. **Actionable first.** Each insight should answer: what changed, why it matters, and what the user should do next.
 3. **Cheap to run.** Heavy aggregations happen in Postgres/materialized views or Supabase cron jobs; LLM calls are reserved for summarisation and natural-language answers.
 4. **Multi-tenant safe.** All queries are scoped to `business_id` and `branch_id` with RLS enforced.
-5. **Pluggable model.** The pipeline is model-agnostic at the SQL/feature layer; Moonshot/Kimi is the LLM used for chat and brief generation.
+5. **Pluggable model.** The pipeline is model-agnostic at the SQL/feature layer; NVIDIA NIM (`meta/llama-3.1-8b-instruct`) is the LLM used for chat and brief generation. The provider is configurable via env (`LEDMI_LLM_PROVIDER`); NVIDIA NIM is the default for MVP.
 
 ---
 
@@ -484,7 +484,7 @@ Response:
 
 1. Verify JWT and `business_id` claim.
 2. Load cached business snapshot (see §7).
-3. Call Moonshot/Kimi with system prompt + snapshot + user query + tools.
+3. Call NVIDIA NIM with system prompt + snapshot + user query + tools.
 4. If tool calls, execute them via Supabase RPC (e.g. `upsert_inventory_item`, `adjust_stock`).
 5. Return final text answer.
 
@@ -517,7 +517,7 @@ TODAY'S DATE: {date}
 
 ### 5.3 Function/tool definitions
 
-Tools use the OpenAI/Moonshot function-calling schema. Two tools are required for MVP:
+Tools use the OpenAI-compatible function-calling schema. Two tools are required for MVP:
 
 #### `add_inventory_item`
 
@@ -806,7 +806,7 @@ Closeup toothpaste 150g: 23 units at North Legon, 17 units at East Legon. Total 
 **Request path (assistant chat):**
 1. Check cache for `ledmi_business_snapshot`.
 2. If expired, rebuild snapshot (not full aggregation) from materialized views.
-3. Call Moonshot/Kimi.
+3. Call NVIDIA NIM.
 
 This keeps the chat response latency under ~2 seconds.
 

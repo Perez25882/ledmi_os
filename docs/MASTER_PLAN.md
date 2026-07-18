@@ -81,7 +81,7 @@
 | 5.1 | Daily aggregation materialized view or scheduled function | `agent_07` |
 | 5.2 | Reorder recommendation algorithm and API | `agent_07` |
 | 5.3 | Anomaly detection and margin advisor | `agent_07` |
-| 5.4 | Integrate Moonshot/Kimi assistant with dashboard chat panel | `agent_07` |
+| 5.4 | Integrate NVIDIA NIM (Llama 3.1) assistant with dashboard chat panel | `agent_07` |
 | 5.5 | Push notification service for critical alerts | `agent_07` |
 | 5.6 | Insight feedback loop and confidence scoring | `agent_07` |
 

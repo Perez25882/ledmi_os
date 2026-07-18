@@ -1,5 +1,5 @@
 import "server-only"
-import { createServiceClient } from "@/lib/supabase/server"
+import { createServerClientForUser, createServiceClient } from "@/lib/supabase/server"
 import { getCurrentBusinessContext } from "./catalog"
 
 export interface SaleItem {
@@ -19,15 +19,31 @@ export interface Sale {
   items: SaleItem[]
 }
 
+// auth.users is not readable under RLS, so the admin API is the only email
+// source available without a migration. Scope is preserved: only cashier_ids
+// taken from rows already RLS-filtered to the caller's business are looked up.
+export async function resolveCashierEmails(cashierIds: string[]): Promise<Map<string, string>> {
+  const unique = [...new Set(cashierIds.filter(Boolean))]
+  if (unique.length === 0) return new Map()
+  const serviceClient = createServiceClient()
+  const entries = await Promise.all(
+    unique.map(async (id): Promise<[string, string]> => {
+      const { data } = await serviceClient.auth.admin.getUserById(id)
+      return [id, data?.user?.email || "Unknown"]
+    })
+  )
+  return new Map(entries)
+}
+
 export async function getSales(
   businessId: string,
   branchId?: string,
   from?: string,
   to?: string
 ): Promise<Sale[]> {
-  const serviceClient = createServiceClient()
+  const client = await createServerClientForUser()
 
-  let query = serviceClient
+  let query = client
     .from("sales")
     .select(
       `
@@ -58,11 +74,14 @@ export async function getSales(
     throw new Error(error.message)
   }
 
-  return (data as any[]).map((s) => ({
+  const rows = data as any[]
+  const cashierEmails = await resolveCashierEmails(rows.map((s) => s.cashier_id as string))
+
+  return rows.map((s) => ({
     id: s.id,
     invoice_number: s.invoices?.invoice_number || "-",
     created_at: s.created_at,
-    cashier_email: "-",
+    cashier_email: cashierEmails.get(s.cashier_id) || "Unknown",
     payment_method: s.payments?.method || "-",
     total: s.payments?.amount || 0,
     items: (s.sale_items as any[]).map((item) => ({
@@ -75,11 +94,11 @@ export async function getSales(
 }
 
 export async function getSalesOverview(businessId: string) {
-  const serviceClient = createServiceClient()
+  const client = await createServerClientForUser()
   const today = new Date()
   today.setHours(0, 0, 0, 0)
 
-  const { data, error } = await serviceClient
+  const { data, error } = await client
     .from("sales")
     .select(
       `
