@@ -111,3 +111,9 @@ ios/.symlinks/
 # Agent task-report dotfiles (kept locally for review, not committed)
 /**/.*_task_report.md
 /**/.task_*.md
+
+# Decommissioned standalone ML card scanner (folded into Flutter POS; see DECISIONS.md AD-20)
+/flutter_ml_credit_card_data_extractor-main/
+
+# Transient commit-message scratch files
+/.commit_msg_*.txt

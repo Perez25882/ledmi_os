@@ -26,8 +26,7 @@ C:\Users\DELL\Desktop\POS
 ├── RESEARCH.md                  <-- competitive research
 ├── flutter_billing_app-main     <-- Flutter POS (package: billing_app)
 ├── ledgermindv1-main            <-- Next.js dashboard (name: ledgermind-supabase)
-├── flutter_ml_credit_card_data_extractor-main  <-- ML card scanner module
-├── database_architecture        <-- existing Supabase SQL schema
+├── database_architecture        <-- existing Supabase SQL schema (reference only)
 ├── docs/                        <-- architecture, protocols, decisions
 │   ├── MASTER_PLAN.md
 │   ├── SYNC_PROTOCOL.md

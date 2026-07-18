@@ -318,5 +318,23 @@
 **Consequences:**
 - `pubspec.yaml` path dependency on `card_scanner` confirmed; `CardScannedEvent` carries only `last4` + `expiry`.
 - `billing_bloc._onCardScanned` stores only `cardLast4` + `cardExpiry` in state — never the PAN.
-- The standalone scanner app is decommissioned as a separate deliverable (AD-19 fold).
+- The standalone scanner app directory has been deleted from the repo (recoverable from git history if needed). The scanner lives on as the embedded `card_scanner` module inside the Flutter POS.
 - Future: if Paystack offers a mobile SDK tokenization path with acceptable PCI scope, we may revisit direct tokenization for faster checkout.
+
+---
+
+## AD-21: RBAC layer for both apps + explicit manager branch assignment
+
+**Decision:** Both apps now enforce role-based access control with a shared permission vocabulary. Managers are scoped to an explicitly assigned branch via a nullable `branch_id` on `user_business_roles` (migration 015); owners and accountants see all branches.
+
+**Rationale:**
+- The prior state had no real role guards — any authenticated user could reach any page. Cashiers could open the dashboard; managers could see other branches' sales.
+- Both apps need the same four roles (owner, manager, accountant, cashier) with mirrored permission names so behavior is consistent across surfaces.
+- The dashboard subagent flagged that `user_business_roles` had no `branch_id` column, so managers were implicitly scoped to "first branch" with no way to assign them to a specific branch. This is a real schema gap, not just a code gap.
+
+**Consequences:**
+- **Flutter POS:** role-aware route guards (cashier vs. manager) with UI gating. Cashiers see checkout + shift; managers see reports + inventory + staff. `session_manager` carries role into routing.
+- **Next.js dashboard:** 3-layer cashier block (middleware → layout → per-page `requirePageAccess()`). New `lib/supabase/permissions.ts` (client-safe) + `lib/supabase/guards.ts` (server-only) split so the client sidebar can safely import `canAccessPage` without pulling `server-only` into the bundle. Branch scoping applied to overview, sales, inventory, reports, shifts, export. Logs/subscription/system pages rebuilt from placeholder redirects.
+- **Schema:** migration `015_manager_branch_assignment.sql` adds nullable `branch_id` to `user_business_roles` (FK to `branches(id)`, `ON DELETE SET NULL`), an index on `(business_id, branch_id)`, and a `user_accessible_branches(p_business_id)` SECURITY DEFINER helper. NULL `branch_id` = all-branch access (owner/accountant); non-NULL = single-branch scope (manager/cashier). Both apps consume it via `getScopedBranchFilter()` / Flutter equivalent.
+- **New routes:** `/auth/cashier-redirect` (tells cashiers to use the POS app), `components/auth/sign-out-button.tsx`.
+- Build verification: `npx next build` → EXIT=0 (38 routes); `flutter analyze` → No issues found.
