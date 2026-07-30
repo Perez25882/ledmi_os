@@ -107,7 +107,45 @@ export function SimplePieChart({ data, className }: SimplePieChartProps) {
   }
 
   const total = data.reduce((sum, item) => sum + item.value, 0)
-  let currentAngle = 0
+
+  // Slice geometry is derived up front rather than by mutating a running angle
+  // inside the JSX map: that mutation is not safe if React re-runs or memoizes
+  // the callback, which silently corrupts every slice after the first.
+  const centerX = 96
+  const centerY = 96
+  const radius = 80
+
+  // Cumulative start angle per slice, computed without mutating shared state
+  // during render.
+  const startAngles = data.reduce<number[]>((acc, item, i) => {
+    acc.push(i === 0 ? 0 : acc[i - 1] + (data[i - 1].value / total) * 360)
+    return acc
+  }, [])
+
+  const slices = data.map((item, i) => {
+    const angle = (item.value / total) * 360
+    const startAngle = startAngles[i]
+    const endAngle = startAngle + angle
+
+    const startAngleRad = (startAngle * Math.PI) / 180
+    const endAngleRad = (endAngle * Math.PI) / 180
+
+    const x1 = centerX + radius * Math.cos(startAngleRad)
+    const y1 = centerY + radius * Math.sin(startAngleRad)
+    const x2 = centerX + radius * Math.cos(endAngleRad)
+    const y2 = centerY + radius * Math.sin(endAngleRad)
+    const largeArcFlag = angle > 180 ? 1 : 0
+
+    return {
+      color: item.color,
+      pathData: [
+        `M ${centerX} ${centerY}`,
+        `L ${x1} ${y1}`,
+        `A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2}`,
+        "Z",
+      ].join(" "),
+    }
+  })
 
   return (
     <div className={cn("w-full h-full flex items-center justify-center p-4", className)}>
@@ -115,47 +153,16 @@ export function SimplePieChart({ data, className }: SimplePieChartProps) {
         {/* SVG Chart */}
         <div className="relative w-48 h-48 flex-shrink-0">
           <svg width="192" height="192" viewBox="0 0 192 192" className="transform -rotate-90 w-full h-full">
-            {data.map((item, index) => {
-              const percentage = item.value / total
-              const angle = percentage * 360
-              const startAngle = currentAngle
-              const endAngle = currentAngle + angle
-              
-              // Calculate path for pie slice
-              const centerX = 96
-              const centerY = 96
-              const radius = 80
-              
-              const startAngleRad = (startAngle * Math.PI) / 180
-              const endAngleRad = (endAngle * Math.PI) / 180
-              
-              const x1 = centerX + radius * Math.cos(startAngleRad)
-              const y1 = centerY + radius * Math.sin(startAngleRad)
-              const x2 = centerX + radius * Math.cos(endAngleRad)
-              const y2 = centerY + radius * Math.sin(endAngleRad)
-              
-              const largeArcFlag = angle > 180 ? 1 : 0
-              
-              const pathData = [
-                `M ${centerX} ${centerY}`,
-                `L ${x1} ${y1}`,
-                `A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2}`,
-                'Z'
-              ].join(' ')
-              
-              currentAngle += angle
-              
-              return (
-                <path
-                  key={index}
-                  d={pathData}
-                  fill={item.color}
-                  stroke="white"
-                  strokeWidth="2"
-                  className="transition-all hover:opacity-80"
-                />
-              )
-            })}
+            {slices.map((slice, index) => (
+              <path
+                key={index}
+                d={slice.pathData}
+                fill={slice.color}
+                stroke="white"
+                strokeWidth="2"
+                className="transition-all hover:opacity-80"
+              />
+            ))}
           </svg>
         </div>
         

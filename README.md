@@ -7,12 +7,14 @@ An offline-first, AI-powered retail operating system for African retail chains.
 | Path | Purpose |
 |---|---|
 | `ledgermindv1-main/` | Next.js back-office dashboard |
-| `flutter_billing_app-main/` | Flutter mobile POS |
-| `flutter_ml_credit_card_data_extractor-main/` | ML credit-card scanner Flutter module |
+| `flutter_billing_app-main/` | Flutter mobile POS (card scanner is folded in — see AD-20) |
 | `infra/supabase/migrations/` | Ordered Supabase SQL migrations |
 | `infra/supabase/seed/` | Seed scripts for roles and demo data |
-| `supabase/functions/` | Deployable Supabase Edge Functions |
+| `infra/supabase/functions/` | Edge Function **sources** (edit these) |
+| `supabase/functions/` | Edge Function **deploy copies** — kept byte-identical to the sources above; `node scripts/verify-edge-functions.js` enforces it |
 | `supabase/templates/` | LedgerMind-branded email templates |
+| `supabase/config.toml` | Supabase CLI project root (migrations, auth, function JWT settings) |
+| `scripts/` | Migration runner and pre-deploy verification scripts |
 | `docs/` | Architecture and design documentation |
 
 ## Key documents
@@ -26,9 +28,31 @@ An offline-first, AI-powered retail operating system for African retail chains.
 
 ## Status
 
+Verified 2026-07-30:
+
+| Check | Command | Result |
+|---|---|---|
+| Dashboard typecheck | `npm run typecheck` | clean |
+| Dashboard lint | `npm run lint` | 0 errors, 47 warnings |
+| Dashboard build | `npm run build` | passes |
+| POS static analysis | `flutter analyze` | 0 issues |
+| POS unit tests | `flutter test` | 20 passing |
+| Edge Function sync | `node scripts/verify-edge-functions.js` | in sync |
+
 - Dashboard ↔ Supabase integration: working.
-- POS backend RPCs and Edge Functions: deployed.
 - Flutter POS login branch-selection bug: fixed.
-- Remaining blockers: Supabase plan/custom SMTP for branded emails and Google OAuth credentials.
+
+**Blockers before real customers:**
+
+1. **Re-deploy both Edge Functions.** The deployed webhook was rejecting every
+   Paystack callback (missing `verify_jwt = false`), and the deployed
+   `paystack-initiate` had no mobile-money support. Both are fixed in the repo but
+   not yet pushed — see `GO_LIVE_CHECKLIST.md` §1.3.
+2. **Android release signing.** Generate the upload keystore and `key.properties`;
+   confirm the `com.ledgermind.pos` application ID before the first Play upload,
+   since it is permanent — see §4.1.
+3. Supabase paid plan or custom SMTP for branded auth emails, and Google OAuth
+   credentials — see §1.1 and §1.2.
+4. Delete the seeded test account and demo business — see §3.2.
 
 Start with <ref_file file="C:\Users\DELL\Desktop\POS\LEDGERMIND_OS_GUIDE.md" />.

@@ -32,12 +32,19 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
       UpdateShopEvent event, Emitter<ShopState> emit) async {
     emit(ShopLoading());
     final result = await updateShopUseCase(event.shop);
-    result.fold(
-      (failure) => emit(ShopError(failure.message)),
-      (_) {
-        // Reload shop to update state with latest data (though local is same)
-        add(LoadShopEvent());
-        emit(ShopOperationSuccess());
+    await result.fold(
+      (failure) async => emit(ShopError(failure.message)),
+      (_) async {
+        // Reload from Supabase so the UI reflects the persisted state,
+        // then signal success.
+        final reload = await getShopUseCase(NoParams());
+        reload.fold(
+          (failure) => emit(ShopOperationSuccess()),
+          (shop) {
+            emit(ShopLoaded(shop));
+            emit(ShopOperationSuccess());
+          },
+        );
       },
     );
   }

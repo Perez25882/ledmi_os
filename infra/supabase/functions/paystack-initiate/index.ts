@@ -16,6 +16,8 @@ interface Dependencies {
 interface InitiatePayload {
   intent_id?: string;
   callback_url?: string;
+  momo_provider?: string; // 'mtn' | 'vod' | 'atl'
+  momo_phone?: string;
 }
 
 interface PaystackInitResponse {
@@ -88,6 +90,9 @@ async function paystackInitialize(
     amount: number; // in pesewas
     reference: string;
     callback_url?: string;
+    currency?: string;
+    momo_provider?: string; // 'mtn' | 'vod' | 'atl'
+    momo_phone?: string;
   },
   fetchFn: typeof globalThis.fetch = fetch,
 ): Promise<PaystackInitResponse> {
@@ -98,6 +103,19 @@ async function paystackInitialize(
   };
   if (payload.callback_url) {
     body.callback_url = payload.callback_url;
+  }
+
+  // Mobile money (MoMo) flow. Paystack requires the `channel` set to
+  // `mobile_money` and the customer's phone number under `mobile_money.phone`.
+  // All Ghanaian MoMo providers (MTN, Vodafone/Cash, AirtelTigo) are served by
+  // the single `mobile_money` channel — Paystack auto-detects the network.
+  if (payload.momo_phone) {
+    body.currency = payload.currency ?? "GHS";
+    body.channel = "mobile_money";
+    body.mobile_money = { phone: payload.momo_phone };
+  } else {
+    // Card flow — restrict to card channel so Paystack does not surface MoMo.
+    body.channel = "card";
   }
 
   const response = await fetchFn("https://api.paystack.co/transaction/initialize", {
@@ -176,6 +194,8 @@ export async function handleInitiate(request: Request, deps: Dependencies = {}):
         amount: amountInPesewas,
         reference,
         callback_url: body.callback_url,
+        momo_provider: body.momo_provider,
+        momo_phone: body.momo_phone,
       },
       fetchFn,
     );

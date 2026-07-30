@@ -1,4 +1,7 @@
 import 'package:get_it/get_it.dart';
+import '../../features/onboarding/data/services/onboarding_service.dart';
+import '../../features/onboarding/presentation/bloc/onboarding_bloc.dart';
+import '../../features/owner/presentation/bloc/owner_bloc.dart';
 import '../../features/product/data/repositories/product_repository_impl.dart';
 import '../../features/product/domain/repositories/product_repository.dart';
 import '../../features/product/domain/usecases/product_usecases.dart';
@@ -15,6 +18,7 @@ import '../../features/billing/data/services/checkout_service.dart';
 import '../../features/billing/data/services/shift_service.dart';
 import '../../features/sync/data/services/offline_queue_service.dart';
 import '../../features/sync/data/services/offline_sync_service.dart';
+import 'services/barcode_lookup_service.dart';
 import 'supabase/auth_service.dart';
 
 final sl = GetIt.instance;
@@ -82,4 +86,14 @@ Future<void> init() async {
     () => OfflineSyncService(sl(), sl()),
   );
   sl.registerLazySingleton(() => ShiftService());
+
+  // Features - Owner / Management
+  sl.registerFactory(() => OwnerBloc());
+
+  // Barcode lookup (local cache + Open Food Facts fallback)
+  sl.registerLazySingleton(() => BarcodeLookupService());
+
+  // Onboarding
+  sl.registerLazySingleton(() => OnboardingService());
+  sl.registerFactory(() => OnboardingBloc(service: sl()));
 }

@@ -13,7 +13,17 @@ import '../../features/settings/presentation/pages/settings_page.dart';
 import '../../features/billing/presentation/pages/scanner_page.dart';
 import '../../features/billing/presentation/pages/card_scanner_page.dart';
 import '../../features/billing/presentation/pages/checkout_page.dart';
+import '../../features/billing/presentation/pages/receipt_preview_page.dart';
 import '../../features/billing/presentation/pages/refund_page.dart';
+import '../../features/owner/presentation/pages/owner_shell_page.dart';
+import '../../features/owner/presentation/pages/stock_in_page.dart';
+import '../../features/owner/presentation/pages/low_stock_page.dart';
+import '../../features/owner/presentation/pages/quick_add_product_page.dart';
+import '../../features/owner/presentation/pages/reports_page.dart';
+import '../../features/onboarding/presentation/pages/business_type_page.dart';
+import '../../features/onboarding/presentation/pages/starter_catalog_page.dart';
+import '../../features/onboarding/presentation/pages/shelf_scan_page.dart';
+import '../../features/onboarding/presentation/pages/onboarding_wrapper.dart';
 import '../../features/product/domain/entities/product.dart';
 
 final _authService = AuthService();
@@ -24,6 +34,11 @@ final _authService = AuthService();
 const _cashierBlocked = <String>{
   '/products/add',
   '/shop',
+  '/manage',
+  '/manage/stock-in',
+  '/manage/low-stock',
+  '/manage/quick-add',
+  '/manage/reports',
 };
 
 /// Routes restricted to owner/manager. Mirrors the dashboard `canAccessPage`
@@ -71,6 +86,16 @@ bool _isManageProductsBlocked(String location) {
   return false;
 }
 
+/// Whether [location] is any of the onboarding routes.
+bool _isOnboardingRoute(String location) =>
+    location == '/onboarding' ||
+    location.startsWith('/onboarding/');
+
+/// The home route for the current user — managers/owners land on `/manage`,
+/// everyone else on `/`.
+String _homeRoute() =>
+    SessionManager.canManageBusiness ? '/manage' : '/';
+
 String? _authRedirect(BuildContext context, GoRouterState state) {
   final isAuthenticated = _authService.isAuthenticated;
   final hasBranch = SessionManager.businessId != null && SessionManager.branchId != null;
@@ -85,14 +110,34 @@ String? _authRedirect(BuildContext context, GoRouterState state) {
   }
 
   if (isAuthenticated && hasBranch && (location == '/login' || location == '/branch-selection')) {
-    return '/';
+    // After login + branch selection, send incomplete onboarding to step 1.
+    if (!SessionManager.onboardingCompleted) {
+      return '/onboarding/business-type';
+    }
+    return _homeRoute();
+  }
+
+  // Onboarding gate: if onboarding is not complete, force the user into the
+  // onboarding flow (unless they are already there).
+  if (isAuthenticated && hasBranch && !SessionManager.onboardingCompleted) {
+    if (!_isOnboardingRoute(location)) {
+      return '/onboarding/business-type';
+    }
+    return null; // allow onboarding routes through
+  }
+
+  // Onboarding is complete — block access to onboarding routes.
+  if (isAuthenticated && hasBranch &&
+      SessionManager.onboardingCompleted &&
+      _isOnboardingRoute(location)) {
+    return _homeRoute();
   }
 
   if (isAuthenticated && hasBranch) {
     if (_isCashierBlocked(location) ||
         _isManagementOnlyBlocked(location) ||
         _isManageProductsBlocked(location)) {
-      return '/';
+      return _homeRoute();
     }
   }
 
@@ -119,6 +164,16 @@ final router = GoRouter(
         GoRoute(
           path: 'card-scanner',
           builder: (context, state) => const CardScannerPage(),
+        ),
+        GoRoute(
+          path: 'receipt',
+          builder: (context, state) {
+            final data = state.extra as ReceiptData?;
+            if (data == null) {
+              return const HomePage();
+            }
+            return ReceiptPreviewPage(data: data);
+          },
         ),
         GoRoute(
           path: 'refund',
@@ -156,12 +211,60 @@ final router = GoRouter(
       builder: (context, state) => const ShopDetailsPage(),
     ),
     GoRoute(
+      path: '/manage',
+      builder: (context, state) => const OwnerShellPage(),
+      routes: [
+        GoRoute(
+          path: 'stock-in',
+          builder: (context, state) => StockInPage(
+            preselectedProduct:
+                state.extra as Map<String, dynamic>?,
+          ),
+        ),
+        GoRoute(
+          path: 'low-stock',
+          builder: (context, state) => const LowStockPage(),
+        ),
+        GoRoute(
+          path: 'quick-add',
+          builder: (context, state) => const QuickAddProductPage(),
+        ),
+        GoRoute(
+          path: 'reports',
+          builder: (context, state) => const ReportsPage(),
+        ),
+      ],
+    ),
+    GoRoute(
       path: '/login',
       builder: (context, state) => const LoginPage(),
     ),
     GoRoute(
       path: '/branch-selection',
       builder: (context, state) => const BranchSelectionPage(),
+    ),
+    // Onboarding flow — wrapped in a shared BlocProvider via OnboardingWrapper.
+    GoRoute(
+      path: '/onboarding',
+      redirect: (context, state) => '/onboarding/business-type',
+    ),
+    ShellRoute(
+      builder: (context, state, child) =>
+          OnboardingWrapper(child: child),
+      routes: [
+        GoRoute(
+          path: '/onboarding/business-type',
+          builder: (context, state) => const BusinessTypePage(),
+        ),
+        GoRoute(
+          path: '/onboarding/starter-catalog',
+          builder: (context, state) => const StarterCatalogPage(),
+        ),
+        GoRoute(
+          path: '/onboarding/shelf-scan',
+          builder: (context, state) => const ShelfScanPage(),
+        ),
+      ],
     ),
   ],
 );

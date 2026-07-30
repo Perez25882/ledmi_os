@@ -13,6 +13,15 @@ class CheckoutResult {
   CheckoutResult({this.saleId, this.queueId, this.wasQueued = false});
 }
 
+/// A single allocation within a split payment (POS-3). `method` matches the
+/// codes used by `createCheckoutIntent` ('cash', 'momo', 'card').
+class SplitPaymentInput {
+  final String method;
+  final double amount;
+
+  const SplitPaymentInput({required this.method, required this.amount});
+}
+
 class CheckoutService {
   final _client = SupabaseClientManager.client;
   final _uuid = const Uuid();
@@ -28,6 +37,8 @@ class CheckoutService {
           'product_id': item.product.id,
           'quantity': item.quantity,
           'unit_price': item.product.price,
+          'is_quick_sale': item.isQuickSale,
+          if (item.isQuickSale) 'quick_sale_name': item.quickSaleName,
         }).toList();
   }
 
@@ -110,6 +121,55 @@ class CheckoutService {
       itemsJson: itemsJson,
       total: discountedTotal,
     );
+  }
+
+  /// Processes a sale paid across multiple methods (POS-3). Methods are
+  /// processed sequentially: the sale is recorded once (via the cash checkout
+  /// RPC, which creates the sale + a cash payment event for the full total),
+  /// then a checkout intent is created for every non-cash allocation so the
+  /// customer can authorize the MoMo/card portions. When offline, the sale is
+  /// queued and synced later.
+  Future<CheckoutResult> processSplitCheckout({
+    required List<CartItem> items,
+    required double discount,
+    required List<SplitPaymentInput> payments,
+  }) async {
+    final total = _computeTotal(items, discount);
+    final itemsJson = _buildItemsPayload(items);
+    final idempotencyKey = _newIdempotencyKey();
+
+    if (await _offlineQueueService.isOnline()) {
+      try {
+        final saleId = await _processCashCheckoutOnline(
+          idempotencyKey: idempotencyKey,
+          itemsJson: itemsJson,
+          total: total,
+        );
+
+        // Create a payment intent for each non-cash allocation so the
+        // customer can authorize MoMo/card portions against this sale.
+        for (final entry in payments) {
+          if (entry.method == 'cash') continue;
+          if (entry.amount <= 0) continue;
+          await createCheckoutIntent(
+            items: items,
+            discount: discount,
+            method: entry.method,
+          );
+        }
+
+        return CheckoutResult(saleId: saleId);
+      } on Exception catch (_) {
+        // Fall through to the offline queue if any RPC fails.
+      }
+    }
+
+    final op = await _offlineQueueService.enqueueSale(
+      items: items,
+      discount: discount,
+      total: total,
+    );
+    return CheckoutResult(queueId: op.id, wasQueued: true);
   }
 
   Future<CheckoutIntent> createCheckoutIntent({

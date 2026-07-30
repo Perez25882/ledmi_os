@@ -4,6 +4,25 @@ enum PaymentMethod { cash, momo, card }
 
 enum MoMoProvider { mtn, vodafone, airteltigo }
 
+/// A single allocation within a split payment (POS-3). Each entry pairs a
+/// payment method with the amount the cashier assigned to it.
+class SplitPayment extends Equatable {
+  final PaymentMethod method;
+  final double amount;
+
+  const SplitPayment({required this.method, this.amount = 0});
+
+  SplitPayment copyWith({PaymentMethod? method, double? amount}) {
+    return SplitPayment(
+      method: method ?? this.method,
+      amount: amount ?? this.amount,
+    );
+  }
+
+  @override
+  List<Object> get props => [method, amount];
+}
+
 class BillingState extends Equatable {
   final List<CartItem> cartItems;
   final PaymentMethod paymentMethod;
@@ -23,6 +42,23 @@ class BillingState extends Equatable {
   final MoMoProvider? momoProvider;
   final String? momoPhone;
 
+  /// Split-payment allocations (POS-3). Empty by default so the single-payment
+  /// flow is preserved; populated only when the cashier adds a second method.
+  final List<SplitPayment> splitPayments;
+
+  /// True when the last successful checkout was queued offline (no saleId yet).
+  final bool wasQueued;
+
+  /// The barcode that was scanned but not found in the catalog. The UI listens
+  /// for this to surface the Quick Sale dialog. Cleared via
+  /// [ClearQuickSalePromptEvent] once the dialog is dismissed.
+  final String? notFoundBarcode;
+
+  /// Smart Quick Sale suggestions — quick sale items sold frequently enough to
+  /// warrant being promoted to the catalog. Empty by default; populated by
+  /// [LoadQuickSaleSuggestionsEvent].
+  final List<QuickSaleSuggestion> quickSaleSuggestions;
+
   const BillingState({
     this.cartItems = const [],
     this.paymentMethod = PaymentMethod.cash,
@@ -41,6 +77,10 @@ class BillingState extends Equatable {
     this.cardExpiry,
     this.momoProvider,
     this.momoPhone,
+    this.splitPayments = const [],
+    this.wasQueued = false,
+    this.notFoundBarcode,
+    this.quickSaleSuggestions = const [],
   });
 
   double get subtotal => cartItems.fold(0, (sum, item) => sum + item.total);
@@ -48,6 +88,22 @@ class BillingState extends Equatable {
   double get totalAmount => (subtotal - discountAmount).clamp(0, double.infinity).toDouble();
 
   double get change => (amountTendered - totalAmount).clamp(0, double.infinity).toDouble();
+
+  /// Sum of all split-payment allocations.
+  double get splitTotal =>
+      splitPayments.fold(0, (sum, entry) => sum + entry.amount);
+
+  /// Outstanding amount still to be allocated across split payments.
+  double get remainingBalance =>
+      (totalAmount - splitTotal).clamp(0, double.infinity).toDouble();
+
+  /// True when the cashier is combining more than one payment method.
+  bool get isSplitPayment => splitPayments.length > 1;
+
+  /// True when split allocations exactly cover the total (POS-3 validation).
+  bool get splitBalanced =>
+      splitPayments.isNotEmpty &&
+      (totalAmount - splitTotal).abs() < 0.005;
 
   BillingState copyWith({
     List<CartItem>? cartItems,
@@ -68,6 +124,12 @@ class BillingState extends Equatable {
     String? cardExpiry,
     MoMoProvider? momoProvider,
     String? momoPhone,
+    List<SplitPayment>? splitPayments,
+    bool clearSplitPayments = false,
+    bool? wasQueued,
+    String? notFoundBarcode,
+    bool clearNotFound = false,
+    List<QuickSaleSuggestion>? quickSaleSuggestions,
   }) {
     return BillingState(
       cartItems: cartItems ?? this.cartItems,
@@ -87,6 +149,13 @@ class BillingState extends Equatable {
       cardExpiry: cardExpiry ?? this.cardExpiry,
       momoProvider: momoProvider ?? this.momoProvider,
       momoPhone: momoPhone ?? this.momoPhone,
+      splitPayments:
+          clearSplitPayments ? const [] : (splitPayments ?? this.splitPayments),
+      wasQueued: wasQueued ?? this.wasQueued,
+      notFoundBarcode:
+          clearNotFound ? null : (notFoundBarcode ?? this.notFoundBarcode),
+      quickSaleSuggestions:
+          quickSaleSuggestions ?? this.quickSaleSuggestions,
     );
   }
 
@@ -111,5 +180,9 @@ class BillingState extends Equatable {
         cardExpiry,
         momoProvider,
         momoPhone,
+        splitPayments,
+        wasQueued,
+        notFoundBarcode,
+        quickSaleSuggestions,
       ];
 }

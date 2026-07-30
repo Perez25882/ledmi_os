@@ -16,6 +16,7 @@ export type DashboardPage =
   | "shifts"
   | "inventory"
   | "catalog"
+  | "quick-sales"
   | "users"
   | "settings"
   | "reports"
@@ -56,6 +57,7 @@ const PAGE_ROLES: Record<DashboardPage, RoleName[]> = {
   shifts: ["owner", "manager"],
   inventory: ["owner", "manager"],
   catalog: ["owner", "manager"],
+  "quick-sales": ["owner", "manager"],
   users: ["owner"],
   settings: ["owner", "manager"],
   reports: ["owner", "accountant"],
@@ -89,17 +91,35 @@ export function canAccessAllBranches(roleName: string): boolean {
   return roleName === "owner" || roleName === "accountant"
 }
 
-export function getScopedBranchIds(context: UserRoleContext): string[] {
+export function getScopedBranchIds(
+  context: UserRoleContext,
+  selectedBranchId?: string | null
+): string[] {
   if (canAccessAllBranches(context.roleName)) {
+    if (selectedBranchId && context.branches.some((b) => b.id === selectedBranchId)) {
+      return [selectedBranchId]
+    }
     return context.branches.map((b) => b.id)
   }
   return [context.branchId]
 }
 
+/**
+ * Resolves the branch filter for the current user.
+ *
+ * Owners/accountants can see every branch ("All Branches") unless they have
+ * picked a specific branch via the global branch selector — in which case
+ * `selectedBranchId` scopes the result to that branch. Managers/cashiers are
+ * always pinned to their assigned branch and ignore the selector.
+ */
 export function getScopedBranchFilter(
-  context: UserRoleContext
+  context: UserRoleContext,
+  selectedBranchId?: string | null
 ): { branchId: string | undefined; allBranches: boolean } {
   if (canAccessAllBranches(context.roleName)) {
+    if (selectedBranchId && context.branches.some((b) => b.id === selectedBranchId)) {
+      return { branchId: selectedBranchId, allBranches: false }
+    }
     return { branchId: undefined, allBranches: true }
   }
   return { branchId: context.branchId, allBranches: false }

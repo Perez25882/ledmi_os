@@ -1,4 +1,3 @@
-import { redirect } from "next/navigation"
 import { requirePageAccess } from "@/lib/supabase/guards"
 import { getProducts, getCategories } from "@/lib/supabase/data/catalog"
 import {
@@ -26,7 +25,8 @@ import {
   deleteCategoryAction,
 } from "./actions"
 import { DeleteButton } from "./delete-button"
-import { Package, Tag } from "lucide-react"
+import { Package, Tag, Upload } from "lucide-react"
+import Link from "next/link"
 
 export default async function CatalogPage() {
   const context = await requirePageAccess("catalog")
@@ -51,6 +51,12 @@ export default async function CatalogPage() {
             Manage products and categories
           </p>
         </div>
+        <Button asChild variant="outline">
+          <Link href="/dashboard/catalog/import">
+            <Upload className="h-4 w-4" />
+            Import CSV
+          </Link>
+        </Button>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">

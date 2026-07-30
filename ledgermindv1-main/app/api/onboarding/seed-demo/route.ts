@@ -51,7 +51,7 @@ export async function POST(_request: NextRequest) {
     const serviceClient = createServiceClient()
 
     // Use the user's existing business/branch if available; otherwise create one.
-    let { data: membership, error: membershipError } = await serviceClient
+    const { data: membership, error: membershipError } = await serviceClient
       .from("user_business_roles")
       .select("business_id")
       .eq("user_id", user.id)

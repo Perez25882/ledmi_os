@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:app_settings/app_settings.dart';
 
+import '../../../../main.dart';
 import '../../../../core/supabase/session_manager.dart';
 import '../../../../core/theme/app_theme.dart';
-import '../../../shop/presentation/bloc/shop_bloc.dart';
 import '../bloc/printer_bloc.dart';
 import '../bloc/printer_event.dart';
 import '../bloc/printer_state.dart';
@@ -18,8 +18,6 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  final bool _canManageBusiness = SessionManager.canManageBusiness;
-
   @override
   void initState() {
     super.initState();
@@ -28,7 +26,13 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final role = SessionManager.currentRole;
+    final branchName = SessionManager.branchId ?? 'No branch';
+    final userName = _roleLabel(role.name);
+    final initial = userName.isNotEmpty ? userName[0].toUpperCase() : 'U';
+
     return Scaffold(
+      backgroundColor: AppTheme.background,
       appBar: AppBar(
         title: const Text('Settings',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
@@ -36,206 +40,267 @@ class _SettingsPageState extends State<SettingsPage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.chevron_left,
-              size: 28, color: Theme.of(context).primaryColor),
+          icon: const Icon(Icons.chevron_left,
+              size: 28, color: AppTheme.primary),
           onPressed: () => context.pop(),
+        ),
+        bottom: const PreferredSize(
+          preferredSize: Size.fromHeight(1),
+          child: Divider(height: 1, thickness: 1, color: AppTheme.border),
         ),
       ),
       body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Profile Section
+            // Profile card
             Container(
-              width: double.infinity,
-              color: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
-              child: BlocBuilder<ShopBloc, ShopState>(
-                builder: (context, state) {
-                  String shopName = 'Elite Groceries';
-                  String initials = 'EG';
-                  if (state is ShopLoaded && state.shop.name.isNotEmpty) {
-                    shopName = state.shop.name;
-                    final parts = shopName.split(' ');
-                    initials = parts
-                        .take(2)
-                        .map((p) => p.isNotEmpty ? p[0].toUpperCase() : '')
-                        .join('');
-                    if (initials.isEmpty) initials = 'S';
-                  }
-
-                  return Column(
-                    children: [
-                      Container(
-                        width: 96,
-                        height: 96,
-                        decoration: BoxDecoration(
-                            color: AppTheme.primaryColor,
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: AppTheme.primaryColor
-                                    .withValues(alpha: 0.2),
-                                blurRadius: 15,
-                                spreadRadius: 5,
-                              )
-                            ]),
-                        alignment: Alignment.center,
-                        child: Text(initials,
-                            style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 32,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: -1)),
-                      ),
-                      const SizedBox(height: 16),
-                      Text(shopName.toUpperCase(),
-                          style: const TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold)),
-                    ],
-                  );
-                },
-              ),
-            ),
-
-            const SizedBox(height: 24),
-
-            // Management Section — owner/manager only. Cashiers are limited to
-            // printer pairing + profile (Option A RBAC decision).
-            if (_canManageBusiness) ...[
-              _buildSectionHeader('Management'),
-              _buildListGroup(
-                children: [
-                  _buildListItem(
-                    icon: Icons.qr_code_scanner,
-                    title: 'Products',
-                    subtitle: 'Manage stock and barcodes',
-                    onTap: () => context.push('/products'),
-                  ),
-                  _buildDivider(),
-                  _buildListItem(
-                    icon: Icons.storefront,
-                    title: 'Shop Details',
-                    subtitle: 'Edit business info & address',
-                    onTap: () => context.push('/shop'),
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: AppTheme.card,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: AppTheme.border),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.04),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
                   ),
                 ],
               ),
-              const SizedBox(height: 24),
-            ],
-
-            // Hardware Section — available to all roles (cashier printer pairing).
-            _buildSectionHeader('Hardware'),
-            BlocConsumer<PrinterBloc, PrinterState>(
-              listener: (context, state) {
-                if (state.errorMessage != null) {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text(state.errorMessage!),
-                      backgroundColor: Colors.red));
-                } else if (state.status == PrinterStatus.connected) {
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text('Connected to printer'),
-                      backgroundColor: Colors.green));
-                }
-              },
-              builder: (context, state) {
-                return _buildListGroup(
-                  children: [
-                    _buildListItem(
-                      icon: Icons.print,
-                      title: 'Print Device',
-                      subtitleWidget: Row(
-                        children: [
-                          Text(
-                            state.connectedMac != null
-                                ? (state.connectedName ?? 'Printer connected')
-                                : 'No printer connected',
-                            style: TextStyle(
-                                fontSize: 12, color: Colors.grey[500]),
-                          ),
-                          if (state.connectedMac != null) ...[
-                            const SizedBox(width: 8),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 6, vertical: 2),
-                              decoration: BoxDecoration(
-                                  color: Colors.teal[100],
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(color: Colors.teal[200]!)),
-                              child: Text(
-                                'CONNECTED',
-                                style: TextStyle(
-                                    fontSize: 9,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.teal[700]),
-                              ),
-                            ),
-                          ]
-                        ],
-                      ),
-                      trailingWidget: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          if (state.status == PrinterStatus.scanning ||
-                              state.status == PrinterStatus.connecting)
-                            const SizedBox(
-                                width: 24,
-                                height: 24,
-                                child:
-                                    CircularProgressIndicator(strokeWidth: 2))
-                          else
-                            IconButton(
-                              icon: const Icon(Icons.refresh),
-                              onPressed: () => context
-                                  .read<PrinterBloc>()
-                                  .add(RefreshPrinterEvent()),
-                              color: AppTheme.primaryColor,
-                            ),
-                          IconButton(
-                            icon: const Icon(Icons.settings),
-                            onPressed: () {
-                              AppSettings.openAppSettings(
-                                  type: AppSettingsType.bluetooth);
-                            },
-                            color: Colors.grey,
-                          ),
-                        ],
+              child: Row(
+                children: [
+                  Container(
+                    width: 52,
+                    height: 52,
+                    decoration: const BoxDecoration(
+                      color: AppTheme.accent,
+                      shape: BoxShape.circle,
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      initial,
+                      style: const TextStyle(
+                        color: AppTheme.primary,
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ],
-                );
-              },
-            ),
-
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              child: Text(
-                "To connect a new device, tap on the Settings gear to pair in phone's Bluetooth settings, then return and hit Refresh.",
-                style: TextStyle(
-                    fontSize: 11,
-                    fontStyle: FontStyle.italic,
-                    color: Colors.grey[500]),
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(userName,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: AppTheme.foreground,
+                            )),
+                        const SizedBox(height: 2),
+                        Text(
+                          '${role.name[0].toUpperCase()}${role.name.substring(1)} - $branchName',
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: AppTheme.mutedForeground,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            Container(
+                              width: 8,
+                              height: 8,
+                              decoration: const BoxDecoration(
+                                color: AppTheme.success,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            const SizedBox(width: 6),
+                            const Text(
+                              'Shift: Open',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                                color: AppTheme.success,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
+            const SizedBox(height: 24),
 
-            const SizedBox(height: 48),
+            // STORE section
+            _buildSectionHeader('STORE'),
+            _buildListGroup(
+              children: [
+                _buildListItem(
+                  icon: Icons.storefront,
+                  title: 'Shop Details',
+                  onTap: () => context.push('/shop'),
+                ),
+                _buildDivider(),
+                _buildListItem(
+                  icon: Icons.inventory_2_outlined,
+                  title: 'Products',
+                  value: '45 items',
+                  onTap: () => context.push('/products'),
+                ),
+                _buildDivider(),
+                BlocConsumer<PrinterBloc, PrinterState>(
+                  listener: (context, state) {
+                    if (state.errorMessage != null) {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(state.errorMessage!),
+                          backgroundColor: AppTheme.destructive));
+                    } else if (state.status == PrinterStatus.connected) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text('Connected to printer'),
+                          backgroundColor: AppTheme.success));
+                    }
+                  },
+                  builder: (context, state) {
+                    return _buildListItem(
+                      icon: Icons.print_outlined,
+                      title: 'Print Receipt',
+                      value: state.connectedMac != null
+                          ? (state.connectedName ?? 'Connected')
+                          : 'Bluetooth',
+                      trailingWidget: state.status == PrinterStatus.scanning ||
+                              state.status == PrinterStatus.connecting
+                          ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(strokeWidth: 2))
+                          : Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  icon: const Icon(Icons.refresh,
+                                      size: 20, color: AppTheme.primary),
+                                  onPressed: () => context
+                                      .read<PrinterBloc>()
+                                      .add(RefreshPrinterEvent()),
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.settings,
+                                      size: 20, color: AppTheme.mutedForeground),
+                                  onPressed: () => AppSettings.openAppSettings(
+                                      type: AppSettingsType.bluetooth),
+                                ),
+                              ],
+                            ),
+                    );
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 24),
+
+            // PAYMENTS section
+            _buildSectionHeader('PAYMENTS'),
+            _buildListGroup(
+              children: [
+                _buildListItem(
+                  icon: Icons.point_of_sale,
+                  title: 'Cash Drawer',
+                  value: 'Active',
+                ),
+                _buildDivider(),
+                _buildListItem(
+                  icon: Icons.phone_android,
+                  title: 'Mobile Money',
+                  value: 'Connected',
+                ),
+                _buildDivider(),
+                _buildListItem(
+                  icon: Icons.credit_card,
+                  title: 'Card Payments',
+                  value: 'Paystack',
+                ),
+              ],
+            ),
+            const SizedBox(height: 24),
+
+            // ACCOUNT section
+            _buildSectionHeader('ACCOUNT'),
+            _buildListGroup(
+              children: [
+                _buildListItem(
+                  icon: Icons.person_outline,
+                  title: 'Profile',
+                ),
+                _buildDivider(),
+                _buildListItem(
+                  icon: Icons.dark_mode_outlined,
+                  title: 'Appearance',
+                  value: 'Dark mode',
+                  trailingWidget: ValueListenableBuilder<ThemeMode>(
+                    valueListenable: themeModeNotifier,
+                    builder: (context, mode, _) {
+                      return Switch(
+                        value: mode == ThemeMode.dark,
+                        activeThumbColor: AppTheme.primary,
+                        onChanged: (enabled) =>
+                            themeModeNotifier.setDarkMode(enabled),
+                      );
+                    },
+                  ),
+                  onTap: null,
+                ),
+                _buildDivider(),
+                _buildListItem(
+                  icon: Icons.logout,
+                  title: 'Sign Out',
+                  iconTint: AppTheme.destructive,
+                  iconBg: AppTheme.destructive.withValues(alpha: 0.1),
+                  titleColor: AppTheme.destructive,
+                  onTap: () => _signOut(context),
+                ),
+              ],
+            ),
+            const SizedBox(height: 32),
           ],
         ),
       ),
     );
   }
 
+  void _signOut(BuildContext context) async {
+    await SessionManager.clearSensitiveData();
+    if (context.mounted) context.go('/login');
+  }
+
+  String _roleLabel(String role) {
+    switch (role.toLowerCase()) {
+      case 'owner':
+        return 'Owner';
+      case 'manager':
+        return 'Manager';
+      case 'accountant':
+        return 'Accountant';
+      default:
+        return 'Cashier';
+    }
+  }
+
   Widget _buildSectionHeader(String title) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-      child: Align(
-        alignment: Alignment.centerLeft,
-        child: Text(
-          title.toUpperCase(),
-          style: const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-              color: Colors.grey,
-              letterSpacing: 1.2),
+      padding: const EdgeInsets.only(left: 8, bottom: 8),
+      child: Text(
+        title,
+        style: const TextStyle(
+          fontSize: 11,
+          fontWeight: FontWeight.w600,
+          color: AppTheme.mutedForeground,
+          letterSpacing: 1.1,
         ),
       ),
     );
@@ -243,70 +308,68 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Widget _buildListGroup({required List<Widget> children}) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppTheme.card,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey[100]!),
+        border: Border.all(color: AppTheme.border),
       ),
       child: Column(children: children),
     );
   }
 
   Widget _buildDivider() {
-    return Divider(height: 1, thickness: 1, color: Colors.grey[50], indent: 64);
+    return const Divider(height: 1, thickness: 1, color: AppTheme.border, indent: 64);
   }
 
   Widget _buildListItem({
     required IconData icon,
     required String title,
-    String? subtitle,
-    Widget? subtitleWidget,
+    String? value,
     Widget? trailingWidget,
     IconData? trailingIcon = Icons.chevron_right,
+    Color iconTint = AppTheme.primary,
+    Color iconBg = AppTheme.accent,
+    Color titleColor = AppTheme.foreground,
     VoidCallback? onTap,
   }) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         child: Row(
           children: [
             Container(
-              width: 40,
-              height: 40,
+              width: 36,
+              height: 36,
               decoration: BoxDecoration(
-                color: AppTheme.primaryColor.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(8),
+                color: iconBg,
+                borderRadius: BorderRadius.circular(10),
               ),
-              child: Icon(icon, color: AppTheme.primaryColor, size: 20),
+              child: Icon(icon, color: iconTint, size: 18),
             ),
-            const SizedBox(width: 16),
+            const SizedBox(width: 14),
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(title,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.w600, fontSize: 14)),
-                  if (subtitle != null) ...[
-                    const SizedBox(height: 2),
-                    Text(subtitle,
-                        style:
-                            TextStyle(fontSize: 12, color: Colors.grey[500])),
-                  ],
-                  if (subtitleWidget != null) ...[
-                    const SizedBox(height: 4),
-                    subtitleWidget,
-                  ]
-                ],
-              ),
+              child: Text(title,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14,
+                    color: titleColor,
+                  )),
             ),
+            if (value != null)
+              Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: Text(value,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: AppTheme.mutedForeground,
+                    )),
+              ),
             if (trailingWidget != null)
               trailingWidget
             else if (trailingIcon != null)
-              Icon(trailingIcon, color: Colors.grey[300]),
+              Icon(trailingIcon, color: AppTheme.mutedForeground, size: 20),
           ],
         ),
       ),

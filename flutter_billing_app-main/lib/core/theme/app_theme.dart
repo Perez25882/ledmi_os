@@ -24,6 +24,8 @@ class AppTheme {
   static const Color accentForeground = Color(0xFF161616);
   static const Color destructive = Color(0xFFCC272E);
   static const Color destructiveForeground = Color(0xFFFFFFFF);
+  static const Color success = Color(0xFF22C55E);
+  static const Color warning = Color(0xFFF59E0B);
   static const Color border = Color(0xFFE4E4E4);
   static const Color input = Color(0xFFFFFFFF);
   static const Color ring = Color(0xFF008994);

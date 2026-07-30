@@ -1,4 +1,3 @@
-import { redirect } from "next/navigation"
 import { requirePageAccess } from "@/lib/supabase/guards"
 import { createServiceClient } from "@/lib/supabase/server"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"

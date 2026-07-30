@@ -29,6 +29,7 @@ class SessionManager {
   static const String _shiftOpenedAtKey = 'shift_opened_at';
   static const String _shiftFloatKey = 'shift_float';
   static const String _reLoginRequiredKey = 're_login_required';
+  static const String _onboardingCompletedKey = 'onboarding_completed';
 
   static late Box<String> _box;
 
@@ -86,6 +87,17 @@ class SessionManager {
   static bool get canManageBusiness =>
       isOwner || isManager;
 
+  /// Whether onboarding has been completed for the current business. Cached
+  /// in Hive so the router can redirect synchronously. Set during branch
+  /// selection (queried from `businesses.onboarding_completed`) and updated
+  /// when the onboarding flow finishes.
+  static bool get onboardingCompleted =>
+      _box.get(_onboardingCompletedKey) == 'true';
+
+  static Future<void> setOnboardingCompleted(bool value) async {
+    await _box.put(_onboardingCompletedKey, value ? 'true' : 'false');
+  }
+
   /// SYNC_PROTOCOL §3.2: when the token refresh fails, sync must stop and the
   /// cashier must re-authenticate. This flag is checked by the sync drain and
   /// can be observed by the router to redirect to login. The offline queue is
@@ -137,6 +149,7 @@ class SessionManager {
     await _box.delete(_roleIdKey);
     await _box.delete(_roleNameKey);
     await _box.delete(_permissionsKey);
+    await _box.delete(_onboardingCompletedKey);
     await _box.put(_shiftOpenKey, 'false');
     await _box.delete(_shiftIdKey);
     await _box.delete(_shiftOpenedAtKey);

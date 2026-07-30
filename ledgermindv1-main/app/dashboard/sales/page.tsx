@@ -1,7 +1,7 @@
-import { redirect } from "next/navigation"
 import { getSales } from "@/lib/supabase/data/sales"
 import { requirePageAccess } from "@/lib/supabase/guards"
 import { getScopedBranchFilter } from "@/lib/supabase/permissions"
+import { getSelectedBranchId } from "@/lib/supabase/selected-branch"
 import {
   Card,
   CardContent,
@@ -9,18 +9,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
 import { Receipt } from "lucide-react"
 import { SalesFilter } from "./filter"
 import { ExportSalesButton } from "./export-button"
+import { SalesTable } from "./sales-table"
 
 export default async function SalesPage({
   searchParams,
@@ -29,7 +21,11 @@ export default async function SalesPage({
 }) {
   const context = await requirePageAccess("sales")
 
-  const { branchId: scopedBranchId, allBranches } = getScopedBranchFilter(context)
+  const selectedBranchId = await getSelectedBranchId(context)
+  const { branchId: scopedBranchId, allBranches } = getScopedBranchFilter(
+    context,
+    selectedBranchId
+  )
   const requestedBranch = allBranches ? searchParams?.branch : scopedBranchId
   const effectiveBranchId = allBranches ? requestedBranch : scopedBranchId
 
@@ -91,42 +87,7 @@ export default async function SalesPage({
         <CardContent>
           <div className="overflow-x-auto -mx-4 sm:mx-0">
             <div className="min-w-[900px] sm:min-w-0">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Invoice</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Cashier</TableHead>
-                    <TableHead>Method</TableHead>
-                    <TableHead>Total</TableHead>
-                    <TableHead>Items</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {sales.length > 0 ? (
-                    sales.map((sale) => (
-                      <TableRow key={sale.id}>
-                        <TableCell className="font-medium">{sale.invoice_number}</TableCell>
-                        <TableCell>{new Date(sale.created_at).toLocaleString()}</TableCell>
-                        <TableCell>{sale.cashier_email}</TableCell>
-                        <TableCell>
-                          <Badge variant={sale.payment_method === "cash" ? "secondary" : "outline"}>
-                            {sale.payment_method}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>GHS {sale.total.toFixed(2)}</TableCell>
-                        <TableCell>{sale.items.length}</TableCell>
-                      </TableRow>
-                    ))
-                  ) : (
-                    <TableRow>
-                      <TableCell colSpan={6} className="text-center py-8">
-                        No sales found.
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
+              <SalesTable sales={sales} />
             </div>
           </div>
         </CardContent>

@@ -1,6 +1,6 @@
-import { redirect } from "next/navigation"
 import { requirePageAccess } from "@/lib/supabase/guards"
 import { getScopedBranchFilter } from "@/lib/supabase/permissions"
+import { getSelectedBranchId } from "@/lib/supabase/selected-branch"
 import { getShifts } from "@/lib/supabase/data/shifts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -9,7 +9,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 export default async function ShiftsPage() {
   const context = await requirePageAccess("shifts")
 
-  const { branchId: scopedBranchId } = getScopedBranchFilter(context)
+  const selectedBranchId = await getSelectedBranchId(context)
+  const { branchId: scopedBranchId } = getScopedBranchFilter(context, selectedBranchId)
   const effectiveBranchId = scopedBranchId ?? context.branchId
 
   const shifts = await getShifts(context.businessId, effectiveBranchId)

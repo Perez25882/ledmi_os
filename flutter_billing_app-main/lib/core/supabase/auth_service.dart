@@ -70,6 +70,16 @@ class AuthService {
     );
   }
 
+  /// Sends a magic link (passwordless OTP) sign-in email. Supabase delivers
+  /// an email containing a link that completes the PKCE flow and establishes
+  /// a session — the existing `onAuthStateChange` listener picks it up.
+  Future<void> signInWithMagicLink(String email) {
+    return _supabase.auth.signInWithOtp(
+      email: email.trim(),
+      emailRedirectTo: 'io.supabase.flutter://login-callback/',
+    );
+  }
+
   Future<void> signOut() => _supabase.auth.signOut();
 
   void dispose() {

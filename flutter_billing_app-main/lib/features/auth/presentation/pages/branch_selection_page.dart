@@ -5,6 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../core/supabase/session_manager.dart';
 import '../../../../core/supabase/supabase_client.dart';
+import '../../../../core/theme/app_theme.dart';
 import '../../../product/presentation/bloc/product_bloc.dart';
 import '../../../sync/data/services/supabase_sync_service.dart';
 
@@ -126,11 +127,32 @@ class _BranchSelectionPageState extends State<BranchSelectionPage> {
         permissions: branch['permissions'] as Set<String>,
       );
 
+      // Query onboarding status so the router can redirect synchronously.
+      final bizId = branch['business_id'] as String;
+      try {
+        final rows = await _client
+            .from('businesses')
+            .select('onboarding_completed')
+            .eq('id', bizId)
+            .limit(1);
+        final completed = rows.isNotEmpty
+            ? (rows.first['onboarding_completed'] as bool? ?? false)
+            : true;
+        await SessionManager.setOnboardingCompleted(completed);
+      } catch (_) {
+        // Best-effort — assume completed so the user is not stuck.
+        await SessionManager.setOnboardingCompleted(true);
+      }
+
       await SupabaseSyncService().syncCatalog();
 
       if (mounted) {
         context.read<ProductBloc>().add(LoadProducts());
-        context.go('/');
+        if (SessionManager.onboardingCompleted) {
+          context.go('/');
+        } else {
+          context.go('/onboarding/business-type');
+        }
       }
     } catch (e) {
       setState(() {
@@ -147,42 +169,252 @@ class _BranchSelectionPageState extends State<BranchSelectionPage> {
 
   @override
   Widget build(BuildContext context) {
+    final user = _client.auth.currentUser;
+    final userName = user?.email?.split('@').first ?? 'User';
+    final initial = userName.isNotEmpty ? userName[0].toUpperCase() : 'U';
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Select Branch'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: _signOut,
-          ),
-        ],
-      ),
+      backgroundColor: AppTheme.background,
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator(color: AppTheme.primary))
           : _error != null
-              ? Center(child: Text(_error!, textAlign: TextAlign.center))
+              ? Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Text(
+                      _error!,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(color: AppTheme.destructive),
+                    ),
+                  ),
+                )
               : _branches.isEmpty
-                  ? const Center(child: Text('No branches available.'))
-                  : ListView.builder(
-                      itemCount: _branches.length,
-                      itemBuilder: (context, index) {
-                        final branch = _branches[index];
-                        final role = (branch['role_name'] as String)
-                            .toUpperCase();
-                        return ListTile(
-                          title: Text(branch['name'] as String),
-                          subtitle: Text(
-                            role.isEmpty ? 'No role assigned' : role,
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey[600],
-                              fontWeight: FontWeight.w600,
+                  ? Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.store_outlined, size: 48, color: AppTheme.mutedForeground),
+                          const SizedBox(height: 12),
+                          const Text('No branches available.',
+                              style: TextStyle(color: AppTheme.mutedForeground)),
+                          const SizedBox(height: 16),
+                          TextButton(onPressed: _signOut, child: const Text('Sign Out')),
+                        ],
+                      ),
+                    )
+                  : Column(
+                      children: [
+                        // Teal header
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.only(top: 60, left: 24, right: 24, bottom: 24),
+                          decoration: const BoxDecoration(color: AppTheme.primary),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Select Branch',
+                                style: TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppTheme.primaryForeground,
+                                ),
+                              ),
+                              const SizedBox(height: 6),
+                              const Text(
+                                'Choose your location to start',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: AppTheme.primaryForeground,
+                                ),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  IconButton(
+                                    icon: const Icon(Icons.logout, color: AppTheme.primaryForeground),
+                                    onPressed: _signOut,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        // User greeting card
+                        Padding(
+                          padding: const EdgeInsets.only(top: 24, left: 24, right: 24),
+                          child: Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: AppTheme.card,
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(color: AppTheme.border),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.06),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 40,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    color: AppTheme.accent,
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      initial,
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: AppTheme.primary,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        userName,
+                                        style: const TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w600,
+                                          color: AppTheme.foreground,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 2),
+                                      Text(
+                                        user?.email ?? '',
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                          color: AppTheme.mutedForeground,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          trailing: const Icon(Icons.chevron_right),
-                          onTap: () => _selectBranch(branch),
-                        );
-                      },
+                        ),
+                        // Section label
+                        const Padding(
+                          padding: EdgeInsets.only(top: 24, left: 24, bottom: 8),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'AVAILABLE BRANCHES',
+                              style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w600,
+                                color: AppTheme.mutedForeground,
+                              ),
+                            ),
+                          ),
+                        ),
+                        // Branch list
+                        Expanded(
+                          child: ListView.builder(
+                            padding: const EdgeInsets.symmetric(horizontal: 24),
+                            itemCount: _branches.length,
+                            itemBuilder: (context, index) {
+                              final branch = _branches[index];
+                              final role = (branch['role_name'] as String).toUpperCase();
+                              return Padding(
+                                padding: const EdgeInsets.only(bottom: 12),
+                                child: Material(
+                                  color: AppTheme.card,
+                                  borderRadius: BorderRadius.circular(16),
+                                  child: InkWell(
+                                    onTap: () => _selectBranch(branch),
+                                    borderRadius: BorderRadius.circular(16),
+                                    child: Container(
+                                      padding: const EdgeInsets.all(16),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(16),
+                                        border: Border.all(color: AppTheme.border),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black.withValues(alpha: 0.06),
+                                            blurRadius: 8,
+                                            offset: const Offset(0, 2),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          // Branch icon
+                                          Container(
+                                            width: 48,
+                                            height: 48,
+                                            decoration: BoxDecoration(
+                                              color: AppTheme.accent,
+                                              borderRadius: BorderRadius.circular(12),
+                                            ),
+                                            child: const Center(
+                                              child: Icon(Icons.store_outlined, color: AppTheme.primary, size: 24),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 12),
+                                          // Branch info
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  branch['name'] as String,
+                                                  style: const TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: AppTheme.foreground,
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 4),
+                                                Text(
+                                                  role.isEmpty ? 'No role assigned' : role,
+                                                  style: const TextStyle(
+                                                    fontSize: 12,
+                                                    color: AppTheme.mutedForeground,
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 6),
+                                                Container(
+                                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                                                  decoration: BoxDecoration(
+                                                    color: AppTheme.success,
+                                                    borderRadius: BorderRadius.circular(11),
+                                                  ),
+                                                  child: const Text(
+                                                    'Open',
+                                                    style: TextStyle(
+                                                      fontSize: 10,
+                                                      fontWeight: FontWeight.bold,
+                                                      color: AppTheme.primaryForeground,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          const Icon(Icons.chevron_right, color: AppTheme.mutedForeground),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
                     ),
     );
   }

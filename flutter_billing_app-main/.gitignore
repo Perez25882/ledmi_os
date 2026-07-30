@@ -42,6 +42,12 @@ app.*.map.json
 # Environment / secrets
 .env
 .env.*
+!.env.example
+
+# Android release signing — never commit keystores or their passwords
+/android/key.properties
+*.jks
+*.keystore
 
 # Android Studio will place build artifacts here
 /android/app/debug

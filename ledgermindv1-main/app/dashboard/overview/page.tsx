@@ -1,7 +1,7 @@
-import { redirect } from "next/navigation"
-import { getSalesOverview } from "@/lib/supabase/data/sales"
+import { getSalesOverview, getTopProducts } from "@/lib/supabase/data/sales"
 import { requirePageAccess } from "@/lib/supabase/guards"
 import { getScopedBranchFilter } from "@/lib/supabase/permissions"
+import { getSelectedBranchId } from "@/lib/supabase/selected-branch"
 import { getInventory } from "@/lib/supabase/data/inventory"
 import {
   Card,
@@ -19,22 +19,25 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { TrendingUp, Store, AlertTriangle, ArrowUpRight, Sparkles } from "lucide-react"
+import { TrendingUp, Store, AlertTriangle, ArrowUpRight, Sparkles, Package } from "lucide-react"
 import { PushNotificationsButton } from "@/components/push-notifications"
 import { StatCard } from "@/components/dashboard/stat-card"
+import { BusinessSnapshot } from "@/components/dashboard/business-snapshot"
 import { getInsights } from "@/lib/supabase/data/insights"
 import { generateProactiveInsights } from "@/lib/nvidia-ai"
 
 export default async function OverviewPage() {
   const context = await requirePageAccess("overview")
 
-  const { branchId: scopedBranchId } = getScopedBranchFilter(context)
+  const selectedBranchId = await getSelectedBranchId(context)
+  const { branchId: scopedBranchId } = getScopedBranchFilter(context, selectedBranchId)
   const effectiveBranchId = scopedBranchId ?? context.branchId
 
-  const [overview, inventory, insights] = await Promise.all([
+  const [overview, inventory, insights, topProducts] = await Promise.all([
     getSalesOverview(context.businessId),
     getInventory(context.businessId, effectiveBranchId),
     getInsights(context.businessId, effectiveBranchId),
+    getTopProducts(context.businessId, effectiveBranchId, 30, 5),
   ])
 
   const proactive = await generateProactiveInsights(insights)
@@ -56,6 +59,8 @@ export default async function OverviewPage() {
         </div>
         <PushNotificationsButton />
       </div>
+
+      <BusinessSnapshot />
 
       <div className="grid gap-4 md:grid-cols-3">
         <StatCard
@@ -135,6 +140,59 @@ export default async function OverviewPage() {
                 <TableRow>
                   <TableCell colSpan={3} className="text-center py-8 text-muted-foreground">
                     No sales today.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+
+      <Card className="border-border/60">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Package className="h-5 w-5 text-primary" />
+            Top Products
+          </CardTitle>
+          <CardDescription>
+            Best-selling products by revenue (last 30 days)
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow className="hover:bg-transparent">
+                <TableHead className="w-12">#</TableHead>
+                <TableHead>Product</TableHead>
+                <TableHead className="text-right">Units Sold</TableHead>
+                <TableHead className="text-right">Revenue</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {topProducts.length > 0 ? (
+                topProducts.map((product, index) => (
+                  <TableRow key={product.product_id}>
+                    <TableCell className="font-medium text-muted-foreground">
+                      {index + 1}
+                    </TableCell>
+                    <TableCell className="font-medium">
+                      {product.product_name}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      {product.total_quantity}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      GHS {product.total_revenue.toFixed(2)}
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={4}
+                    className="text-center py-8 text-muted-foreground"
+                  >
+                    No sales in the last 30 days.
                   </TableCell>
                 </TableRow>
               )}

@@ -65,9 +65,12 @@ CREATE INDEX IF NOT EXISTS idx_ai_insights_business_type_created
     ON ai_insights(business_id, type, created_at DESC);
 
 -- Partial unique index for 24h dedupe of pending insights (Task A3).
+-- Note: NOW() is not IMMUTABLE so it cannot appear in an index predicate.
+-- We use a plain (non-partial) unique index on the dedupe columns instead;
+-- the 24h window is enforced at query/insert time by the application layer.
 CREATE UNIQUE INDEX IF NOT EXISTS uq_ai_insights_dedupe_24h
     ON ai_insights(business_id, branch_id, type, data_hash)
-    WHERE status = 'pending' AND created_at > NOW() - INTERVAL '24 hours';
+    WHERE status = 'pending';
 
 
 -- ============================================================

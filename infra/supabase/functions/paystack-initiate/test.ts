@@ -115,6 +115,34 @@ Deno.test("returns authorization URL and updates intent", async () => {
   assertEquals(paystackBody.amount, 5000); // 50 GHS in pesewas
   assertEquals(paystackBody.email, `cashier-${userId}@ledgermind.app`);
   assertEquals(paystackBody.callback_url, "https://app.example.com/callback");
+  // Card flow restricts the channel to "card".
+  assertEquals(paystackBody.channel, "card");
+});
+
+Deno.test("MoMo flow sends mobile_money channel and phone", async () => {
+  const userId = "user-1";
+  const { authClient, serviceClient } = buildFakeClients({ userId });
+  capturedPaystackRequest = null;
+
+  const res = await handleInitiate(
+    new Request("http://localhost/paystack-initiate", {
+      method: "POST",
+      headers: { Authorization: "Bearer valid-token", "Content-Type": "application/json" },
+      body: JSON.stringify({
+        intent_id: "pi-1",
+        momo_provider: "mtn",
+        momo_phone: "0241234567",
+      }),
+    }),
+    { authClient, serviceClient, fetch: mockFetch, getEnv },
+  );
+
+  assertEquals(res.status, 200);
+  assertExists(capturedPaystackRequest);
+  const paystackBody = JSON.parse(capturedPaystackRequest!.body);
+  assertEquals(paystackBody.channel, "mobile_money");
+  assertEquals(paystackBody.currency, "GHS");
+  assertEquals(paystackBody.mobile_money.phone, "0241234567");
 });
 
 Deno.test("rejects missing intent_id", async () => {

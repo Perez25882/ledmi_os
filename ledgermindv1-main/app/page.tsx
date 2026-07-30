@@ -9,7 +9,6 @@ import {
   Package,
   CreditCard,
   Brain,
-  TrendingUp,
   ShieldCheck,
   Smartphone,
   ArrowRight,

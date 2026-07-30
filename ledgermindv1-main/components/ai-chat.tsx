@@ -27,7 +27,6 @@ export function LedmiChat() {
   const [input, setInput] = useState("")
   const [loading, setLoading] = useState(false)
   const [insights, setInsights] = useState<any>(null)
-  const [insightsLoading, setInsightsLoading] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -45,22 +44,27 @@ export function LedmiChat() {
     }
   }, [isOpen])
 
-  // Load business insights once when chat opens
+  // Load business insights once when chat opens. The in-flight guard lives in a
+  // ref rather than the dependency array so `loadInsights` keeps a stable
+  // identity — otherwise every insights/loading change rebuilds the callback and
+  // re-triggers the effect below.
+  const insightsRequestedRef = useRef(false)
   const loadInsights = useCallback(async () => {
-    if (insights || insightsLoading) return
-    setInsightsLoading(true)
+    if (insightsRequestedRef.current) return
+    insightsRequestedRef.current = true
     try {
       const res = await fetch("/api/ledmi/insights")
       if (res.ok) {
         const data = await res.json()
         setInsights(data)
+      } else {
+        insightsRequestedRef.current = false
       }
     } catch {
-      // Silently fail — not critical
-    } finally {
-      setInsightsLoading(false)
+      // Allow a retry on the next open; insights are not critical to chat.
+      insightsRequestedRef.current = false
     }
-  }, [insights, insightsLoading])
+  }, [])
 
   useEffect(() => {
     if (isOpen) {
@@ -72,7 +76,7 @@ export function LedmiChat() {
     if (!text.trim() || loading) return
 
     const userMsg: ChatMessage = {
-      id: Date.now().toString(),
+      id: crypto.randomUUID(),
       role: "user",
       content: text.trim(),
       timestamp: new Date(),
@@ -103,7 +107,7 @@ export function LedmiChat() {
       }
 
       const aiMsg: ChatMessage = {
-        id: (Date.now() + 1).toString(),
+        id: crypto.randomUUID(),
         role: "assistant",
         content: data.answer || "An error occurred while processing the response.",
         timestamp: new Date(),
@@ -112,7 +116,7 @@ export function LedmiChat() {
       setMessages((prev) => [...prev, aiMsg])
     } catch {
       const errorMsg: ChatMessage = {
-        id: (Date.now() + 1).toString(),
+        id: crypto.randomUUID(),
         role: "assistant",
         content: "System error: Unable to reach the AI service. Please verify your connection or try again later.",
         timestamp: new Date(),

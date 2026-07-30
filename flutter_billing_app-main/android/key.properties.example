@@ -1,0 +1,14 @@
+# Copy to android/key.properties and fill in real values.
+# NEVER commit key.properties or the .jks file itself — losing or leaking the
+# upload key means you cannot publish updates to an existing Play listing.
+#
+# Generate the keystore with:
+#   keytool -genkey -v -keystore ledgermind-upload.jks \
+#     -keyalg RSA -keysize 2048 -validity 10000 -alias upload
+#
+# storeFile is resolved relative to the android/app/ directory.
+
+storePassword=
+keyPassword=
+keyAlias=upload
+storeFile=../ledgermind-upload.jks

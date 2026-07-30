@@ -3,14 +3,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 import '../../../billing/presentation/bloc/billing_bloc.dart';
 import '../../../../core/theme/app_theme.dart';
-import '../../../../core/widgets/primary_button.dart';
 import '../../../../core/supabase/session_manager.dart';
 import '../../../../core/service_locator.dart' as di;
 import '../../data/services/shift_service.dart';
 import '../../domain/entities/cart_item.dart';
+import '../widgets/quick_sale_suggestion_banner.dart';
+import 'quick_sale_dialog.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -30,6 +32,14 @@ class _HomePageState extends State<HomePage> {
 
   // Cooldown mapping to prevent rapid firing of the same barcode
   final Map<String, DateTime> _lastScanTimes = {};
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Surface smart quick sale suggestions (items sold frequently as quick
+    // sales that could be promoted to the catalog).
+    context.read<BillingBloc>().add(LoadQuickSaleSuggestionsEvent());
+  }
 
   @override
   void dispose() {
@@ -72,22 +82,68 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocListener<BillingBloc, BillingState>(
-        listenWhen: (previous, current) =>
-            previous.error != current.error && current.error != null,
-        listener: (context, state) {
-          if (state.error != null) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.error!),
-                backgroundColor: Colors.red,
-                behavior: SnackBarBehavior.floating,
-              ),
-            );
-          }
-        },
+      body: MultiBlocListener(
+        listeners: [
+          BlocListener<BillingBloc, BillingState>(
+            listenWhen: (previous, current) =>
+                previous.error != current.error && current.error != null,
+            listener: (context, state) {
+              if (state.error != null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(state.error!),
+                    backgroundColor: Colors.red,
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
+              }
+            },
+          ),
+          BlocListener<BillingBloc, BillingState>(
+            listenWhen: (previous, current) =>
+                previous.notFoundBarcode != current.notFoundBarcode &&
+                current.notFoundBarcode != null,
+            listener: (context, state) async {
+              final barcode = state.notFoundBarcode!;
+              // Clear the prompt flag so the same barcode can re-trigger later.
+              context
+                  .read<BillingBloc>()
+                  .add(ClearQuickSalePromptEvent());
+
+              _scannerController.stop();
+              final result = await showQuickSaleDialog(context,
+                  barcode: barcode);
+              if (_isCameraOn && mounted) _scannerController.start();
+
+              if (result == null || !context.mounted) return;
+              if (result is QuickSaleResult) {
+                context.read<BillingBloc>().add(AddQuickSaleEvent(
+                      result.name,
+                      result.price,
+                      result.quantity,
+                    ));
+              } else if (result is QuickSaleAddToCatalogResult) {
+                // Manager chose to add to catalog — navigate to product form.
+                await context.push('/product-form', extra: {
+                  'barcode': result.barcode,
+                  'name': result.name,
+                  'price': result.price,
+                });
+                if (_isCameraOn && mounted) _scannerController.start();
+              }
+            },
+          ),
+        ],
         child: Stack(
           children: [
+            // Smart Quick Sale suggestion banner (above the scanner section).
+            Positioned(
+              top: MediaQuery.of(context).padding.top,
+              left: 0,
+              right: 0,
+              child: const QuickSaleSuggestionBanner(),
+            ),
+
             // SCANNER VIEW (TOP 50%)
             Positioned(
               top: 0,
@@ -110,16 +166,39 @@ class _HomePageState extends State<HomePage> {
       ),
       bottomSheet:
           BlocBuilder<BillingBloc, BillingState>(builder: (context, state) {
-        return PrimaryButton(
-          onPressed: state.cartItems.isEmpty
-              ? null
-              : () async {
-                  _scannerController.stop();
-                  await context.push('/checkout');
-                  if (_isCameraOn && mounted) _scannerController.start();
-                },
-          icon: Icons.payment,
-          label: 'Review Order',
+        return Padding(
+          padding: const EdgeInsets.all(24),
+          child: SizedBox(
+            width: double.infinity,
+            height: 56,
+            child: ElevatedButton(
+              onPressed: state.cartItems.isEmpty
+                  ? null
+                  : () async {
+                      _scannerController.stop();
+                      await context.push('/checkout');
+                      if (_isCameraOn && mounted) _scannerController.start();
+                    },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.primary,
+                foregroundColor: AppTheme.primaryForeground,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                shadowColor: AppTheme.primary.withValues(alpha: 0.3),
+              ),
+              child: Text(
+                state.cartItems.isEmpty
+                    ? 'Review Order'
+                    : 'Review Order  -  GHS ${state.totalAmount.toStringAsFixed(2)}',
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
         );
       }),
     );
@@ -127,7 +206,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildScannerSection() {
     return Container(
-      color: Colors.black,
+      color: const Color(0xFF1E293B),
       child: Stack(
         fit: StackFit.expand,
         children: [
@@ -154,7 +233,7 @@ class _HomePageState extends State<HomePage> {
                 const SizedBox(height: 16),
                 _buildOverlayButton(
                   icon: SessionManager.isShiftOpen ? Icons.lock_clock : Icons.lock_open,
-                  color: SessionManager.isShiftOpen ? Colors.green : Colors.orange,
+                  color: SessionManager.isShiftOpen ? AppTheme.success : AppTheme.warning,
                   onPressed: () => _showShiftDialog(),
                 ),
                 const SizedBox(height: 16),
@@ -194,6 +273,13 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
 
+          // Connectivity indicator (Top Left)
+          Positioned(
+            top: MediaQuery.of(context).padding.top + 16,
+            left: 16,
+            child: _buildConnectivityIndicator(),
+          ),
+
           // Central Overlay Bounding Box
           if (_isCameraOn)
             Center(
@@ -222,7 +308,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildCameraOffState() {
     return Container(
-      color: const Color(0xFF1E293B), // slate-800
+      color: const Color(0xFF1E293B),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -230,35 +316,36 @@ class _HomePageState extends State<HomePage> {
             width: 64,
             height: 64,
             decoration: const BoxDecoration(
-              color: Color(0xFF334155), // slate-700
+              color: Color(0xFF334155),
               shape: BoxShape.circle,
             ),
             alignment: Alignment.center,
             child:
-                const Icon(Icons.videocam_off, color: Colors.white, size: 32),
+                const Icon(Icons.videocam_off, color: Colors.white70, size: 32),
           ),
           const SizedBox(height: 16),
           const Text(
             'Camera is turned off',
             style: TextStyle(
-                color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+                color: Colors.white70, fontWeight: FontWeight.bold, fontSize: 16),
           ),
           const SizedBox(height: 8),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 32),
             child: Text(
-              'Turn on your camera to start scanning barcodes and items automatically.',
+              'Turn on your camera to start scanning barcodes.',
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white70, fontSize: 12),
+              style: TextStyle(color: Colors.white54, fontSize: 13),
             ),
           ),
           const SizedBox(height: 24),
           ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppTheme.primaryColor,
-              foregroundColor: Colors.white,
+              backgroundColor: AppTheme.primary,
+              foregroundColor: AppTheme.primaryForeground,
+              elevation: 0,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)),
+                  borderRadius: BorderRadius.circular(14)),
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             ),
             icon: const Icon(Icons.videocam),
@@ -281,14 +368,58 @@ class _HomePageState extends State<HomePage> {
       height: 44,
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: color ?? Colors.black45,
+        color: color ?? Colors.black.withValues(alpha: 0.4),
         shape: BoxShape.circle,
         border: Border.all(color: Colors.white24),
       ),
       child: IconButton(
-        icon: Icon(icon, color: Colors.white),
+        icon: Icon(icon, color: Colors.white, size: 20),
         onPressed: onPressed,
       ),
+    );
+  }
+
+  Widget _buildConnectivityIndicator() {
+    return StreamBuilder<List<ConnectivityResult>>(
+      stream: Connectivity().onConnectivityChanged,
+      initialData: const [ConnectivityResult.none],
+      builder: (context, snapshot) {
+        final results = snapshot.data ?? const [ConnectivityResult.none];
+        final isOnline = results.any((r) =>
+            r != ConnectivityResult.none && r != ConnectivityResult.bluetooth);
+        final dotColor = isOnline ? AppTheme.success : AppTheme.warning;
+        final label = isOnline ? 'Online' : 'Offline';
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+          decoration: BoxDecoration(
+            color: Colors.black.withValues(alpha: 0.4),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: Colors.white24),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 8,
+                height: 8,
+                decoration: BoxDecoration(
+                  color: dotColor,
+                  shape: BoxShape.circle,
+                ),
+              ),
+              const SizedBox(width: 6),
+              Text(
+                label,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -436,19 +567,19 @@ class _HomePageState extends State<HomePage> {
           border: Border(
             top: (alignment == Alignment.topLeft ||
                     alignment == Alignment.topRight)
-                ? const BorderSide(color: Colors.greenAccent, width: 4)
+                ? const BorderSide(color: AppTheme.primary, width: 4)
                 : BorderSide.none,
             bottom: (alignment == Alignment.bottomLeft ||
                     alignment == Alignment.bottomRight)
-                ? const BorderSide(color: Colors.greenAccent, width: 4)
+                ? const BorderSide(color: AppTheme.primary, width: 4)
                 : BorderSide.none,
             left: (alignment == Alignment.topLeft ||
                     alignment == Alignment.bottomLeft)
-                ? const BorderSide(color: Colors.greenAccent, width: 4)
+                ? const BorderSide(color: AppTheme.primary, width: 4)
                 : BorderSide.none,
             right: (alignment == Alignment.topRight ||
                     alignment == Alignment.bottomRight)
-                ? const BorderSide(color: Colors.greenAccent, width: 4)
+                ? const BorderSide(color: AppTheme.primary, width: 4)
                 : BorderSide.none,
           ),
         ),
@@ -459,11 +590,11 @@ class _HomePageState extends State<HomePage> {
   Widget _buildBottomPanel() {
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).scaffoldBackgroundColor,
+        color: AppTheme.background,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-        boxShadow: const [
+        boxShadow: [
           BoxShadow(
-              color: Colors.black26, blurRadius: 15, offset: Offset(0, -5))
+              color: Colors.black.withValues(alpha: 0.08), blurRadius: 20, offset: const Offset(0, -4))
         ],
       ),
       child: Column(
@@ -474,7 +605,7 @@ class _HomePageState extends State<HomePage> {
             height: 4,
             margin: const EdgeInsets.symmetric(vertical: 12),
             decoration: BoxDecoration(
-              color: Colors.grey.withValues(alpha: 0.3),
+              color: AppTheme.border,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -490,41 +621,43 @@ class _HomePageState extends State<HomePage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    Row(
                       children: [
-                        const Text('Scanned Items',
+                        const Text('Current Order',
                             style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.w600)),
-                        Text('$totalItems items total',
+                                fontSize: 18, fontWeight: FontWeight.bold,
+                                color: AppTheme.foreground)),
+                        const SizedBox(width: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: AppTheme.accent,
+                            borderRadius: BorderRadius.circular(11),
+                          ),
+                          child: Text(
+                            '$totalItems',
                             style: const TextStyle(
-                                fontSize: 12, color: Colors.grey)),
-                      ],
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        const Text('TOTAL PRICE',
-                            style: TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.grey,
-                                letterSpacing: 1.2)),
-                        Text(
-                          '₹${state.totalAmount.toStringAsFixed(2)}',
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w900,
-                              color: Theme.of(context).primaryColor),
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: AppTheme.primary,
+                            ),
+                          ),
                         ),
                       ],
+                    ),
+                    Text(
+                      'GHS ${state.totalAmount.toStringAsFixed(2)}',
+                      style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.foreground),
                     ),
                   ],
                 ),
               );
             },
           ),
-          const Divider(height: 1),
+          const Divider(height: 1, color: AppTheme.border),
 
           // List View
           Expanded(
@@ -563,24 +696,23 @@ class _HomePageState extends State<HomePage> {
           Container(
             width: 80,
             height: 80,
-            decoration: BoxDecoration(
-              color: Colors.grey[100],
+            decoration: const BoxDecoration(
+              color: AppTheme.muted,
               shape: BoxShape.circle,
             ),
             alignment: Alignment.center,
-            child:
-                Icon(Icons.shopping_basket, size: 40, color: Colors.grey[300]),
+            child: const Icon(Icons.shopping_basket_outlined, size: 40, color: AppTheme.mutedForeground),
           ),
           const SizedBox(height: 16),
-          const Text('List is empty',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+          const Text('No items yet',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: AppTheme.foreground)),
           const SizedBox(height: 8),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 40),
             child: Text(
-              'Scanned items will appear here as you scan them with the camera above.',
+              'Scan a barcode to add items to the order.',
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.grey, fontSize: 14),
+              style: TextStyle(color: AppTheme.mutedForeground, fontSize: 14),
             ),
           ),
         ],
@@ -594,77 +726,158 @@ class _HomePageState extends State<HomePage> {
   ) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppTheme.card,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey[200]!),
-        boxShadow: const [
-          BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2))
+        border: Border.all(color: AppTheme.border),
+        boxShadow: [
+          BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 8, offset: const Offset(0, 2))
         ],
       ),
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(12),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        spacing: 1,
         children: [
+          // Quantity badge
+          Container(
+            width: 32,
+            height: 32,
+            decoration: BoxDecoration(
+              color: AppTheme.accent,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Center(
+              child: Text(
+                '${item.quantity}',
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.primary,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          // Item info
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Row(
+                  children: [
+                    Flexible(
+                      child: Text(
+                        item.displayName,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14,
+                            color: AppTheme.foreground),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    if (item.isQuickSale) ...[
+                      const SizedBox(width: 6),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: AppTheme.warning.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(
+                              color: AppTheme.warning.withValues(alpha: 0.4)),
+                        ),
+                        child: const Text(
+                          'Quick Sale',
+                          style: TextStyle(
+                            fontSize: 9,
+                            fontWeight: FontWeight.bold,
+                            color: AppTheme.warning,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+                const SizedBox(height: 2),
                 Text(
-                  item.product.name,
+                  'GHS ${item.product.price.toStringAsFixed(2)}',
                   style: const TextStyle(
-                      fontWeight: FontWeight.w600, fontSize: 14),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
+                      fontSize: 11, color: AppTheme.mutedForeground),
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  '₹${item.product.price.toStringAsFixed(2)}',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                      color: Colors.grey[600]),
-                ),
+                if (item.hasDiscount) ...[
+                  const SizedBox(height: 2),
+                  Text(
+                    'Discount: GHS ${item.discount.toStringAsFixed(2)}',
+                    style: const TextStyle(
+                        fontSize: 11,
+                        color: AppTheme.warning,
+                        fontWeight: FontWeight.w600),
+                  ),
+                ],
               ],
             ),
           ),
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.grey[100],
-              borderRadius: BorderRadius.circular(8),
-            ),
-            padding: const EdgeInsets.all(4),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _circularIconButton(
-                    icon: Icons.remove,
-                    onPressed: () {
-                      if (item.quantity > 1) {
-                        context.read<BillingBloc>().add(UpdateQuantityEvent(
-                            item.product.id, item.quantity - 1));
-                      } else {
-                        context
-                            .read<BillingBloc>()
-                            .add(RemoveProductFromCartEvent(item.product.id));
-                      }
-                    }),
-                SizedBox(
-                  width: 32,
-                  child: Text(
-                    '${item.quantity}',
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+          // Total + quantity controls
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (item.hasDiscount)
+                    Text(
+                      'GHS ${(item.product.price * item.quantity).toStringAsFixed(2)}',
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: AppTheme.mutedForeground,
+                        decoration: TextDecoration.lineThrough,
+                      ),
+                    ),
+                  if (item.hasDiscount) const SizedBox(width: 6),
+                  Text(
+                    'GHS ${item.total.toStringAsFixed(2)}',
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 15, color: AppTheme.foreground),
                   ),
-                ),
-                _circularIconButton(
-                    icon: Icons.add,
-                    onPressed: () {
-                      context.read<BillingBloc>().add(UpdateQuantityEvent(
-                          item.product.id, item.quantity + 1));
-                    }),
-              ],
-            ),
+                ],
+              ),
+              const SizedBox(height: 4),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _circularIconButton(
+                      icon: Icons.local_offer_outlined,
+                      color: item.hasDiscount ? AppTheme.warning : AppTheme.mutedForeground,
+                      onPressed: () => _showItemDiscountDialog(context, item)),
+                  const SizedBox(width: 4),
+                  _circularIconButton(
+                      icon: Icons.remove,
+                      onPressed: () {
+                        if (item.quantity > 1) {
+                          context.read<BillingBloc>().add(UpdateQuantityEvent(
+                              item.product.id, item.quantity - 1));
+                        } else {
+                          context
+                              .read<BillingBloc>()
+                              .add(RemoveProductFromCartEvent(item.product.id));
+                        }
+                      }),
+                  SizedBox(
+                    width: 28,
+                    child: Text(
+                      '${item.quantity}',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontWeight: FontWeight.bold, color: AppTheme.foreground),
+                    ),
+                  ),
+                  _circularIconButton(
+                      icon: Icons.add,
+                      onPressed: () {
+                        context.read<BillingBloc>().add(UpdateQuantityEvent(
+                            item.product.id, item.quantity + 1));
+                      }),
+                ],
+              ),
+            ],
           ),
         ],
       ),
@@ -672,13 +885,107 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _circularIconButton(
-      {required IconData icon, required VoidCallback onPressed}) {
+      {required IconData icon,
+      required VoidCallback onPressed,
+      Color? color}) {
     return InkWell(
       onTap: onPressed,
       borderRadius: BorderRadius.circular(8),
       child: Padding(
         padding: const EdgeInsets.all(4.0),
-        child: Icon(icon, size: 20, color: Colors.grey[600]),
+        child: Icon(icon, size: 20, color: color ?? AppTheme.mutedForeground),
+      ),
+    );
+  }
+
+  Future<void> _showItemDiscountDialog(
+      BuildContext context, CartItem item) async {
+    final amountController = TextEditingController(
+        text: item.hasDiscount ? item.discount.toStringAsFixed(2) : '');
+    final percentController = TextEditingController();
+    bool isPercent = false;
+
+    await showDialog(
+      context: context,
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (context, setDialogState) {
+          return AlertDialog(
+            title: const Text('Line Discount'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(item.displayName,
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 4),
+                Text(
+                    'Line total: GHS ${(item.product.price * item.quantity).toStringAsFixed(2)}',
+                    style:
+                        const TextStyle(color: AppTheme.mutedForeground, fontSize: 13)),
+                const SizedBox(height: 16),
+                ToggleButtons(
+                  isSelected: [!isPercent, isPercent],
+                  onPressed: (index) {
+                    setDialogState(() => isPercent = index == 1);
+                  },
+                  children: const [
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 12),
+                      child: Text('Amount'),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 12),
+                      child: Text('Percent'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: isPercent ? percentController : amountController,
+                  decoration: InputDecoration(
+                    labelText: isPercent ? 'Discount (%)' : 'Discount (GHS)',
+                    prefixText: isPercent ? '% ' : 'GHS ',
+                  ),
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
+                  autofocus: true,
+                ),
+              ],
+            ),
+            actions: [
+              if (item.hasDiscount)
+                TextButton(
+                  onPressed: () {
+                    context
+                        .read<BillingBloc>()
+                        .add(SetItemDiscountEvent(item.product.id, 0));
+                    Navigator.of(dialogContext).pop();
+                  },
+                  child: const Text('Remove'),
+                ),
+              TextButton(
+                onPressed: () => Navigator.of(dialogContext).pop(),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  final raw = isPercent
+                      ? percentController.text
+                      : amountController.text;
+                  final value = double.tryParse(raw) ?? 0;
+                  final lineTotal = item.product.price * item.quantity;
+                  final discount =
+                      isPercent ? (lineTotal * value / 100) : value;
+                  context
+                      .read<BillingBloc>()
+                      .add(SetItemDiscountEvent(item.product.id, discount));
+                  Navigator.of(dialogContext).pop();
+                },
+                child: const Text('Apply'),
+              ),
+            ],
+          );
+        },
       ),
     );
   }

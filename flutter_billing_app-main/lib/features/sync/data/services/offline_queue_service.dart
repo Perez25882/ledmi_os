@@ -134,6 +134,8 @@ class OfflineQueueService {
                 'product_id': item.product.id,
                 'quantity': item.quantity,
                 'unit_price': item.product.price,
+                'is_quick_sale': item.isQuickSale,
+                if (item.isQuickSale) 'quick_sale_name': item.quickSaleName,
               })
           .toList(),
       'discount': discount,

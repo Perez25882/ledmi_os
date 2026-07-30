@@ -411,6 +411,18 @@ deno_version = 2
 # [edge_runtime.secrets]
 # secret_key = "env(SECRET_VALUE)"
 
+# Paystack calls this endpoint server-to-server with no Supabase JWT; it
+# authenticates the request itself via the x-paystack-signature HMAC-SHA512.
+# Leaving verify_jwt at its default (true) makes Supabase reject every webhook
+# with 401, so payments are never confirmed.
+[functions.paystack-webhook]
+verify_jwt = false
+
+# Called by the POS/dashboard on behalf of a signed-in user, so the caller's
+# JWT must be present and valid.
+[functions.paystack-initiate]
+verify_jwt = true
+
 [analytics]
 enabled = true
 port = 54327

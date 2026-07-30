@@ -1,5 +1,5 @@
 name: billing_app
-description: A new Flutter project.
+description: LedgerMind POS — offline-first point of sale for African retail chains.
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -46,8 +46,7 @@ dependencies:
   flutter_dotenv: ^5.2.1
   url_launcher: ^6.3.2
   connectivity_plus: ^6.1.0
-  card_scanner:
-    path: ../flutter_ml_credit_card_data_extractor-main
+  http: ^1.2.2
 
 dev_dependencies:
   flutter_test:

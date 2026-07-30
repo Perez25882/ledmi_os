@@ -54,6 +54,29 @@ The POS relies on the `paystack-initiate` Edge Function to start Paystack transa
 - Set Edge Function secrets `PAYSTACK_SECRET_KEY` and `PAYSTACK_WEBHOOK_SECRET`.
 - Deployed `paystack-initiate` and `paystack-webhook`.
 
+> ⚠️ **Both functions must be re-deployed.** Two defects were found and fixed in
+> the repo after that deploy:
+>
+> 1. `supabase/config.toml` had no `[functions.paystack-webhook]` block, so
+>    `verify_jwt` was left at its default of `true`. Paystack calls the webhook
+>    with only an `x-paystack-signature` header and no Supabase JWT, so **every
+>    webhook was being rejected with 401** and no payment could ever be confirmed.
+>    The block is now present and set to `false` (the function still authenticates
+>    every request via HMAC-SHA512).
+> 2. `supabase/functions/` — the tree the CLI actually deploys — had drifted from
+>    the maintained sources in `infra/supabase/functions/`. The deployed copy was
+>    missing **mobile money support entirely** (`channel: "mobile_money"`, MoMo
+>    phone passthrough) and the `webhook_receipts.business_id` backfill that the
+>    business-scoped RLS policy depends on. The trees are now identical.
+>
+> Re-deploy and verify with a Paystack test transaction before going live:
+> ```powershell
+> node scripts/verify-edge-functions.js   # fails if the two trees drift again
+> supabase config push
+> supabase functions deploy paystack-webhook
+> supabase functions deploy paystack-initiate
+> ```
+
 Still required manually:
 1. Configure the Paystack webhook URL in your Paystack Dashboard:
    ```
@@ -92,12 +115,8 @@ PAYSTACK_PUBLIC_KEY=pk_test_...
 ```
 
 ### 1.6 ML card scanner environment
-Create `flutter_ml_credit_card_data_extractor-main/.env`:
-
-```env
-SUPABASE_URL=https://xsdvanqkhricgmbabamu.supabase.co
-SUPABASE_ANON_KEY=<anon-key>
-```
+Not applicable. The standalone scanner app was decommissioned (see `docs/DECISIONS.md`
+AD-20) and folded into the Flutter POS, so it needs no environment of its own.
 
 ---
 
@@ -152,14 +171,34 @@ Also clear any leftover onboarding-test users from earlier development.
 ## 4. Flutter POS (mobile)
 
 ### 4.1 Android build
-1. Update `android/app/build.gradle` package name and version.
-2. Add your Paystack public key and Supabase anon key in `android/app/src/main/AndroidManifest.xml` if needed.
-3. Build release APK/AAB:
+
+✅ **Done in-repo:**
+- Application ID and namespace are `com.ledgermind.pos` (was the Play-rejected
+  `com.example.billing_app`). ⚠️ Confirm this ID before the **first** Play upload —
+  it is permanent for the listing and cannot be changed afterwards.
+- App display name is `LedgerMind POS` (was `billing_app`).
+- Release signing reads `android/key.properties` instead of using debug keys.
+
+Still required manually:
+
+1. Generate the upload keystore (do this once, and back it up — losing it means
+   you can never update the Play listing):
+   ```powershell
+   cd flutter_billing_app-main/android
+   keytool -genkey -v -keystore ledgermind-upload.jks -keyalg RSA -keysize 2048 -validity 10000 -alias upload
+   ```
+2. Copy `android/key.properties.example` to `android/key.properties` and fill in
+   the passwords and alias. Both the `.jks` and `key.properties` are git-ignored.
+3. Bump `version:` in `pubspec.yaml` for each release (`1.0.0+1` → `1.0.1+2`, …).
+4. Build the release bundle:
    ```powershell
    cd flutter_billing_app-main
    flutter build appbundle --release
    ```
-4. Upload to Google Play Console (internal testing first).
+   If `key.properties` is missing, Gradle prints a warning and falls back to the
+   debug keystore — that artifact will be **rejected** by Play. Check the build
+   log before uploading.
+5. Upload to Google Play Console (internal testing track first).
 
 ### 4.2 Bluetooth printer
 1. Test with real Bluetooth thermal printers (commonly used in Ghana).
@@ -172,15 +211,24 @@ Also clear any leftover onboarding-test users from earlier development.
 
 ---
 
-## 5. ML card scanner module
+## 5. Card scanner (embedded in the POS)
+
+Per `docs/DECISIONS.md` AD-20 the scanner is no longer a separate app; it lives at
+`lib/features/billing/presentation/pages/card_scanner_page.dart` inside the POS.
 
 ### 5.1 Integration with POS
-1. The scanner app/module is a separate Flutter package.
-2. It is invoked from `CheckoutPage` via the `/card-scanner` route.
-3. Verify on-device that the camera preview works and card number/expiry are recognized in low light.
+1. Invoked from `CheckoutPage` via the `/card-scanner` route.
+2. Verify on-device that the camera preview works and that card number/expiry are
+   recognised in low light.
+3. Confirm the PAN boundary still holds: `CheckoutPage` truncates the scanner
+   result to last-4 before dispatching `CardScannedEvent`, so only `cardLast4` and
+   `cardExpiry` ever reach `BillingState`. There are no `print`/`debugPrint` calls
+   anywhere in `lib/` — keep it that way.
 
 ### 5.2 PCI review
-Engage a PCI SAQ-A review (or Paystack's guidance) before capturing real cards with the camera.
+Engage a PCI SAQ-A review (or Paystack's guidance) before capturing real cards with
+the camera. The intended end state (AD-20) is Paystack **hosted checkout** for card
+payments, with the scanner acting only as a cashier-facing verification aid.
 
 ---
 
@@ -209,19 +257,42 @@ Engage a PCI SAQ-A review (or Paystack's guidance) before capturing real cards w
 
 ## 7. Final verification commands
 
-Run these before each release:
+Run these before each release. All must exit clean.
 
 ```powershell
-# Dashboard
-npm run build
+# Dashboard — typecheck, lint, then production build
+cd ledgermindv1-main
+npm run verify
 
-# POS
+# POS — static analysis and unit tests
+cd ../flutter_billing_app-main
 flutter analyze
+flutter test
 flutter build appbundle --release
 
-# Scanner module
-flutter analyze
+# Infrastructure — Edge Function deploy copies must match their sources
+cd ../scripts
+npm run verify:functions
+
+# Database schema
+npm run verify
 ```
+
+Current baseline (verified 2026-07-30):
+
+| Check | Result |
+|---|---|
+| `npm run typecheck` (dashboard) | clean |
+| `npm run lint` (dashboard) | 0 errors, 47 warnings |
+| `npm run build` (dashboard) | passes |
+| `flutter analyze` | 0 issues |
+| `flutter test` | 20 passing |
+| `verify-edge-functions.js` | in sync |
+
+The 47 lint warnings are tracked debt, not blockers: mostly `no-explicit-any` on
+untyped Supabase RPC payloads, plus React Compiler `set-state-in-effect` findings
+on fetch-on-mount components and vendored shadcn/ui primitives. See the rationale
+comments in `ledgermindv1-main/eslint.config.mjs`.
 
 ---
 

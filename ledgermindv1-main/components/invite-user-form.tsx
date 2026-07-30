@@ -11,11 +11,9 @@ import { inviteUser } from "@/app/dashboard/users/actions"
 export function InviteUserForm({
   businessId,
   roles,
-  currentUserId,
 }: {
   businessId: string
   roles: { id: string; name: string }[]
-  currentUserId: string
 }) {
   const [email, setEmail] = useState("")
   const [roleId, setRoleId] = useState(roles[0]?.id || "")

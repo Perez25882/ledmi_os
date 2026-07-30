@@ -1,7 +1,7 @@
-import { redirect } from "next/navigation"
 import { getInventory, getCategories } from "@/lib/supabase/data/inventory"
 import { requirePageAccess } from "@/lib/supabase/guards"
 import { getScopedBranchFilter } from "@/lib/supabase/permissions"
+import { getSelectedBranchId } from "@/lib/supabase/selected-branch"
 import { InventoryRealtime } from "./realtime"
 import {
   Card,
@@ -20,12 +20,12 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Package, AlertTriangle } from "lucide-react"
-import Link from "next/link"
 
 export default async function SupabaseInventoryPage() {
   const context = await requirePageAccess("inventory")
 
-  const { branchId: scopedBranchId } = getScopedBranchFilter(context)
+  const selectedBranchId = await getSelectedBranchId(context)
+  const { branchId: scopedBranchId } = getScopedBranchFilter(context, selectedBranchId)
   const effectiveBranchId = scopedBranchId ?? context.branchId
 
   const [items, categories] = await Promise.all([
@@ -50,7 +50,7 @@ export default async function SupabaseInventoryPage() {
         </div>
         {context.branches.length > 1 && (
           <div className="text-sm text-muted-foreground">
-            Branch: {context.branches.find((b) => b.id === context.branchId)?.name ?? context.branchId}
+            Branch: {context.branches.find((b) => b.id === effectiveBranchId)?.name ?? effectiveBranchId}
           </div>
         )}
       </div>

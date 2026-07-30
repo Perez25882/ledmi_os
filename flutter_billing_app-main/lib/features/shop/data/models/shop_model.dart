@@ -53,5 +53,38 @@ class ShopModel extends Shop {
     );
   }
 
+  /// Builds a [ShopModel] from a `branches` row joined with its parent
+  /// `businesses` row. Used by [ShopRepositoryImpl] when reading from
+  /// Supabase. Tolerates missing columns/NULLs so a partially-populated
+  /// branch still loads.
+  factory ShopModel.fromSupabase(Map<String, dynamic> branch,
+      [Map<String, dynamic>? business]) {
+    final businessName = (business?['name'] as String?) ?? '';
+    final branchName = (branch['name'] as String?) ?? '';
+    final name = businessName.isEmpty
+        ? branchName
+        : (branchName.isEmpty ? businessName : '$businessName - $branchName');
+
+    return ShopModel(
+      name: name,
+      addressLine1: (branch['location'] as String?) ?? '',
+      addressLine2: '',
+      phoneNumber: (branch['phone'] as String?) ?? '',
+      upiId: (branch['momo_number'] as String?) ?? '',
+      footerText: (branch['footer_text'] as String?) ?? '',
+    );
+  }
+
+  /// Payload for `branches` UPDATE. Only the columns owned by `branches`
+  /// are included; `name` is the branch name, not the composite display
+  /// name, so callers that loaded a composite name should set it
+  /// explicitly before calling [updateShop].
+  Map<String, dynamic> toSupabaseBranch() => {
+        'location': addressLine1,
+        'phone': phoneNumber,
+        'momo_number': upiId,
+        'footer_text': footerText,
+      };
+
   Shop toEntity() => this;
 }

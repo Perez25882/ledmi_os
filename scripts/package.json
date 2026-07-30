@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "apply": "node apply-migrations.js",
-    "verify": "node verify-schema.js"
+    "verify": "node verify-schema.js",
+    "verify:functions": "node verify-edge-functions.js"
   },
   "dependencies": {
     "dotenv": "^16.4.5",

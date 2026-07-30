@@ -1,16 +1,14 @@
-import { redirect } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { SimpleBarChart, SimplePieChart } from "@/components/ui/simple-charts"
 import {
   DollarSign,
   TrendingUp,
-  ShoppingCart,
   Package,
   AlertTriangle,
 } from "lucide-react"
 import { requirePageAccess } from "@/lib/supabase/guards"
 import { getScopedBranchFilter } from "@/lib/supabase/permissions"
+import { getSelectedBranchId } from "@/lib/supabase/selected-branch"
 import { getSalesOverview } from "@/lib/supabase/data/sales"
 import { getInventory } from "@/lib/supabase/data/inventory"
 import { getCategories } from "@/lib/supabase/data/catalog"
@@ -18,7 +16,8 @@ import { getCategories } from "@/lib/supabase/data/catalog"
 export default async function ReportsPage() {
   const context = await requirePageAccess("reports")
 
-  const { branchId: scopedBranchId } = getScopedBranchFilter(context)
+  const selectedBranchId = await getSelectedBranchId(context)
+  const { branchId: scopedBranchId } = getScopedBranchFilter(context, selectedBranchId)
   const effectiveBranchId = scopedBranchId ?? context.branchId
 
   const [overview, inventory, categories] = await Promise.all([
@@ -36,7 +35,6 @@ export default async function ReportsPage() {
   const grossProfit = totalRevenue - totalCostValue * 0.6
   const profitMargin = totalRevenue > 0 ? (grossProfit / totalRevenue) * 100 : 0
 
-  const categoryMap = new Map(categories.map((c) => [c.id, c.name]))
   const categoryData = inventory.reduce(
     (acc: Array<{ name: string; value: number; color: string }>, item) => {
       const catName = item.category_name || "Uncategorized"

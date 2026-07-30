@@ -167,7 +167,7 @@ $$;
 -- Supabase Edge Function scheduled via cron.trigger, or any external scheduler
 -- at 06:00 GMT using the service role key.
 
-DO $$
+DO $cron_block$
 BEGIN
     IF EXISTS (SELECT 1 FROM pg_extension WHERE extname = 'pg_cron') THEN
         -- unschedule any prior version of the job (idempotent re-registration)
@@ -175,8 +175,8 @@ BEGIN
         PERFORM cron.schedule(
             'ledmi_daily_refresh',
             '0 6 * * *',
-            $$SELECT refresh_ledmi_aggregations();$$
+            $cmd$SELECT refresh_ledmi_aggregations();$cmd$
         );
     END IF;
 END;
-$$;
+$cron_block$;

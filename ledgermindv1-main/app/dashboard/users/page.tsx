@@ -1,4 +1,3 @@
-import { getCurrentUserRoleContext } from "@/lib/supabase/data/user-context"
 import { createServiceClient } from "@/lib/supabase/server"
 import { requirePageAccess } from "@/lib/supabase/guards"
 import { UserManagementTable } from "@/components/user-management-table"
@@ -57,7 +56,6 @@ export default async function UsersPage() {
       <InviteUserForm
         businessId={context.businessId}
         roles={(roles || []) as { id: string; name: string }[]}
-        currentUserId={context.userId}
       />
       <UserManagementTable
         members={enrichedMembers}

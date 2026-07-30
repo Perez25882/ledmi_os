@@ -143,3 +143,63 @@ export async function getSalesOverview(businessId: string) {
 export async function getCurrentBusinessContextForSales() {
   return getCurrentBusinessContext()
 }
+
+export interface TopProduct {
+  product_id: string
+  product_name: string
+  total_quantity: number
+  total_revenue: number
+}
+
+export async function getTopProducts(
+  businessId: string,
+  branchId?: string,
+  days = 30,
+  limit = 5
+): Promise<TopProduct[]> {
+  const client = await createServerClientForUser()
+  const since = new Date()
+  since.setDate(since.getDate() - days)
+  since.setHours(0, 0, 0, 0)
+
+  let query = client
+    .from("sales")
+    .select(
+      `sale_items(quantity, unit_price, subtotal, product_id, products(name))`
+    )
+    .eq("business_id", businessId)
+    .gte("created_at", since.toISOString())
+
+  if (branchId) {
+    query = query.eq("branch_id", branchId)
+  }
+
+  const { data, error } = await query.limit(500)
+
+  if (error) {
+    throw new Error(error.message)
+  }
+
+  const rows = data as any[]
+  const productMap = new Map<string, TopProduct>()
+
+  for (const sale of rows) {
+    for (const item of sale.sale_items as any[]) {
+      const productId = item.product_id as string
+      const existing =
+        productMap.get(productId) || {
+          product_id: productId,
+          product_name: item.products?.name || "Unknown",
+          total_quantity: 0,
+          total_revenue: 0,
+        }
+      existing.total_quantity += item.quantity
+      existing.total_revenue += item.subtotal || item.quantity * item.unit_price
+      productMap.set(productId, existing)
+    }
+  }
+
+  return Array.from(productMap.values())
+    .sort((a, b) => b.total_revenue - a.total_revenue)
+    .slice(0, limit)
+}
