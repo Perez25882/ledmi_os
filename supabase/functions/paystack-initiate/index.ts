@@ -232,8 +232,10 @@ export async function handleInitiate(request: Request, deps: Dependencies = {}):
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     console.error("paystack-initiate error:", message);
+    // Do not leak internal error/config detail (e.g. missing env var names) to
+    // the caller; the full message is logged server-side above.
     return new Response(
-      JSON.stringify({ error: message }),
+      JSON.stringify({ error: "Unable to initiate payment. Please try again." }),
       { status: 500, headers: { "Content-Type": "application/json" } },
     );
   }

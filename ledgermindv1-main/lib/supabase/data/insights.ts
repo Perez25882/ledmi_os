@@ -199,32 +199,27 @@ export async function getInsights(
   businessId: string,
   branchId: string
 ): Promise<LedmiInsights> {
-  // User-scoped client for reads — mat-views inherit RLS from underlying tables
-  // (004_rls_policies.sql enforces user_belongs_to_business SELECT on sales/sale_items/inventory).
+  // Aggregation matviews/view are read via SECURITY DEFINER wrapper RPCs
+  // (get_stock_velocity/get_daily_sales/get_inventory_snapshot, migration 022)
+  // which enforce business membership + branch access; PostgREST does not expose
+  // matviews directly and migration 020 revoked the over-broad direct grants.
   const userClient = await createServerClientForUser()
   const serviceClient = createServiceClient()
 
   const [velocityRes, dailySalesRes, snapshotRes, salesRes] = await Promise.all([
-    userClient
-      .from("mv_stock_velocity")
-      .select(
-        "product_id, product_name, branch_id, current_stock, reorder_threshold, avg_daily_units, stddev_daily_units, days_until_stockout, days_with_sales, supplier_id"
-      )
-      .eq("business_id", businessId)
-      .eq("branch_id", branchId),
-    userClient
-      .from("mv_daily_sales")
-      .select("sale_date, product_id, product_name, units_sold, revenue")
-      .eq("business_id", businessId)
-      .eq("branch_id", branchId)
-      .gte("sale_date", daysAgoString(ANOMALY_WINDOW_DAYS)),
-    userClient
-      .from("v_inventory_snapshot")
-      .select(
-        "product_id, product_name, branch_id, selling_price, cost_price, current_stock, reorder_threshold, category_id, category_name"
-      )
-      .eq("business_id", businessId)
-      .eq("branch_id", branchId),
+    userClient.rpc("get_stock_velocity", {
+      p_business_id: businessId,
+      p_branch_id: branchId,
+    }),
+    userClient.rpc("get_daily_sales", {
+      p_business_id: businessId,
+      p_branch_id: branchId,
+      p_since: daysAgoString(ANOMALY_WINDOW_DAYS),
+    }),
+    userClient.rpc("get_inventory_snapshot", {
+      p_business_id: businessId,
+      p_branch_id: branchId,
+    }),
     userClient
       .from("sales")
       .select(

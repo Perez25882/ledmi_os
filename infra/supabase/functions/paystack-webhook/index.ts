@@ -317,6 +317,21 @@ export async function handleWebhook(
   // the legacy payment/invoice/sale, and raises if the cart is not active. All
   // side-effects happen in one transaction, so a failure rolls back cleanly.
   if (canonicalEventType === "payment_captured" && eventId) {
+    // Defense in depth: confirm Paystack actually captured the amount this intent
+    // was created for. intent.amount is GHS decimals; Paystack data.amount is
+    // pesewas (minor units). A forged/replayed payload or a partial capture that
+    // does not match the intent must never finalize the full sale.
+    const capturedPesewas = Number((data as { amount?: unknown }).amount);
+    const expectedPesewas = Math.round(Number(intent.amount) * 100);
+    if (!Number.isFinite(capturedPesewas) || capturedPesewas !== expectedPesewas) {
+      console.error("Captured amount mismatch; refusing to finalize", {
+        intentId: intent.id,
+        capturedPesewas,
+        expectedPesewas,
+      });
+      return new Response("captured amount mismatch", { status: 400 });
+    }
+
     const { data: saleId, error: finalizeErr } = await supabase.rpc(
       "safe_finalize_sale",
       { p_payment_intent_id: intent.id },

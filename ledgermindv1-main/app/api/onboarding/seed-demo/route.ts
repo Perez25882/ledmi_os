@@ -126,6 +126,20 @@ export async function POST(_request: NextRequest) {
     } else {
       businessId = membership.business_id
 
+      // Seeding writes catalog + inventory. An existing-business member may only
+      // do this if they can manage products (owner/manager) — a cashier must not.
+      const { data: callerRole } = await serviceClient
+        .from("user_business_roles")
+        .select("custom_roles(permissions)")
+        .eq("user_id", user.id)
+        .eq("business_id", businessId)
+        .single()
+      const perms = (callerRole as { custom_roles?: { permissions?: Record<string, boolean> } } | null)
+        ?.custom_roles?.permissions
+      if (!perms?.manage_products) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+      }
+
       const { data: branch, error: branchError } = await serviceClient
         .from("branches")
         .select("id")

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import webpush from "web-push"
 import { getCurrentUserRoleContext } from "@/lib/supabase/data/user-context"
+import { hasPermission } from "@/lib/supabase/permissions"
 import { getPushSubscriptionsForBusiness } from "@/lib/supabase/data/push"
 
 function requireVapid() {
@@ -9,11 +10,16 @@ function requireVapid() {
   if (!vapidPublic || !vapidPrivate) {
     throw new Error("VAPID keys are not configured")
   }
-  webpush.setVapidDetails(
-    "mailto:admin@ledgermind.io",
-    vapidPublic,
-    vapidPrivate
-  )
+  webpush.setVapidDetails("mailto:admin@ledgermind.io", vapidPublic, vapidPrivate)
+}
+
+// Only allow same-origin relative deep links. The service worker opens this URL
+// on notification click, so an absolute/external URL would be a phishing vector.
+function sanitizeDeepLink(raw: string | undefined): string {
+  const fallback = "/dashboard/overview"
+  if (!raw || typeof raw !== "string") return fallback
+  if (!raw.startsWith("/") || raw.startsWith("//")) return fallback
+  return raw
 }
 
 export async function POST(request: NextRequest) {
@@ -23,10 +29,17 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
+    // Broadcasting to every subscribed device is an operational action — restrict
+    // it to roles that manage the business (owner/manager). Cashiers/accountants
+    // must not be able to push notifications to all staff.
+    if (!hasPermission(context.roleName, "manage_inventory")) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+    }
+
     const body = (await request.json()) as { title?: string; body?: string; url?: string }
-    const title = body.title || "LedgerMind Alert"
-    const messageBody = body.body || "Something needs your attention."
-    const url = body.url || "/dashboard/overview"
+    const title = (body.title || "LedgerMind Alert").slice(0, 120)
+    const messageBody = (body.body || "Something needs your attention.").slice(0, 300)
+    const url = sanitizeDeepLink(body.url)
 
     requireVapid()
     const subscriptions = await getPushSubscriptionsForBusiness(context.businessId)

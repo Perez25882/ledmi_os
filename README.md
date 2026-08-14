@@ -28,7 +28,16 @@ An offline-first, AI-powered retail operating system for African retail chains.
 
 ## Status
 
-Verified 2026-07-30:
+> **2026-08-14 — Security remediation applied.** A ship-readiness adversarial
+> audit found and fixed cross-tenant and privilege-escalation vulnerabilities
+> (anonymous sale forgery, unauthenticated inventory injection, an invite-based
+> owner-escalation, missing branch scoping, and more). Migrations `020`–`022`
+> are applied to the live project and the fixes were re-verified against it. See
+> [`docs/SECURITY_REMEDIATION.md`](docs/SECURITY_REMEDIATION.md). The Paystack
+> Edge Functions are fixed in-repo but **must be redeployed** (`supabase config
+> push` + `supabase functions deploy`) before real Paystack traffic.
+
+Baseline verified 2026-07-30 (still current):
 
 | Check | Command | Result |
 |---|---|---|

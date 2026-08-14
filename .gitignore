@@ -117,3 +117,8 @@ ios/.symlinks/
 
 # Transient commit-message scratch files
 /.commit_msg_*.txt
+
+# Local-only: internal security remediation detail (not for public repo)
+docs/SECURITY_REMEDIATION.md
+# Local Android build helper scripts
+scripts/build-apk*.ps1
