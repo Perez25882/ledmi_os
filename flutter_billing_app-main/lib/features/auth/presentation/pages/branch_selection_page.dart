@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../../../core/supabase/auth_error.dart';
 import '../../../../core/supabase/session_manager.dart';
 import '../../../../core/supabase/supabase_client.dart';
 import '../../../../core/theme/app_theme.dart';
@@ -17,6 +18,11 @@ class BranchSelectionPage extends StatefulWidget {
 }
 
 class _BranchSelectionPageState extends State<BranchSelectionPage> {
+  static const String _loadFailed =
+      'Could not load your branches. Please try again.';
+  static const String _selectFailed =
+      'Could not open that branch. Please try again.';
+
   bool _isLoading = true;
   String? _error;
   List<Map<String, dynamic>> _branches = [];
@@ -103,13 +109,15 @@ class _BranchSelectionPageState extends State<BranchSelectionPage> {
         _isLoading = false;
       });
     } on PostgrestException catch (e) {
+      if (!mounted) return;
       setState(() {
         _error = e.message;
         _isLoading = false;
       });
     } catch (e) {
+      if (!mounted) return;
       setState(() {
-        _error = e.toString();
+        _error = AuthErrorMapper.message(e, fallback: _loadFailed);
         _isLoading = false;
       });
     }
@@ -155,8 +163,9 @@ class _BranchSelectionPageState extends State<BranchSelectionPage> {
         }
       }
     } catch (e) {
+      if (!mounted) return;
       setState(() {
-        _error = e.toString();
+        _error = AuthErrorMapper.message(e, fallback: _selectFailed);
         _isLoading = false;
       });
     }
