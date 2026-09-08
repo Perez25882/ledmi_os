@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/supabase/auth_error.dart';
 import '../../../../core/supabase/auth_service.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/utils/app_validators.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -19,6 +21,7 @@ class _LoginPageState extends State<LoginPage> {
   bool _isLoading = false;
   bool _magicLinkMode = false;
   bool _magicLinkSent = false;
+  bool _obscurePassword = true;
   String? _error;
 
   @override
@@ -29,32 +32,45 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _signIn() async {
+    final email = _emailController.text.trim();
+    // The password is sent verbatim: trimming it silently changes what the
+    // cashier typed and turns a valid password into "invalid credentials".
+    final password = _passwordController.text;
+
+    final emailError = AppValidators.email(email);
+    if (emailError != null) {
+      setState(() => _error = emailError);
+      return;
+    }
+    if (password.isEmpty) {
+      setState(() => _error = 'Please enter your password');
+      return;
+    }
+
     setState(() {
       _isLoading = true;
       _error = null;
     });
 
     try {
-      await _authService.signIn(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
-      );
-      if (mounted) {
-        context.go('/branch-selection');
-      }
-    } on Exception catch (e) {
-      setState(() => _error = e.toString());
+      await _authService.signIn(email: email, password: password);
+      if (!mounted) return;
+      context.go('/branch-selection');
     } catch (e) {
-      setState(() => _error = e.toString());
-    } finally {
-      setState(() => _isLoading = false);
+      if (!mounted) return;
+      setState(() {
+        _error = AuthErrorMapper.message(e);
+        _isLoading = false;
+      });
     }
   }
 
   Future<void> _sendMagicLink() async {
     final email = _emailController.text.trim();
-    if (email.isEmpty) {
-      setState(() => _error = 'Please enter your email');
+
+    final emailError = AppValidators.email(email);
+    if (emailError != null) {
+      setState(() => _error = emailError);
       return;
     }
 
@@ -65,15 +81,17 @@ class _LoginPageState extends State<LoginPage> {
 
     try {
       await _authService.signInWithMagicLink(email);
-      if (mounted) {
-        setState(() => _magicLinkSent = true);
-      }
-    } on Exception catch (e) {
-      setState(() => _error = e.toString());
+      if (!mounted) return;
+      setState(() {
+        _magicLinkSent = true;
+        _isLoading = false;
+      });
     } catch (e) {
-      setState(() => _error = e.toString());
-    } finally {
-      setState(() => _isLoading = false);
+      if (!mounted) return;
+      setState(() {
+        _error = AuthErrorMapper.message(e);
+        _isLoading = false;
+      });
     }
   }
 
@@ -181,6 +199,14 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       keyboardType: TextInputType.emailAddress,
                       autocorrect: false,
+                      enableSuggestions: false,
+                      textCapitalization: TextCapitalization.none,
+                      textInputAction: _magicLinkMode
+                          ? TextInputAction.done
+                          : TextInputAction.next,
+                      onSubmitted: (_) {
+                        if (_magicLinkMode && !_isLoading) _sendMagicLink();
+                      },
                     ),
                     if (!_magicLinkMode) ...[
                       const SizedBox(height: 16),
@@ -195,20 +221,65 @@ class _LoginPageState extends State<LoginPage> {
                       const SizedBox(height: 6),
                       TextField(
                         controller: _passwordController,
-                        decoration: const InputDecoration(
-                          hintText: '\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022',
+                        decoration: InputDecoration(
+                          hintText:
+                              '\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022',
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscurePassword
+                                  ? Icons.visibility_outlined
+                                  : Icons.visibility_off_outlined,
+                              size: 20,
+                              color: AppTheme.mutedForeground,
+                            ),
+                            tooltip: _obscurePassword
+                                ? 'Show password'
+                                : 'Hide password',
+                            onPressed: () => setState(
+                              () => _obscurePassword = !_obscurePassword,
+                            ),
+                          ),
                         ),
-                        obscureText: true,
+                        obscureText: _obscurePassword,
                         autocorrect: false,
+                        enableSuggestions: false,
+                        textInputAction: TextInputAction.done,
+                        onSubmitted: (_) {
+                          if (!_isLoading) _signIn();
+                        },
                       ),
                     ],
                     if (_error != null) ...[
                       const SizedBox(height: 12),
-                      Text(
-                        _error!,
-                        style: const TextStyle(
-                          color: AppTheme.destructive,
-                          fontSize: 13,
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: AppTheme.destructive.withValues(alpha: 0.08),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: AppTheme.destructive.withValues(alpha: 0.25),
+                          ),
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Icon(
+                              Icons.error_outline,
+                              color: AppTheme.destructive,
+                              size: 20,
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                _error!,
+                                style: const TextStyle(
+                                  color: AppTheme.destructive,
+                                  fontSize: 13,
+                                  height: 1.4,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
