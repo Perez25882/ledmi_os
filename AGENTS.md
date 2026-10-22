@@ -161,7 +161,7 @@ Create `.env.example` files in each app root. Never commit `.env` files.
    - Blockers or questions for the lead
    - Suggested next task
 4. **No silent edits:** If you rename or move a file another agent depends on, report it immediately.
-5. **No pushing to git:** The lead will review, squash, and commit.
+5. **Keep GitHub in sync:** The user authorizes the lead to commit and push completed changes to `https://github.com/Perez25882/ledmi_os`. Fetch before starting, preserve existing local work, run relevant checks, and push each completed change to the working branch before reporting completion. Never force-push or commit secrets. Delegated agents report their changes to the lead for review and publishing. This instruction supersedes the previous no-push rule.
 
 ---
 

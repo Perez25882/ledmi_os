@@ -33,7 +33,8 @@
       "PowerShell($env:PATH = \"C:\\\\tools\\\\flutter\\\\bin;$env:PATH\"; Set-Location C:\\\\Users\\\\DELL\\\\Desktop\\\\POS\\\\flutter_billing_app-main; flutter analyze --no-pub 2>&1 | Select-Object -Last 25)",
       "Bash(git checkout *)",
       "Bash(git add *)",
-      "Bash(grep -iE \"\\(^|/\\)\\\\.env$|\\\\.jks$|\\\\.keystore$|key\\\\.properties$|node_modules|\\\\.next/\")"
+      "Bash(grep -iE \"\\(^|/\\)\\\\.env$|\\\\.jks$|\\\\.keystore$|key\\\\.properties$|node_modules|\\\\.next/\")",
+      "Bash(git commit *)"
     ],
     "additionalDirectories": [
       "/Users/adams/Downloads/POS/database_architecture"
