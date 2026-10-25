@@ -1,0 +1,60 @@
+Check test.ts
+running 5 tests from ./test.ts
+charge.success is verified, stored, captured and finalized ...
+------- output -------
+Captured amount mismatch; refusing to finalize { intentId: "pi-1", capturedPesewas: 50000, expectedPesewas: 5000000 }
+----- output end -----
+charge.success is verified, stored, captured and finalized ... FAILED (210ms)
+invalid signature returns 400 and does not touch the database ...
+------- output -------
+Paystack signature mismatch
+----- output end -----
+invalid signature returns 400 and does not touch the database ... ok (3ms)
+duplicate charge.success event is idempotent ...
+------- output -------
+Captured amount mismatch; refusing to finalize { intentId: "pi-1", capturedPesewas: 50000, expectedPesewas: 5000000 }
+----- output end -----
+duplicate charge.success event is idempotent ... FAILED (3ms)
+Paystack event mapping ... ok (643µs)
+signature helper produces Paystack-compatible HMAC ... ok (1ms)
+
+ ERRORS
+
+charge.success is verified, stored, captured and finalized => ./test.ts:110:6
+error: AssertionError: Values are not equal.
+
+
+    [Diff] Actual / Expected
+
+
+-   400
++   200
+
+  throw new AssertionError(message);
+        ^
+    at assertEquals (https://deno.land/std@0.200.0/assert/assert_equals.ts:53:9)
+    at file:///C:/Users/DELL/Desktop/POS/infra/supabase/functions/paystack-webhook/test.ts:120:3
+
+duplicate charge.success event is idempotent => ./test.ts:160:6
+error: AssertionError: Values are not equal.
+
+
+    [Diff] Actual / Expected
+
+
+-   400
++   200
+
+  throw new AssertionError(message);
+        ^
+    at assertEquals (https://deno.land/std@0.200.0/assert/assert_equals.ts:53:9)
+    at file:///C:/Users/DELL/Desktop/POS/infra/supabase/functions/paystack-webhook/test.ts:173:3
+
+ FAILURES
+
+charge.success is verified, stored, captured and finalized => ./test.ts:110:6
+duplicate charge.success event is idempotent => ./test.ts:160:6
+
+FAILED | 3 passed | 2 failed (697ms)
+
+error: Test failed

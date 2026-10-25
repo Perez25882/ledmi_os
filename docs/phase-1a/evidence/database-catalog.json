@@ -1,0 +1,5013 @@
+{
+  "tables": [
+    {
+      "relname": "activity_logs",
+      "relrowsecurity": true,
+      "relforcerowsecurity": false,
+      "owner": "phase1a_admin"
+    },
+    {
+      "relname": "ai_insights",
+      "relrowsecurity": true,
+      "relforcerowsecurity": false,
+      "owner": "phase1a_admin"
+    },
+    {
+      "relname": "barcode_cache",
+      "relrowsecurity": true,
+      "relforcerowsecurity": false,
+      "owner": "phase1a_admin"
+    },
+    {
+      "relname": "branches",
+      "relrowsecurity": true,
+      "relforcerowsecurity": false,
+      "owner": "phase1a_admin"
+    },
+    {
+      "relname": "business_types",
+      "relrowsecurity": true,
+      "relforcerowsecurity": false,
+      "owner": "phase1a_admin"
+    },
+    {
+      "relname": "businesses",
+      "relrowsecurity": true,
+      "relforcerowsecurity": false,
+      "owner": "phase1a_admin"
+    },
+    {
+      "relname": "cart_items",
+      "relrowsecurity": true,
+      "relforcerowsecurity": false,
+      "owner": "phase1a_admin"
+    },
+    {
+      "relname": "carts",
+      "relrowsecurity": true,
+      "relforcerowsecurity": false,
+      "owner": "phase1a_admin"
+    },
+    {
+      "relname": "categories",
+      "relrowsecurity": true,
+      "relforcerowsecurity": false,
+      "owner": "phase1a_admin"
+    },
+    {
+      "relname": "custom_roles",
+      "relrowsecurity": true,
+      "relforcerowsecurity": false,
+      "owner": "phase1a_admin"
+    },
+    {
+      "relname": "inventory",
+      "relrowsecurity": true,
+      "relforcerowsecurity": false,
+      "owner": "phase1a_admin"
+    },
+    {
+      "relname": "inventory_logs",
+      "relrowsecurity": true,
+      "relforcerowsecurity": false,
+      "owner": "phase1a_admin"
+    },
+    {
+      "relname": "invoices",
+      "relrowsecurity": true,
+      "relforcerowsecurity": false,
+      "owner": "phase1a_admin"
+    },
+    {
+      "relname": "mv_daily_sales",
+      "relrowsecurity": false,
+      "relforcerowsecurity": false,
+      "owner": "phase1a_admin"
+    },
+    {
+      "relname": "mv_stock_velocity",
+      "relrowsecurity": false,
+      "relforcerowsecurity": false,
+      "owner": "phase1a_admin"
+    },
+    {
+      "relname": "payment_events",
+      "relrowsecurity": true,
+      "relforcerowsecurity": false,
+      "owner": "phase1a_admin"
+    },
+    {
+      "relname": "payment_intents",
+      "relrowsecurity": true,
+      "relforcerowsecurity": false,
+      "owner": "phase1a_admin"
+    },
+    {
+      "relname": "payment_processing_markers",
+      "relrowsecurity": true,
+      "relforcerowsecurity": false,
+      "owner": "phase1a_admin"
+    },
+    {
+      "relname": "payments",
+      "relrowsecurity": true,
+      "relforcerowsecurity": false,
+      "owner": "phase1a_admin"
+    },
+    {
+      "relname": "products",
+      "relrowsecurity": true,
+      "relforcerowsecurity": false,
+      "owner": "phase1a_admin"
+    },
+    {
+      "relname": "push_subscriptions",
+      "relrowsecurity": true,
+      "relforcerowsecurity": false,
+      "owner": "phase1a_admin"
+    },
+    {
+      "relname": "refund_items",
+      "relrowsecurity": true,
+      "relforcerowsecurity": false,
+      "owner": "phase1a_admin"
+    },
+    {
+      "relname": "refunds",
+      "relrowsecurity": true,
+      "relforcerowsecurity": false,
+      "owner": "phase1a_admin"
+    },
+    {
+      "relname": "sale_items",
+      "relrowsecurity": true,
+      "relforcerowsecurity": false,
+      "owner": "phase1a_admin"
+    },
+    {
+      "relname": "sales",
+      "relrowsecurity": true,
+      "relforcerowsecurity": false,
+      "owner": "phase1a_admin"
+    },
+    {
+      "relname": "schema_migrations",
+      "relrowsecurity": false,
+      "relforcerowsecurity": false,
+      "owner": "phase1a_admin"
+    },
+    {
+      "relname": "shifts",
+      "relrowsecurity": true,
+      "relforcerowsecurity": false,
+      "owner": "phase1a_admin"
+    },
+    {
+      "relname": "starter_catalog_templates",
+      "relrowsecurity": true,
+      "relforcerowsecurity": false,
+      "owner": "phase1a_admin"
+    },
+    {
+      "relname": "suppliers",
+      "relrowsecurity": true,
+      "relforcerowsecurity": false,
+      "owner": "phase1a_admin"
+    },
+    {
+      "relname": "user_business_roles",
+      "relrowsecurity": true,
+      "relforcerowsecurity": false,
+      "owner": "phase1a_admin"
+    },
+    {
+      "relname": "v_inventory_snapshot",
+      "relrowsecurity": false,
+      "relforcerowsecurity": false,
+      "owner": "phase1a_admin"
+    },
+    {
+      "relname": "webhook_receipts",
+      "relrowsecurity": true,
+      "relforcerowsecurity": false,
+      "owner": "phase1a_admin"
+    }
+  ],
+  "constraints": [
+    {
+      "relation": "activity_logs",
+      "conname": "activity_logs_actor_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (actor_id) REFERENCES auth.users(id)"
+    },
+    {
+      "relation": "activity_logs",
+      "conname": "activity_logs_business_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (business_id) REFERENCES businesses(id) ON DELETE CASCADE"
+    },
+    {
+      "relation": "activity_logs",
+      "conname": "activity_logs_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "relation": "activity_logs",
+      "conname": "fk_activity_logs_branch",
+      "contype": "f",
+      "definition": "FOREIGN KEY (branch_id) REFERENCES branches(id) ON DELETE SET NULL"
+    },
+    {
+      "relation": "ai_insights",
+      "conname": "ai_insights_actor_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (actor_id) REFERENCES auth.users(id) ON DELETE SET NULL"
+    },
+    {
+      "relation": "ai_insights",
+      "conname": "ai_insights_branch_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (branch_id) REFERENCES branches(id) ON DELETE CASCADE"
+    },
+    {
+      "relation": "ai_insights",
+      "conname": "ai_insights_business_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (business_id) REFERENCES businesses(id) ON DELETE CASCADE"
+    },
+    {
+      "relation": "ai_insights",
+      "conname": "ai_insights_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "relation": "barcode_cache",
+      "conname": "barcode_cache_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (barcode)"
+    },
+    {
+      "relation": "branches",
+      "conname": "branches_business_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (business_id) REFERENCES businesses(id) ON DELETE CASCADE"
+    },
+    {
+      "relation": "branches",
+      "conname": "branches_business_id_name_key",
+      "contype": "u",
+      "definition": "UNIQUE (business_id, name)"
+    },
+    {
+      "relation": "branches",
+      "conname": "branches_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "relation": "business_types",
+      "conname": "business_types_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "relation": "businesses",
+      "conname": "businesses_business_type_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (business_type) REFERENCES business_types(id)"
+    },
+    {
+      "relation": "businesses",
+      "conname": "businesses_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "relation": "cart_items",
+      "conname": "cart_items_cart_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (cart_id) REFERENCES carts(id) ON DELETE CASCADE"
+    },
+    {
+      "relation": "cart_items",
+      "conname": "cart_items_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "relation": "cart_items",
+      "conname": "cart_items_product_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (product_id) REFERENCES products(id)"
+    },
+    {
+      "relation": "cart_items",
+      "conname": "cart_items_quantity_check",
+      "contype": "c",
+      "definition": "CHECK ((quantity > 0))"
+    },
+    {
+      "relation": "cart_items",
+      "conname": "cart_items_unit_price_check",
+      "contype": "c",
+      "definition": "CHECK ((unit_price >= (0)::numeric))"
+    },
+    {
+      "relation": "carts",
+      "conname": "carts_business_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (business_id) REFERENCES businesses(id) ON DELETE CASCADE"
+    },
+    {
+      "relation": "carts",
+      "conname": "carts_cashier_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (cashier_id) REFERENCES auth.users(id)"
+    },
+    {
+      "relation": "carts",
+      "conname": "carts_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "relation": "carts",
+      "conname": "fk_carts_branch",
+      "contype": "f",
+      "definition": "FOREIGN KEY (branch_id) REFERENCES branches(id) ON DELETE CASCADE"
+    },
+    {
+      "relation": "categories",
+      "conname": "categories_business_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (business_id) REFERENCES businesses(id) ON DELETE CASCADE"
+    },
+    {
+      "relation": "categories",
+      "conname": "categories_business_id_name_key",
+      "contype": "u",
+      "definition": "UNIQUE (business_id, name)"
+    },
+    {
+      "relation": "categories",
+      "conname": "categories_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "relation": "custom_roles",
+      "conname": "custom_roles_business_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (business_id) REFERENCES businesses(id) ON DELETE CASCADE"
+    },
+    {
+      "relation": "custom_roles",
+      "conname": "custom_roles_business_id_name_key",
+      "contype": "u",
+      "definition": "UNIQUE (business_id, name)"
+    },
+    {
+      "relation": "custom_roles",
+      "conname": "custom_roles_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "relation": "inventory",
+      "conname": "fk_inventory_branch",
+      "contype": "f",
+      "definition": "FOREIGN KEY (branch_id) REFERENCES branches(id) ON DELETE CASCADE"
+    },
+    {
+      "relation": "inventory",
+      "conname": "inventory_business_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (business_id) REFERENCES businesses(id) ON DELETE CASCADE"
+    },
+    {
+      "relation": "inventory",
+      "conname": "inventory_product_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE"
+    },
+    {
+      "relation": "inventory",
+      "conname": "inventory_quantity_check",
+      "contype": "c",
+      "definition": "CHECK ((quantity >= 0))"
+    },
+    {
+      "relation": "inventory",
+      "conname": "pk_inventory",
+      "contype": "p",
+      "definition": "PRIMARY KEY (product_id, branch_id)"
+    },
+    {
+      "relation": "inventory_logs",
+      "conname": "fk_inventory_logs_branch",
+      "contype": "f",
+      "definition": "FOREIGN KEY (branch_id) REFERENCES branches(id) ON DELETE CASCADE"
+    },
+    {
+      "relation": "inventory_logs",
+      "conname": "inventory_logs_actor_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (actor_id) REFERENCES auth.users(id)"
+    },
+    {
+      "relation": "inventory_logs",
+      "conname": "inventory_logs_business_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (business_id) REFERENCES businesses(id) ON DELETE CASCADE"
+    },
+    {
+      "relation": "inventory_logs",
+      "conname": "inventory_logs_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "relation": "inventory_logs",
+      "conname": "inventory_logs_product_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE"
+    },
+    {
+      "relation": "invoices",
+      "conname": "fk_invoices_branch",
+      "contype": "f",
+      "definition": "FOREIGN KEY (branch_id) REFERENCES branches(id) ON DELETE CASCADE"
+    },
+    {
+      "relation": "invoices",
+      "conname": "invoices_business_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (business_id) REFERENCES businesses(id) ON DELETE CASCADE"
+    },
+    {
+      "relation": "invoices",
+      "conname": "invoices_business_id_invoice_number_key",
+      "contype": "u",
+      "definition": "UNIQUE (business_id, invoice_number)"
+    },
+    {
+      "relation": "invoices",
+      "conname": "invoices_cashier_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (cashier_id) REFERENCES auth.users(id)"
+    },
+    {
+      "relation": "invoices",
+      "conname": "invoices_payment_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (payment_id) REFERENCES payments(id)"
+    },
+    {
+      "relation": "invoices",
+      "conname": "invoices_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "relation": "invoices",
+      "conname": "invoices_subtotal_check",
+      "contype": "c",
+      "definition": "CHECK ((subtotal >= (0)::numeric))"
+    },
+    {
+      "relation": "invoices",
+      "conname": "invoices_tax_check",
+      "contype": "c",
+      "definition": "CHECK ((tax >= (0)::numeric))"
+    },
+    {
+      "relation": "payment_events",
+      "conname": "chk_payment_events_type",
+      "contype": "c",
+      "definition": "CHECK (((event_type)::text = ANY ((ARRAY['payment_initiated'::character varying, 'payment_authorized'::character varying, 'payment_captured'::character varying, 'payment_failed'::character varying, 'payment_refunded'::character varying, 'payment_partially_refunded'::character varying, 'chargeback_created'::character varying, 'chargeback_won'::character varying, 'chargeback_lost'::character varying, 'payment_cancelled'::character varying, 'webhook_received'::character varying])::text[])))"
+    },
+    {
+      "relation": "payment_events",
+      "conname": "payment_events_payment_intent_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (payment_intent_id) REFERENCES payment_intents(id) ON DELETE CASCADE"
+    },
+    {
+      "relation": "payment_events",
+      "conname": "payment_events_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "relation": "payment_intents",
+      "conname": "chk_payment_intents_amount",
+      "contype": "c",
+      "definition": "CHECK ((amount >= (0)::numeric))"
+    },
+    {
+      "relation": "payment_intents",
+      "conname": "chk_payment_intents_status",
+      "contype": "c",
+      "definition": "CHECK (((status)::text = ANY ((ARRAY['initiated'::character varying, 'pending'::character varying, 'completed'::character varying, 'failed'::character varying, 'refunded'::character varying, 'disputed'::character varying])::text[])))"
+    },
+    {
+      "relation": "payment_intents",
+      "conname": "payment_intents_amount_check",
+      "contype": "c",
+      "definition": "CHECK ((amount >= (0)::numeric))"
+    },
+    {
+      "relation": "payment_intents",
+      "conname": "payment_intents_business_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (business_id) REFERENCES businesses(id) ON DELETE CASCADE"
+    },
+    {
+      "relation": "payment_intents",
+      "conname": "payment_intents_cart_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (cart_id) REFERENCES carts(id) ON DELETE SET NULL"
+    },
+    {
+      "relation": "payment_intents",
+      "conname": "payment_intents_created_by_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (created_by) REFERENCES auth.users(id) ON DELETE RESTRICT"
+    },
+    {
+      "relation": "payment_intents",
+      "conname": "payment_intents_legacy_payment_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (legacy_payment_id) REFERENCES payments(id) ON DELETE SET NULL"
+    },
+    {
+      "relation": "payment_intents",
+      "conname": "payment_intents_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "relation": "payment_intents",
+      "conname": "uq_payment_intents_idempotency",
+      "contype": "u",
+      "definition": "UNIQUE (idempotency_key)"
+    },
+    {
+      "relation": "payment_processing_markers",
+      "conname": "payment_processing_markers_event_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (event_id) REFERENCES payment_events(id) ON DELETE CASCADE"
+    },
+    {
+      "relation": "payment_processing_markers",
+      "conname": "payment_processing_markers_payment_intent_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (payment_intent_id) REFERENCES payment_intents(id) ON DELETE CASCADE"
+    },
+    {
+      "relation": "payment_processing_markers",
+      "conname": "payment_processing_markers_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "relation": "payment_processing_markers",
+      "conname": "uq_payment_marker_intent",
+      "contype": "u",
+      "definition": "UNIQUE (payment_intent_id)"
+    },
+    {
+      "relation": "payments",
+      "conname": "payments_amount_check",
+      "contype": "c",
+      "definition": "CHECK ((amount >= (0)::numeric))"
+    },
+    {
+      "relation": "payments",
+      "conname": "payments_business_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (business_id) REFERENCES businesses(id) ON DELETE CASCADE"
+    },
+    {
+      "relation": "payments",
+      "conname": "payments_cashier_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (cashier_id) REFERENCES auth.users(id)"
+    },
+    {
+      "relation": "payments",
+      "conname": "payments_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "relation": "products",
+      "conname": "products_business_id_barcode_key",
+      "contype": "u",
+      "definition": "UNIQUE (business_id, barcode)"
+    },
+    {
+      "relation": "products",
+      "conname": "products_business_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (business_id) REFERENCES businesses(id) ON DELETE CASCADE"
+    },
+    {
+      "relation": "products",
+      "conname": "products_business_id_sku_key",
+      "contype": "u",
+      "definition": "UNIQUE (business_id, sku)"
+    },
+    {
+      "relation": "products",
+      "conname": "products_category_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL"
+    },
+    {
+      "relation": "products",
+      "conname": "products_cost_price_check",
+      "contype": "c",
+      "definition": "CHECK ((cost_price >= (0)::numeric))"
+    },
+    {
+      "relation": "products",
+      "conname": "products_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "relation": "products",
+      "conname": "products_selling_price_check",
+      "contype": "c",
+      "definition": "CHECK ((selling_price >= (0)::numeric))"
+    },
+    {
+      "relation": "products",
+      "conname": "products_supplier_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (supplier_id) REFERENCES suppliers(id) ON DELETE SET NULL"
+    },
+    {
+      "relation": "push_subscriptions",
+      "conname": "push_subscriptions_business_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (business_id) REFERENCES businesses(id) ON DELETE CASCADE"
+    },
+    {
+      "relation": "push_subscriptions",
+      "conname": "push_subscriptions_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "relation": "push_subscriptions",
+      "conname": "push_subscriptions_user_id_endpoint_key",
+      "contype": "u",
+      "definition": "UNIQUE (user_id, endpoint)"
+    },
+    {
+      "relation": "push_subscriptions",
+      "conname": "push_subscriptions_user_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+    },
+    {
+      "relation": "refund_items",
+      "conname": "refund_items_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "relation": "refund_items",
+      "conname": "refund_items_product_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE"
+    },
+    {
+      "relation": "refund_items",
+      "conname": "refund_items_quantity_check",
+      "contype": "c",
+      "definition": "CHECK ((quantity > 0))"
+    },
+    {
+      "relation": "refund_items",
+      "conname": "refund_items_refund_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (refund_id) REFERENCES refunds(id) ON DELETE CASCADE"
+    },
+    {
+      "relation": "refund_items",
+      "conname": "refund_items_sale_item_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (sale_item_id) REFERENCES sale_items(id) ON DELETE CASCADE"
+    },
+    {
+      "relation": "refund_items",
+      "conname": "refund_items_subtotal_check",
+      "contype": "c",
+      "definition": "CHECK ((subtotal >= (0)::numeric))"
+    },
+    {
+      "relation": "refund_items",
+      "conname": "refund_items_unit_price_check",
+      "contype": "c",
+      "definition": "CHECK ((unit_price >= (0)::numeric))"
+    },
+    {
+      "relation": "refunds",
+      "conname": "refunds_branch_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (branch_id) REFERENCES branches(id) ON DELETE CASCADE"
+    },
+    {
+      "relation": "refunds",
+      "conname": "refunds_business_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (business_id) REFERENCES businesses(id) ON DELETE CASCADE"
+    },
+    {
+      "relation": "refunds",
+      "conname": "refunds_cashier_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (cashier_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+    },
+    {
+      "relation": "refunds",
+      "conname": "refunds_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "relation": "refunds",
+      "conname": "refunds_sale_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (sale_id) REFERENCES sales(id) ON DELETE CASCADE"
+    },
+    {
+      "relation": "refunds",
+      "conname": "refunds_status_check",
+      "contype": "c",
+      "definition": "CHECK ((status = ANY (ARRAY['completed'::text, 'voided'::text])))"
+    },
+    {
+      "relation": "sale_items",
+      "conname": "sale_items_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "relation": "sale_items",
+      "conname": "sale_items_product_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (product_id) REFERENCES products(id)"
+    },
+    {
+      "relation": "sale_items",
+      "conname": "sale_items_quantity_check",
+      "contype": "c",
+      "definition": "CHECK ((quantity > 0))"
+    },
+    {
+      "relation": "sale_items",
+      "conname": "sale_items_sale_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (sale_id) REFERENCES sales(id) ON DELETE CASCADE"
+    },
+    {
+      "relation": "sale_items",
+      "conname": "sale_items_unit_price_check",
+      "contype": "c",
+      "definition": "CHECK ((unit_price >= (0)::numeric))"
+    },
+    {
+      "relation": "sales",
+      "conname": "fk_sales_branch",
+      "contype": "f",
+      "definition": "FOREIGN KEY (branch_id) REFERENCES branches(id) ON DELETE CASCADE"
+    },
+    {
+      "relation": "sales",
+      "conname": "sales_business_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (business_id) REFERENCES businesses(id) ON DELETE CASCADE"
+    },
+    {
+      "relation": "sales",
+      "conname": "sales_cashier_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (cashier_id) REFERENCES auth.users(id)"
+    },
+    {
+      "relation": "sales",
+      "conname": "sales_invoice_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (invoice_id) REFERENCES invoices(id)"
+    },
+    {
+      "relation": "sales",
+      "conname": "sales_payment_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (payment_id) REFERENCES payments(id)"
+    },
+    {
+      "relation": "sales",
+      "conname": "sales_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "relation": "schema_migrations",
+      "conname": "schema_migrations_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (filename)"
+    },
+    {
+      "relation": "shifts",
+      "conname": "shifts_branch_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (branch_id) REFERENCES branches(id) ON DELETE CASCADE"
+    },
+    {
+      "relation": "shifts",
+      "conname": "shifts_business_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (business_id) REFERENCES businesses(id) ON DELETE CASCADE"
+    },
+    {
+      "relation": "shifts",
+      "conname": "shifts_cashier_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (cashier_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+    },
+    {
+      "relation": "shifts",
+      "conname": "shifts_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "relation": "shifts",
+      "conname": "shifts_status_check",
+      "contype": "c",
+      "definition": "CHECK ((status = ANY (ARRAY['open'::text, 'closed'::text, 'verified'::text])))"
+    },
+    {
+      "relation": "starter_catalog_templates",
+      "conname": "starter_catalog_templates_business_type_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (business_type) REFERENCES business_types(id) ON DELETE CASCADE"
+    },
+    {
+      "relation": "starter_catalog_templates",
+      "conname": "starter_catalog_templates_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "relation": "suppliers",
+      "conname": "suppliers_business_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (business_id) REFERENCES businesses(id) ON DELETE CASCADE"
+    },
+    {
+      "relation": "suppliers",
+      "conname": "suppliers_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "relation": "user_business_roles",
+      "conname": "fk_user_business_roles_branch",
+      "contype": "f",
+      "definition": "FOREIGN KEY (branch_id) REFERENCES branches(id) ON DELETE SET NULL"
+    },
+    {
+      "relation": "user_business_roles",
+      "conname": "user_business_roles_business_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (business_id) REFERENCES businesses(id) ON DELETE CASCADE"
+    },
+    {
+      "relation": "user_business_roles",
+      "conname": "user_business_roles_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (user_id, business_id)"
+    },
+    {
+      "relation": "user_business_roles",
+      "conname": "user_business_roles_role_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (role_id) REFERENCES custom_roles(id) ON DELETE CASCADE"
+    },
+    {
+      "relation": "user_business_roles",
+      "conname": "user_business_roles_user_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+    },
+    {
+      "relation": "webhook_receipts",
+      "conname": "fk_webhook_receipts_business",
+      "contype": "f",
+      "definition": "FOREIGN KEY (business_id) REFERENCES businesses(id) ON DELETE SET NULL"
+    },
+    {
+      "relation": "webhook_receipts",
+      "conname": "uq_webhook_receipts_provider_event",
+      "contype": "u",
+      "definition": "UNIQUE (provider, provider_event_id, event_type)"
+    },
+    {
+      "relation": "webhook_receipts",
+      "conname": "webhook_receipts_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id)"
+    }
+  ],
+  "functions": [
+    {
+      "signature": "close_shift(uuid,numeric,text)",
+      "prosecdef": true,
+      "proconfig": null,
+      "owner": "phase1a_admin",
+      "anon_execute": true,
+      "authenticated_execute": true,
+      "service_execute": true
+    },
+    {
+      "signature": "create_checkout_intent(uuid,uuid,uuid,uuid,jsonb,bigint,text)",
+      "prosecdef": true,
+      "proconfig": null,
+      "owner": "phase1a_admin",
+      "anon_execute": true,
+      "authenticated_execute": true,
+      "service_execute": true
+    },
+    {
+      "signature": "create_default_roles_for_business()",
+      "prosecdef": true,
+      "proconfig": null,
+      "owner": "phase1a_admin",
+      "anon_execute": true,
+      "authenticated_execute": true,
+      "service_execute": true
+    },
+    {
+      "signature": "current_business_id()",
+      "prosecdef": true,
+      "proconfig": null,
+      "owner": "phase1a_admin",
+      "anon_execute": true,
+      "authenticated_execute": true,
+      "service_execute": true
+    },
+    {
+      "signature": "current_user_id()",
+      "prosecdef": true,
+      "proconfig": null,
+      "owner": "phase1a_admin",
+      "anon_execute": true,
+      "authenticated_execute": true,
+      "service_execute": true
+    },
+    {
+      "signature": "enforce_branch_write()",
+      "prosecdef": true,
+      "proconfig": null,
+      "owner": "phase1a_admin",
+      "anon_execute": true,
+      "authenticated_execute": true,
+      "service_execute": true
+    },
+    {
+      "signature": "get_branch_catalog(uuid,uuid)",
+      "prosecdef": true,
+      "proconfig": null,
+      "owner": "phase1a_admin",
+      "anon_execute": true,
+      "authenticated_execute": true,
+      "service_execute": true
+    },
+    {
+      "signature": "get_catalog_delta(uuid,uuid,timestamp with time zone)",
+      "prosecdef": true,
+      "proconfig": null,
+      "owner": "phase1a_admin",
+      "anon_execute": true,
+      "authenticated_execute": true,
+      "service_execute": true
+    },
+    {
+      "signature": "get_daily_sales(uuid,uuid,date)",
+      "prosecdef": true,
+      "proconfig": null,
+      "owner": "phase1a_admin",
+      "anon_execute": false,
+      "authenticated_execute": true,
+      "service_execute": true
+    },
+    {
+      "signature": "get_inventory_snapshot(uuid,uuid)",
+      "prosecdef": true,
+      "proconfig": null,
+      "owner": "phase1a_admin",
+      "anon_execute": false,
+      "authenticated_execute": true,
+      "service_execute": true
+    },
+    {
+      "signature": "get_stock_velocity(uuid,uuid)",
+      "prosecdef": true,
+      "proconfig": null,
+      "owner": "phase1a_admin",
+      "anon_execute": false,
+      "authenticated_execute": true,
+      "service_execute": true
+    },
+    {
+      "signature": "open_shift(uuid,uuid,uuid,numeric)",
+      "prosecdef": true,
+      "proconfig": null,
+      "owner": "phase1a_admin",
+      "anon_execute": true,
+      "authenticated_execute": true,
+      "service_execute": true
+    },
+    {
+      "signature": "process_checkout_cash(uuid,uuid,uuid,uuid,jsonb,bigint)",
+      "prosecdef": true,
+      "proconfig": null,
+      "owner": "phase1a_admin",
+      "anon_execute": true,
+      "authenticated_execute": true,
+      "service_execute": true
+    },
+    {
+      "signature": "process_payment_capture(uuid,uuid)",
+      "prosecdef": true,
+      "proconfig": null,
+      "owner": "phase1a_admin",
+      "anon_execute": false,
+      "authenticated_execute": false,
+      "service_execute": true
+    },
+    {
+      "signature": "process_refund(uuid,uuid,uuid,uuid,jsonb,text,text)",
+      "prosecdef": true,
+      "proconfig": null,
+      "owner": "phase1a_admin",
+      "anon_execute": true,
+      "authenticated_execute": true,
+      "service_execute": true
+    },
+    {
+      "signature": "process_stock_in(uuid,uuid,integer,text,text)",
+      "prosecdef": true,
+      "proconfig": null,
+      "owner": "phase1a_admin",
+      "anon_execute": true,
+      "authenticated_execute": true,
+      "service_execute": true
+    },
+    {
+      "signature": "refresh_ledmi_aggregations()",
+      "prosecdef": true,
+      "proconfig": [
+        "search_path=public"
+      ],
+      "owner": "phase1a_admin",
+      "anon_execute": true,
+      "authenticated_execute": true,
+      "service_execute": true
+    },
+    {
+      "signature": "refunded_quantity(uuid)",
+      "prosecdef": true,
+      "proconfig": [
+        "search_path=public, pg_temp"
+      ],
+      "owner": "phase1a_admin",
+      "anon_execute": true,
+      "authenticated_execute": true,
+      "service_execute": true
+    },
+    {
+      "signature": "safe_finalize_sale(uuid)",
+      "prosecdef": true,
+      "proconfig": null,
+      "owner": "phase1a_admin",
+      "anon_execute": false,
+      "authenticated_execute": false,
+      "service_execute": true
+    },
+    {
+      "signature": "seed_default_roles()",
+      "prosecdef": true,
+      "proconfig": null,
+      "owner": "phase1a_admin",
+      "anon_execute": true,
+      "authenticated_execute": true,
+      "service_execute": true
+    },
+    {
+      "signature": "update_updated_at_column()",
+      "prosecdef": false,
+      "proconfig": null,
+      "owner": "phase1a_admin",
+      "anon_execute": true,
+      "authenticated_execute": true,
+      "service_execute": true
+    },
+    {
+      "signature": "user_accessible_branches(uuid)",
+      "prosecdef": true,
+      "proconfig": null,
+      "owner": "phase1a_admin",
+      "anon_execute": true,
+      "authenticated_execute": true,
+      "service_execute": true
+    },
+    {
+      "signature": "user_belongs_to_business(uuid)",
+      "prosecdef": true,
+      "proconfig": null,
+      "owner": "phase1a_admin",
+      "anon_execute": true,
+      "authenticated_execute": true,
+      "service_execute": true
+    },
+    {
+      "signature": "user_has_permission(uuid,text)",
+      "prosecdef": true,
+      "proconfig": null,
+      "owner": "phase1a_admin",
+      "anon_execute": true,
+      "authenticated_execute": true,
+      "service_execute": true
+    },
+    {
+      "signature": "user_is_owner(uuid)",
+      "prosecdef": true,
+      "proconfig": null,
+      "owner": "phase1a_admin",
+      "anon_execute": true,
+      "authenticated_execute": true,
+      "service_execute": true
+    },
+    {
+      "signature": "uuid_generate_v1()",
+      "prosecdef": false,
+      "proconfig": null,
+      "owner": "phase1a_admin",
+      "anon_execute": true,
+      "authenticated_execute": true,
+      "service_execute": true
+    },
+    {
+      "signature": "uuid_generate_v1mc()",
+      "prosecdef": false,
+      "proconfig": null,
+      "owner": "phase1a_admin",
+      "anon_execute": true,
+      "authenticated_execute": true,
+      "service_execute": true
+    },
+    {
+      "signature": "uuid_generate_v3(uuid,text)",
+      "prosecdef": false,
+      "proconfig": null,
+      "owner": "phase1a_admin",
+      "anon_execute": true,
+      "authenticated_execute": true,
+      "service_execute": true
+    },
+    {
+      "signature": "uuid_generate_v4()",
+      "prosecdef": false,
+      "proconfig": null,
+      "owner": "phase1a_admin",
+      "anon_execute": true,
+      "authenticated_execute": true,
+      "service_execute": true
+    },
+    {
+      "signature": "uuid_generate_v5(uuid,text)",
+      "prosecdef": false,
+      "proconfig": null,
+      "owner": "phase1a_admin",
+      "anon_execute": true,
+      "authenticated_execute": true,
+      "service_execute": true
+    },
+    {
+      "signature": "uuid_nil()",
+      "prosecdef": false,
+      "proconfig": null,
+      "owner": "phase1a_admin",
+      "anon_execute": true,
+      "authenticated_execute": true,
+      "service_execute": true
+    },
+    {
+      "signature": "uuid_ns_dns()",
+      "prosecdef": false,
+      "proconfig": null,
+      "owner": "phase1a_admin",
+      "anon_execute": true,
+      "authenticated_execute": true,
+      "service_execute": true
+    },
+    {
+      "signature": "uuid_ns_oid()",
+      "prosecdef": false,
+      "proconfig": null,
+      "owner": "phase1a_admin",
+      "anon_execute": true,
+      "authenticated_execute": true,
+      "service_execute": true
+    },
+    {
+      "signature": "uuid_ns_url()",
+      "prosecdef": false,
+      "proconfig": null,
+      "owner": "phase1a_admin",
+      "anon_execute": true,
+      "authenticated_execute": true,
+      "service_execute": true
+    },
+    {
+      "signature": "uuid_ns_x500()",
+      "prosecdef": false,
+      "proconfig": null,
+      "owner": "phase1a_admin",
+      "anon_execute": true,
+      "authenticated_execute": true,
+      "service_execute": true
+    }
+  ],
+  "policies": [
+    {
+      "tablename": "activity_logs",
+      "policyname": "activity_logs_select",
+      "roles": "{public}",
+      "cmd": "SELECT",
+      "qual": "(user_belongs_to_business(business_id) AND ((branch_id IS NULL) OR (branch_id IN ( SELECT user_accessible_branches(activity_logs.business_id) AS user_accessible_branches))))",
+      "with_check": null
+    },
+    {
+      "tablename": "ai_insights",
+      "policyname": "ai_insights_insert_service",
+      "roles": "{service_role}",
+      "cmd": "INSERT",
+      "qual": null,
+      "with_check": "true"
+    },
+    {
+      "tablename": "ai_insights",
+      "policyname": "ai_insights_select_members",
+      "roles": "{authenticated}",
+      "cmd": "SELECT",
+      "qual": "user_belongs_to_business(business_id)",
+      "with_check": null
+    },
+    {
+      "tablename": "ai_insights",
+      "policyname": "ai_insights_update_members",
+      "roles": "{authenticated}",
+      "cmd": "UPDATE",
+      "qual": "user_belongs_to_business(business_id)",
+      "with_check": "user_belongs_to_business(business_id)"
+    },
+    {
+      "tablename": "barcode_cache",
+      "policyname": "barcode_cache_auth_read",
+      "roles": "{authenticated}",
+      "cmd": "SELECT",
+      "qual": "true",
+      "with_check": null
+    },
+    {
+      "tablename": "barcode_cache",
+      "policyname": "barcode_cache_auth_update",
+      "roles": "{authenticated}",
+      "cmd": "UPDATE",
+      "qual": "true",
+      "with_check": "true"
+    },
+    {
+      "tablename": "barcode_cache",
+      "policyname": "barcode_cache_auth_write",
+      "roles": "{authenticated}",
+      "cmd": "INSERT",
+      "qual": null,
+      "with_check": "true"
+    },
+    {
+      "tablename": "branches",
+      "policyname": "branches_manage_owners_managers",
+      "roles": "{public}",
+      "cmd": "ALL",
+      "qual": "(user_belongs_to_business(business_id) AND (user_is_owner(business_id) OR user_has_permission(business_id, 'manage_users'::text)))",
+      "with_check": "(user_belongs_to_business(business_id) AND (user_is_owner(business_id) OR user_has_permission(business_id, 'manage_users'::text)))"
+    },
+    {
+      "tablename": "branches",
+      "policyname": "branches_select_active",
+      "roles": "{public}",
+      "cmd": "SELECT",
+      "qual": "(user_belongs_to_business(business_id) AND (is_active = true) AND (deleted_at IS NULL))",
+      "with_check": null
+    },
+    {
+      "tablename": "business_types",
+      "policyname": "business_types_public_read",
+      "roles": "{anon,authenticated}",
+      "cmd": "SELECT",
+      "qual": "true",
+      "with_check": null
+    },
+    {
+      "tablename": "businesses",
+      "policyname": "businesses_select_members",
+      "roles": "{public}",
+      "cmd": "SELECT",
+      "qual": "user_belongs_to_business(id)",
+      "with_check": null
+    },
+    {
+      "tablename": "businesses",
+      "policyname": "businesses_update_owners",
+      "roles": "{public}",
+      "cmd": "UPDATE",
+      "qual": "user_is_owner(id)",
+      "with_check": "user_is_owner(id)"
+    },
+    {
+      "tablename": "cart_items",
+      "policyname": "cart_items_select",
+      "roles": "{public}",
+      "cmd": "SELECT",
+      "qual": "(EXISTS ( SELECT 1\n   FROM carts\n  WHERE ((carts.id = cart_items.cart_id) AND user_belongs_to_business(carts.business_id) AND ((carts.cashier_id = current_user_id()) OR user_is_owner(carts.business_id) OR user_has_permission(carts.business_id, 'manage_users'::text)))))",
+      "with_check": null
+    },
+    {
+      "tablename": "cart_items",
+      "policyname": "cart_items_write_cashier",
+      "roles": "{public}",
+      "cmd": "ALL",
+      "qual": "(EXISTS ( SELECT 1\n   FROM carts\n  WHERE ((carts.id = cart_items.cart_id) AND user_belongs_to_business(carts.business_id) AND (carts.cashier_id = current_user_id()) AND user_has_permission(carts.business_id, 'process_sales'::text))))",
+      "with_check": "(EXISTS ( SELECT 1\n   FROM carts\n  WHERE ((carts.id = cart_items.cart_id) AND user_belongs_to_business(carts.business_id) AND (carts.cashier_id = current_user_id()) AND user_has_permission(carts.business_id, 'process_sales'::text))))"
+    },
+    {
+      "tablename": "carts",
+      "policyname": "carts_select",
+      "roles": "{public}",
+      "cmd": "SELECT",
+      "qual": "(user_belongs_to_business(business_id) AND (branch_id IN ( SELECT user_accessible_branches(carts.business_id) AS user_accessible_branches)) AND ((cashier_id = current_user_id()) OR user_is_owner(business_id) OR user_has_permission(business_id, 'manage_users'::text)))",
+      "with_check": null
+    },
+    {
+      "tablename": "carts",
+      "policyname": "carts_write_cashier",
+      "roles": "{public}",
+      "cmd": "ALL",
+      "qual": "(user_belongs_to_business(business_id) AND (cashier_id = current_user_id()) AND user_has_permission(business_id, 'process_sales'::text))",
+      "with_check": "(user_belongs_to_business(business_id) AND (cashier_id = current_user_id()) AND user_has_permission(business_id, 'process_sales'::text))"
+    },
+    {
+      "tablename": "categories",
+      "policyname": "categories_select",
+      "roles": "{public}",
+      "cmd": "SELECT",
+      "qual": "user_belongs_to_business(business_id)",
+      "with_check": null
+    },
+    {
+      "tablename": "categories",
+      "policyname": "categories_write_managers",
+      "roles": "{public}",
+      "cmd": "ALL",
+      "qual": "(user_belongs_to_business(business_id) AND user_has_permission(business_id, 'manage_products'::text))",
+      "with_check": "(user_belongs_to_business(business_id) AND user_has_permission(business_id, 'manage_products'::text))"
+    },
+    {
+      "tablename": "custom_roles",
+      "policyname": "custom_roles_manage_owners",
+      "roles": "{public}",
+      "cmd": "ALL",
+      "qual": "(user_belongs_to_business(business_id) AND user_is_owner(business_id))",
+      "with_check": "(user_belongs_to_business(business_id) AND user_is_owner(business_id))"
+    },
+    {
+      "tablename": "custom_roles",
+      "policyname": "custom_roles_select",
+      "roles": "{public}",
+      "cmd": "SELECT",
+      "qual": "(user_belongs_to_business(business_id) AND (user_is_owner(business_id) OR user_has_permission(business_id, 'manage_users'::text) OR (EXISTS ( SELECT 1\n   FROM user_business_roles ubr\n  WHERE ((ubr.role_id = custom_roles.id) AND (ubr.user_id = current_user_id()))))))",
+      "with_check": null
+    },
+    {
+      "tablename": "inventory",
+      "policyname": "inventory_insert_managers",
+      "roles": "{public}",
+      "cmd": "INSERT",
+      "qual": null,
+      "with_check": "(user_belongs_to_business(business_id) AND user_has_permission(business_id, 'manage_inventory'::text))"
+    },
+    {
+      "tablename": "inventory",
+      "policyname": "inventory_select",
+      "roles": "{public}",
+      "cmd": "SELECT",
+      "qual": "(user_belongs_to_business(business_id) AND (branch_id IN ( SELECT user_accessible_branches(inventory.business_id) AS user_accessible_branches)))",
+      "with_check": null
+    },
+    {
+      "tablename": "inventory",
+      "policyname": "inventory_update_managers",
+      "roles": "{public}",
+      "cmd": "UPDATE",
+      "qual": "(user_belongs_to_business(business_id) AND user_has_permission(business_id, 'manage_inventory'::text))",
+      "with_check": "(user_belongs_to_business(business_id) AND user_has_permission(business_id, 'manage_inventory'::text))"
+    },
+    {
+      "tablename": "inventory_logs",
+      "policyname": "inventory_logs_select",
+      "roles": "{public}",
+      "cmd": "SELECT",
+      "qual": "(user_belongs_to_business(business_id) AND (branch_id IN ( SELECT user_accessible_branches(inventory_logs.business_id) AS user_accessible_branches)))",
+      "with_check": null
+    },
+    {
+      "tablename": "invoices",
+      "policyname": "invoices_insert_cashiers",
+      "roles": "{public}",
+      "cmd": "INSERT",
+      "qual": null,
+      "with_check": "(user_belongs_to_business(business_id) AND user_has_permission(business_id, 'process_sales'::text))"
+    },
+    {
+      "tablename": "invoices",
+      "policyname": "invoices_select",
+      "roles": "{public}",
+      "cmd": "SELECT",
+      "qual": "(user_belongs_to_business(business_id) AND (branch_id IN ( SELECT user_accessible_branches(invoices.business_id) AS user_accessible_branches)))",
+      "with_check": null
+    },
+    {
+      "tablename": "payment_events",
+      "policyname": "payment_events_select_finance",
+      "roles": "{public}",
+      "cmd": "SELECT",
+      "qual": "(EXISTS ( SELECT 1\n   FROM payment_intents\n  WHERE ((payment_intents.id = payment_events.payment_intent_id) AND (user_is_owner(payment_intents.business_id) OR user_has_permission(payment_intents.business_id, 'view_reports'::text)))))",
+      "with_check": null
+    },
+    {
+      "tablename": "payment_intents",
+      "policyname": "payment_intents_insert_cashiers",
+      "roles": "{public}",
+      "cmd": "INSERT",
+      "qual": null,
+      "with_check": "(user_belongs_to_business(business_id) AND user_has_permission(business_id, 'process_sales'::text))"
+    },
+    {
+      "tablename": "payment_intents",
+      "policyname": "payment_intents_select",
+      "roles": "{public}",
+      "cmd": "SELECT",
+      "qual": "user_belongs_to_business(business_id)",
+      "with_check": null
+    },
+    {
+      "tablename": "payment_processing_markers",
+      "policyname": "payment_processing_markers_select_managers",
+      "roles": "{public}",
+      "cmd": "SELECT",
+      "qual": "(EXISTS ( SELECT 1\n   FROM payment_intents\n  WHERE ((payment_intents.id = payment_processing_markers.payment_intent_id) AND (user_is_owner(payment_intents.business_id) OR user_has_permission(payment_intents.business_id, 'view_reports'::text)))))",
+      "with_check": null
+    },
+    {
+      "tablename": "payments",
+      "policyname": "payments_insert_cashiers",
+      "roles": "{public}",
+      "cmd": "INSERT",
+      "qual": null,
+      "with_check": "(user_belongs_to_business(business_id) AND user_has_permission(business_id, 'process_sales'::text))"
+    },
+    {
+      "tablename": "payments",
+      "policyname": "payments_select",
+      "roles": "{public}",
+      "cmd": "SELECT",
+      "qual": "user_belongs_to_business(business_id)",
+      "with_check": null
+    },
+    {
+      "tablename": "products",
+      "policyname": "products_select",
+      "roles": "{public}",
+      "cmd": "SELECT",
+      "qual": "(user_belongs_to_business(business_id) AND (deleted_at IS NULL))",
+      "with_check": null
+    },
+    {
+      "tablename": "products",
+      "policyname": "products_write_managers",
+      "roles": "{public}",
+      "cmd": "ALL",
+      "qual": "(user_belongs_to_business(business_id) AND user_has_permission(business_id, 'manage_products'::text))",
+      "with_check": "(user_belongs_to_business(business_id) AND user_has_permission(business_id, 'manage_products'::text))"
+    },
+    {
+      "tablename": "push_subscriptions",
+      "policyname": "push_subscriptions_user_access",
+      "roles": "{authenticated}",
+      "cmd": "ALL",
+      "qual": "(user_id = auth.uid())",
+      "with_check": "(user_id = auth.uid())"
+    },
+    {
+      "tablename": "refund_items",
+      "policyname": "refund_items_business_access",
+      "roles": "{authenticated}",
+      "cmd": "ALL",
+      "qual": "(EXISTS ( SELECT 1\n   FROM refunds r\n  WHERE ((r.id = refund_items.refund_id) AND user_belongs_to_business(r.business_id))))",
+      "with_check": "(EXISTS ( SELECT 1\n   FROM refunds r\n  WHERE ((r.id = refund_items.refund_id) AND user_belongs_to_business(r.business_id))))"
+    },
+    {
+      "tablename": "refunds",
+      "policyname": "refunds_insert_self",
+      "roles": "{authenticated}",
+      "cmd": "INSERT",
+      "qual": null,
+      "with_check": "(user_belongs_to_business(business_id) AND (cashier_id = current_user_id()))"
+    },
+    {
+      "tablename": "refunds",
+      "policyname": "refunds_select",
+      "roles": "{authenticated}",
+      "cmd": "SELECT",
+      "qual": "(user_belongs_to_business(business_id) AND (branch_id IN ( SELECT user_accessible_branches(refunds.business_id) AS user_accessible_branches)))",
+      "with_check": null
+    },
+    {
+      "tablename": "sale_items",
+      "policyname": "sale_items_insert_cashiers",
+      "roles": "{public}",
+      "cmd": "INSERT",
+      "qual": null,
+      "with_check": "(EXISTS ( SELECT 1\n   FROM sales\n  WHERE ((sales.id = sale_items.sale_id) AND user_belongs_to_business(sales.business_id) AND user_has_permission(sales.business_id, 'process_sales'::text))))"
+    },
+    {
+      "tablename": "sale_items",
+      "policyname": "sale_items_select",
+      "roles": "{public}",
+      "cmd": "SELECT",
+      "qual": "(EXISTS ( SELECT 1\n   FROM sales\n  WHERE ((sales.id = sale_items.sale_id) AND user_belongs_to_business(sales.business_id) AND (sales.branch_id IN ( SELECT user_accessible_branches(sales.business_id) AS user_accessible_branches)))))",
+      "with_check": null
+    },
+    {
+      "tablename": "sales",
+      "policyname": "sales_insert_cashiers",
+      "roles": "{public}",
+      "cmd": "INSERT",
+      "qual": null,
+      "with_check": "(user_belongs_to_business(business_id) AND user_has_permission(business_id, 'process_sales'::text))"
+    },
+    {
+      "tablename": "sales",
+      "policyname": "sales_select",
+      "roles": "{public}",
+      "cmd": "SELECT",
+      "qual": "(user_belongs_to_business(business_id) AND (branch_id IN ( SELECT user_accessible_branches(sales.business_id) AS user_accessible_branches)))",
+      "with_check": null
+    },
+    {
+      "tablename": "shifts",
+      "policyname": "shifts_insert_self",
+      "roles": "{authenticated}",
+      "cmd": "INSERT",
+      "qual": null,
+      "with_check": "(user_belongs_to_business(business_id) AND (cashier_id = current_user_id()))"
+    },
+    {
+      "tablename": "shifts",
+      "policyname": "shifts_select",
+      "roles": "{authenticated}",
+      "cmd": "SELECT",
+      "qual": "(user_belongs_to_business(business_id) AND (branch_id IN ( SELECT user_accessible_branches(shifts.business_id) AS user_accessible_branches)))",
+      "with_check": null
+    },
+    {
+      "tablename": "shifts",
+      "policyname": "shifts_update_self_or_manager",
+      "roles": "{authenticated}",
+      "cmd": "UPDATE",
+      "qual": "(user_belongs_to_business(business_id) AND ((cashier_id = current_user_id()) OR user_has_permission(business_id, 'manage_users'::text)))",
+      "with_check": "(user_belongs_to_business(business_id) AND ((cashier_id = current_user_id()) OR user_has_permission(business_id, 'manage_users'::text)))"
+    },
+    {
+      "tablename": "starter_catalog_templates",
+      "policyname": "starter_catalog_templates_public_read",
+      "roles": "{anon,authenticated}",
+      "cmd": "SELECT",
+      "qual": "true",
+      "with_check": null
+    },
+    {
+      "tablename": "suppliers",
+      "policyname": "suppliers_select",
+      "roles": "{public}",
+      "cmd": "SELECT",
+      "qual": "(user_belongs_to_business(business_id) AND (deleted_at IS NULL))",
+      "with_check": null
+    },
+    {
+      "tablename": "suppliers",
+      "policyname": "suppliers_write_managers",
+      "roles": "{public}",
+      "cmd": "ALL",
+      "qual": "(user_belongs_to_business(business_id) AND user_has_permission(business_id, 'manage_inventory'::text))",
+      "with_check": "(user_belongs_to_business(business_id) AND user_has_permission(business_id, 'manage_inventory'::text))"
+    },
+    {
+      "tablename": "user_business_roles",
+      "policyname": "user_business_roles_manage_owners",
+      "roles": "{public}",
+      "cmd": "ALL",
+      "qual": "(user_belongs_to_business(business_id) AND user_is_owner(business_id))",
+      "with_check": "(user_belongs_to_business(business_id) AND user_is_owner(business_id))"
+    },
+    {
+      "tablename": "user_business_roles",
+      "policyname": "user_business_roles_select",
+      "roles": "{public}",
+      "cmd": "SELECT",
+      "qual": "(user_belongs_to_business(business_id) AND (user_is_owner(business_id) OR user_has_permission(business_id, 'manage_users'::text) OR (user_id = current_user_id())))",
+      "with_check": null
+    },
+    {
+      "tablename": "webhook_receipts",
+      "policyname": "webhook_receipts_select_finance",
+      "roles": "{public}",
+      "cmd": "SELECT",
+      "qual": "((business_id = current_business_id()) AND (user_is_owner(business_id) OR user_has_permission(business_id, 'view_reports'::text)))",
+      "with_check": null
+    }
+  ],
+  "triggers": [
+    {
+      "relname": "ai_insights",
+      "tgname": "set_updated_at_ai_insights",
+      "definition": "CREATE TRIGGER set_updated_at_ai_insights BEFORE UPDATE ON public.ai_insights FOR EACH ROW EXECUTE FUNCTION update_updated_at_column()"
+    },
+    {
+      "relname": "branches",
+      "tgname": "set_updated_at_branches",
+      "definition": "CREATE TRIGGER set_updated_at_branches BEFORE UPDATE ON public.branches FOR EACH ROW EXECUTE FUNCTION update_updated_at_column()"
+    },
+    {
+      "relname": "businesses",
+      "tgname": "set_updated_at_businesses",
+      "definition": "CREATE TRIGGER set_updated_at_businesses BEFORE UPDATE ON public.businesses FOR EACH ROW EXECUTE FUNCTION update_updated_at_column()"
+    },
+    {
+      "relname": "businesses",
+      "tgname": "trg_create_default_roles",
+      "definition": "CREATE TRIGGER trg_create_default_roles AFTER INSERT ON public.businesses FOR EACH ROW EXECUTE FUNCTION create_default_roles_for_business()"
+    },
+    {
+      "relname": "cart_items",
+      "tgname": "set_updated_at_cart_items",
+      "definition": "CREATE TRIGGER set_updated_at_cart_items BEFORE UPDATE ON public.cart_items FOR EACH ROW EXECUTE FUNCTION update_updated_at_column()"
+    },
+    {
+      "relname": "carts",
+      "tgname": "set_updated_at_carts",
+      "definition": "CREATE TRIGGER set_updated_at_carts BEFORE UPDATE ON public.carts FOR EACH ROW EXECUTE FUNCTION update_updated_at_column()"
+    },
+    {
+      "relname": "carts",
+      "tgname": "trg_carts_branch_write",
+      "definition": "CREATE TRIGGER trg_carts_branch_write BEFORE INSERT ON public.carts FOR EACH ROW EXECUTE FUNCTION enforce_branch_write()"
+    },
+    {
+      "relname": "categories",
+      "tgname": "set_updated_at_categories",
+      "definition": "CREATE TRIGGER set_updated_at_categories BEFORE UPDATE ON public.categories FOR EACH ROW EXECUTE FUNCTION update_updated_at_column()"
+    },
+    {
+      "relname": "custom_roles",
+      "tgname": "set_updated_at_custom_roles",
+      "definition": "CREATE TRIGGER set_updated_at_custom_roles BEFORE UPDATE ON public.custom_roles FOR EACH ROW EXECUTE FUNCTION update_updated_at_column()"
+    },
+    {
+      "relname": "inventory",
+      "tgname": "set_updated_at_inventory",
+      "definition": "CREATE TRIGGER set_updated_at_inventory BEFORE UPDATE ON public.inventory FOR EACH ROW EXECUTE FUNCTION update_updated_at_column()"
+    },
+    {
+      "relname": "invoices",
+      "tgname": "set_updated_at_invoices",
+      "definition": "CREATE TRIGGER set_updated_at_invoices BEFORE UPDATE ON public.invoices FOR EACH ROW EXECUTE FUNCTION update_updated_at_column()"
+    },
+    {
+      "relname": "payment_intents",
+      "tgname": "set_updated_at_payment_intents",
+      "definition": "CREATE TRIGGER set_updated_at_payment_intents BEFORE UPDATE ON public.payment_intents FOR EACH ROW EXECUTE FUNCTION update_updated_at_column()"
+    },
+    {
+      "relname": "products",
+      "tgname": "set_updated_at_products",
+      "definition": "CREATE TRIGGER set_updated_at_products BEFORE UPDATE ON public.products FOR EACH ROW EXECUTE FUNCTION update_updated_at_column()"
+    },
+    {
+      "relname": "refunds",
+      "tgname": "trg_refunds_branch_write",
+      "definition": "CREATE TRIGGER trg_refunds_branch_write BEFORE INSERT ON public.refunds FOR EACH ROW EXECUTE FUNCTION enforce_branch_write()"
+    },
+    {
+      "relname": "sale_items",
+      "tgname": "set_updated_at_sale_items",
+      "definition": "CREATE TRIGGER set_updated_at_sale_items BEFORE UPDATE ON public.sale_items FOR EACH ROW EXECUTE FUNCTION update_updated_at_column()"
+    },
+    {
+      "relname": "sales",
+      "tgname": "set_updated_at_sales",
+      "definition": "CREATE TRIGGER set_updated_at_sales BEFORE UPDATE ON public.sales FOR EACH ROW EXECUTE FUNCTION update_updated_at_column()"
+    },
+    {
+      "relname": "shifts",
+      "tgname": "trg_shifts_branch_write",
+      "definition": "CREATE TRIGGER trg_shifts_branch_write BEFORE INSERT ON public.shifts FOR EACH ROW EXECUTE FUNCTION enforce_branch_write()"
+    },
+    {
+      "relname": "suppliers",
+      "tgname": "set_updated_at_suppliers",
+      "definition": "CREATE TRIGGER set_updated_at_suppliers BEFORE UPDATE ON public.suppliers FOR EACH ROW EXECUTE FUNCTION update_updated_at_column()"
+    },
+    {
+      "relname": "user_business_roles",
+      "tgname": "set_updated_at_user_business_roles",
+      "definition": "CREATE TRIGGER set_updated_at_user_business_roles BEFORE UPDATE ON public.user_business_roles FOR EACH ROW EXECUTE FUNCTION update_updated_at_column()"
+    }
+  ],
+  "tableGrants": [
+    {
+      "relname": "activity_logs",
+      "rolname": "anon",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "activity_logs",
+      "rolname": "authenticated",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "activity_logs",
+      "rolname": "service_role",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "ai_insights",
+      "rolname": "anon",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "ai_insights",
+      "rolname": "authenticated",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "ai_insights",
+      "rolname": "service_role",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "barcode_cache",
+      "rolname": "anon",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "barcode_cache",
+      "rolname": "authenticated",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "barcode_cache",
+      "rolname": "service_role",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "branches",
+      "rolname": "anon",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "branches",
+      "rolname": "authenticated",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "branches",
+      "rolname": "service_role",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "business_types",
+      "rolname": "anon",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "business_types",
+      "rolname": "authenticated",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "business_types",
+      "rolname": "service_role",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "businesses",
+      "rolname": "anon",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "businesses",
+      "rolname": "authenticated",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "businesses",
+      "rolname": "service_role",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "cart_items",
+      "rolname": "anon",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "cart_items",
+      "rolname": "authenticated",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "cart_items",
+      "rolname": "service_role",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "carts",
+      "rolname": "anon",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "carts",
+      "rolname": "authenticated",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "carts",
+      "rolname": "service_role",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "categories",
+      "rolname": "anon",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "categories",
+      "rolname": "authenticated",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "categories",
+      "rolname": "service_role",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "custom_roles",
+      "rolname": "anon",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "custom_roles",
+      "rolname": "authenticated",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "custom_roles",
+      "rolname": "service_role",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "inventory",
+      "rolname": "anon",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "inventory",
+      "rolname": "authenticated",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "inventory",
+      "rolname": "service_role",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "inventory_logs",
+      "rolname": "anon",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "inventory_logs",
+      "rolname": "authenticated",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "inventory_logs",
+      "rolname": "service_role",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "invoices",
+      "rolname": "anon",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "invoices",
+      "rolname": "authenticated",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "invoices",
+      "rolname": "service_role",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "mv_daily_sales",
+      "rolname": "anon",
+      "can_select": false,
+      "can_insert": false,
+      "can_update": false,
+      "can_delete": false
+    },
+    {
+      "relname": "mv_daily_sales",
+      "rolname": "authenticated",
+      "can_select": false,
+      "can_insert": false,
+      "can_update": false,
+      "can_delete": false
+    },
+    {
+      "relname": "mv_daily_sales",
+      "rolname": "service_role",
+      "can_select": false,
+      "can_insert": false,
+      "can_update": false,
+      "can_delete": false
+    },
+    {
+      "relname": "mv_stock_velocity",
+      "rolname": "anon",
+      "can_select": false,
+      "can_insert": false,
+      "can_update": false,
+      "can_delete": false
+    },
+    {
+      "relname": "mv_stock_velocity",
+      "rolname": "authenticated",
+      "can_select": false,
+      "can_insert": false,
+      "can_update": false,
+      "can_delete": false
+    },
+    {
+      "relname": "mv_stock_velocity",
+      "rolname": "service_role",
+      "can_select": false,
+      "can_insert": false,
+      "can_update": false,
+      "can_delete": false
+    },
+    {
+      "relname": "payment_events",
+      "rolname": "anon",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "payment_events",
+      "rolname": "authenticated",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "payment_events",
+      "rolname": "service_role",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "payment_intents",
+      "rolname": "anon",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "payment_intents",
+      "rolname": "authenticated",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "payment_intents",
+      "rolname": "service_role",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "payment_processing_markers",
+      "rolname": "anon",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "payment_processing_markers",
+      "rolname": "authenticated",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "payment_processing_markers",
+      "rolname": "service_role",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "payments",
+      "rolname": "anon",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "payments",
+      "rolname": "authenticated",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "payments",
+      "rolname": "service_role",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "products",
+      "rolname": "anon",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "products",
+      "rolname": "authenticated",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "products",
+      "rolname": "service_role",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "push_subscriptions",
+      "rolname": "anon",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "push_subscriptions",
+      "rolname": "authenticated",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "push_subscriptions",
+      "rolname": "service_role",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "refund_items",
+      "rolname": "anon",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "refund_items",
+      "rolname": "authenticated",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "refund_items",
+      "rolname": "service_role",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "refunds",
+      "rolname": "anon",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "refunds",
+      "rolname": "authenticated",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "refunds",
+      "rolname": "service_role",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "sale_items",
+      "rolname": "anon",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "sale_items",
+      "rolname": "authenticated",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "sale_items",
+      "rolname": "service_role",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "sales",
+      "rolname": "anon",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "sales",
+      "rolname": "authenticated",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "sales",
+      "rolname": "service_role",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "schema_migrations",
+      "rolname": "anon",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "schema_migrations",
+      "rolname": "authenticated",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "schema_migrations",
+      "rolname": "service_role",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "shifts",
+      "rolname": "anon",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "shifts",
+      "rolname": "authenticated",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "shifts",
+      "rolname": "service_role",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "starter_catalog_templates",
+      "rolname": "anon",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "starter_catalog_templates",
+      "rolname": "authenticated",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "starter_catalog_templates",
+      "rolname": "service_role",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "suppliers",
+      "rolname": "anon",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "suppliers",
+      "rolname": "authenticated",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "suppliers",
+      "rolname": "service_role",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "user_business_roles",
+      "rolname": "anon",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "user_business_roles",
+      "rolname": "authenticated",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "user_business_roles",
+      "rolname": "service_role",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "v_inventory_snapshot",
+      "rolname": "anon",
+      "can_select": false,
+      "can_insert": false,
+      "can_update": false,
+      "can_delete": false
+    },
+    {
+      "relname": "v_inventory_snapshot",
+      "rolname": "authenticated",
+      "can_select": false,
+      "can_insert": false,
+      "can_update": false,
+      "can_delete": false
+    },
+    {
+      "relname": "v_inventory_snapshot",
+      "rolname": "service_role",
+      "can_select": false,
+      "can_insert": false,
+      "can_update": false,
+      "can_delete": false
+    },
+    {
+      "relname": "webhook_receipts",
+      "rolname": "anon",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "webhook_receipts",
+      "rolname": "authenticated",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    },
+    {
+      "relname": "webhook_receipts",
+      "rolname": "service_role",
+      "can_select": true,
+      "can_insert": true,
+      "can_update": true,
+      "can_delete": true
+    }
+  ],
+  "roles": [
+    {
+      "rolname": "anon",
+      "rolsuper": false,
+      "rolinherit": true,
+      "rolbypassrls": false,
+      "rolcanlogin": false
+    },
+    {
+      "rolname": "authenticated",
+      "rolsuper": false,
+      "rolinherit": true,
+      "rolbypassrls": false,
+      "rolcanlogin": false
+    },
+    {
+      "rolname": "phase1a_admin",
+      "rolsuper": true,
+      "rolinherit": true,
+      "rolbypassrls": true,
+      "rolcanlogin": true
+    },
+    {
+      "rolname": "service_role",
+      "rolsuper": false,
+      "rolinherit": true,
+      "rolbypassrls": true,
+      "rolcanlogin": false
+    }
+  ],
+  "columns": [
+    {
+      "table_name": "activity_logs",
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "activity_logs",
+      "column_name": "business_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "activity_logs",
+      "column_name": "branch_id",
+      "data_type": "uuid",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "activity_logs",
+      "column_name": "actor_id",
+      "data_type": "uuid",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "activity_logs",
+      "column_name": "action",
+      "data_type": "character varying",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "activity_logs",
+      "column_name": "entity_table",
+      "data_type": "character varying",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "activity_logs",
+      "column_name": "entity_id",
+      "data_type": "uuid",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "activity_logs",
+      "column_name": "metadata",
+      "data_type": "jsonb",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "activity_logs",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "ai_insights",
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "ai_insights",
+      "column_name": "business_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "ai_insights",
+      "column_name": "branch_id",
+      "data_type": "uuid",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "ai_insights",
+      "column_name": "type",
+      "data_type": "USER-DEFINED",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "ai_insights",
+      "column_name": "title",
+      "data_type": "text",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "ai_insights",
+      "column_name": "body",
+      "data_type": "text",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "ai_insights",
+      "column_name": "confidence_score",
+      "data_type": "numeric",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "ai_insights",
+      "column_name": "data_hash",
+      "data_type": "text",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "ai_insights",
+      "column_name": "push_eligible",
+      "data_type": "boolean",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "ai_insights",
+      "column_name": "status",
+      "data_type": "USER-DEFINED",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "ai_insights",
+      "column_name": "actor_id",
+      "data_type": "uuid",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "ai_insights",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "ai_insights",
+      "column_name": "actioned_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "ai_insights",
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "barcode_cache",
+      "column_name": "barcode",
+      "data_type": "text",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "barcode_cache",
+      "column_name": "name",
+      "data_type": "text",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "barcode_cache",
+      "column_name": "category",
+      "data_type": "text",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "barcode_cache",
+      "column_name": "brand",
+      "data_type": "text",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "barcode_cache",
+      "column_name": "image_url",
+      "data_type": "text",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "barcode_cache",
+      "column_name": "suggested_price",
+      "data_type": "numeric",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "barcode_cache",
+      "column_name": "source",
+      "data_type": "text",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "barcode_cache",
+      "column_name": "cached_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "branches",
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "branches",
+      "column_name": "business_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "branches",
+      "column_name": "name",
+      "data_type": "character varying",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "branches",
+      "column_name": "location",
+      "data_type": "character varying",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "branches",
+      "column_name": "phone",
+      "data_type": "character varying",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "branches",
+      "column_name": "is_active",
+      "data_type": "boolean",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "branches",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "branches",
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "branches",
+      "column_name": "deleted_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "branches",
+      "column_name": "email",
+      "data_type": "character varying",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "branches",
+      "column_name": "momo_number",
+      "data_type": "character varying",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "branches",
+      "column_name": "tax_id",
+      "data_type": "character varying",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "branches",
+      "column_name": "opening_hours",
+      "data_type": "character varying",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "branches",
+      "column_name": "footer_text",
+      "data_type": "character varying",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "business_types",
+      "column_name": "id",
+      "data_type": "text",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "business_types",
+      "column_name": "name",
+      "data_type": "text",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "business_types",
+      "column_name": "icon",
+      "data_type": "text",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "businesses",
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "businesses",
+      "column_name": "name",
+      "data_type": "character varying",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "businesses",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "businesses",
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "businesses",
+      "column_name": "is_active",
+      "data_type": "boolean",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "businesses",
+      "column_name": "deleted_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "businesses",
+      "column_name": "currency",
+      "data_type": "character varying",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "businesses",
+      "column_name": "business_type",
+      "data_type": "text",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "businesses",
+      "column_name": "onboarding_completed",
+      "data_type": "boolean",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "cart_items",
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "cart_items",
+      "column_name": "cart_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "cart_items",
+      "column_name": "product_id",
+      "data_type": "uuid",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "cart_items",
+      "column_name": "quantity",
+      "data_type": "integer",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "cart_items",
+      "column_name": "unit_price",
+      "data_type": "numeric",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "cart_items",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "cart_items",
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "carts",
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "carts",
+      "column_name": "business_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "carts",
+      "column_name": "cashier_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "carts",
+      "column_name": "status",
+      "data_type": "character varying",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "carts",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "carts",
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "carts",
+      "column_name": "branch_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "categories",
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "categories",
+      "column_name": "business_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "categories",
+      "column_name": "name",
+      "data_type": "character varying",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "categories",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "categories",
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "custom_roles",
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "custom_roles",
+      "column_name": "business_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "custom_roles",
+      "column_name": "name",
+      "data_type": "character varying",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "custom_roles",
+      "column_name": "permissions",
+      "data_type": "jsonb",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "custom_roles",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "custom_roles",
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "inventory",
+      "column_name": "product_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "inventory",
+      "column_name": "business_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "inventory",
+      "column_name": "quantity",
+      "data_type": "integer",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "inventory",
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "inventory",
+      "column_name": "branch_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "inventory",
+      "column_name": "reorder_level",
+      "data_type": "integer",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "inventory_logs",
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "inventory_logs",
+      "column_name": "business_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "inventory_logs",
+      "column_name": "branch_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "inventory_logs",
+      "column_name": "product_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "inventory_logs",
+      "column_name": "old_quantity",
+      "data_type": "integer",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "inventory_logs",
+      "column_name": "new_quantity",
+      "data_type": "integer",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "inventory_logs",
+      "column_name": "change_amount",
+      "data_type": "integer",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "inventory_logs",
+      "column_name": "reason",
+      "data_type": "character varying",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "inventory_logs",
+      "column_name": "actor_id",
+      "data_type": "uuid",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "inventory_logs",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "inventory_logs",
+      "column_name": "idempotency_key",
+      "data_type": "text",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "invoices",
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "invoices",
+      "column_name": "business_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "invoices",
+      "column_name": "invoice_number",
+      "data_type": "character varying",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "invoices",
+      "column_name": "cashier_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "invoices",
+      "column_name": "payment_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "invoices",
+      "column_name": "subtotal",
+      "data_type": "numeric",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "invoices",
+      "column_name": "tax",
+      "data_type": "numeric",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "invoices",
+      "column_name": "total",
+      "data_type": "numeric",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "invoices",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "invoices",
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "invoices",
+      "column_name": "branch_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "payment_events",
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "payment_events",
+      "column_name": "payment_intent_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "payment_events",
+      "column_name": "event_type",
+      "data_type": "character varying",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "payment_events",
+      "column_name": "provider",
+      "data_type": "character varying",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "payment_events",
+      "column_name": "provider_event_id",
+      "data_type": "character varying",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "payment_events",
+      "column_name": "provider_reference",
+      "data_type": "character varying",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "payment_events",
+      "column_name": "payload",
+      "data_type": "jsonb",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "payment_events",
+      "column_name": "occurred_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "payment_events",
+      "column_name": "received_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "payment_events",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "payment_intents",
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "payment_intents",
+      "column_name": "business_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "payment_intents",
+      "column_name": "cart_id",
+      "data_type": "uuid",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "payment_intents",
+      "column_name": "invoice_id",
+      "data_type": "uuid",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "payment_intents",
+      "column_name": "customer_reference",
+      "data_type": "character varying",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "payment_intents",
+      "column_name": "amount",
+      "data_type": "numeric",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "payment_intents",
+      "column_name": "currency",
+      "data_type": "character varying",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "payment_intents",
+      "column_name": "idempotency_key",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "payment_intents",
+      "column_name": "provider",
+      "data_type": "character varying",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "payment_intents",
+      "column_name": "provider_reference",
+      "data_type": "character varying",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "payment_intents",
+      "column_name": "status",
+      "data_type": "character varying",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "payment_intents",
+      "column_name": "legacy_payment_id",
+      "data_type": "uuid",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "payment_intents",
+      "column_name": "created_by",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "payment_intents",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "payment_intents",
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "payment_processing_markers",
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "payment_processing_markers",
+      "column_name": "payment_intent_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "payment_processing_markers",
+      "column_name": "event_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "payment_processing_markers",
+      "column_name": "processed_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "payments",
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "payments",
+      "column_name": "business_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "payments",
+      "column_name": "cashier_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "payments",
+      "column_name": "method",
+      "data_type": "character varying",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "payments",
+      "column_name": "amount",
+      "data_type": "numeric",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "payments",
+      "column_name": "status",
+      "data_type": "character varying",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "payments",
+      "column_name": "provider_reference",
+      "data_type": "character varying",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "payments",
+      "column_name": "card_last4",
+      "data_type": "character varying",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "payments",
+      "column_name": "card_brand",
+      "data_type": "character varying",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "payments",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "products",
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "products",
+      "column_name": "business_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "products",
+      "column_name": "name",
+      "data_type": "character varying",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "products",
+      "column_name": "sku",
+      "data_type": "character varying",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "products",
+      "column_name": "barcode",
+      "data_type": "character varying",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "products",
+      "column_name": "selling_price",
+      "data_type": "numeric",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "products",
+      "column_name": "cost_price",
+      "data_type": "numeric",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "products",
+      "column_name": "category_id",
+      "data_type": "uuid",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "products",
+      "column_name": "supplier_id",
+      "data_type": "uuid",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "products",
+      "column_name": "reorder_threshold",
+      "data_type": "integer",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "products",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "products",
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "products",
+      "column_name": "deleted_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "push_subscriptions",
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "push_subscriptions",
+      "column_name": "user_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "push_subscriptions",
+      "column_name": "business_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "push_subscriptions",
+      "column_name": "endpoint",
+      "data_type": "text",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "push_subscriptions",
+      "column_name": "p256dh",
+      "data_type": "text",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "push_subscriptions",
+      "column_name": "auth",
+      "data_type": "text",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "push_subscriptions",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "push_subscriptions",
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "refund_items",
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "refund_items",
+      "column_name": "refund_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "refund_items",
+      "column_name": "sale_item_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "refund_items",
+      "column_name": "product_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "refund_items",
+      "column_name": "quantity",
+      "data_type": "integer",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "refund_items",
+      "column_name": "unit_price",
+      "data_type": "numeric",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "refund_items",
+      "column_name": "subtotal",
+      "data_type": "numeric",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "refund_items",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "refunds",
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "refunds",
+      "column_name": "business_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "refunds",
+      "column_name": "branch_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "refunds",
+      "column_name": "sale_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "refunds",
+      "column_name": "cashier_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "refunds",
+      "column_name": "total_amount",
+      "data_type": "numeric",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "refunds",
+      "column_name": "reason",
+      "data_type": "text",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "refunds",
+      "column_name": "status",
+      "data_type": "text",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "refunds",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "refunds",
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "refunds",
+      "column_name": "idempotency_key",
+      "data_type": "text",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "sale_items",
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "sale_items",
+      "column_name": "sale_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "sale_items",
+      "column_name": "product_id",
+      "data_type": "uuid",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "sale_items",
+      "column_name": "quantity",
+      "data_type": "integer",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "sale_items",
+      "column_name": "unit_price",
+      "data_type": "numeric",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "sale_items",
+      "column_name": "subtotal",
+      "data_type": "numeric",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "sale_items",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "sale_items",
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "sale_items",
+      "column_name": "is_quick_sale",
+      "data_type": "boolean",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "sale_items",
+      "column_name": "quick_sale_name",
+      "data_type": "text",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "sales",
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "sales",
+      "column_name": "business_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "sales",
+      "column_name": "invoice_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "sales",
+      "column_name": "payment_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "sales",
+      "column_name": "cashier_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "sales",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "sales",
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "sales",
+      "column_name": "branch_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "schema_migrations",
+      "column_name": "filename",
+      "data_type": "text",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "schema_migrations",
+      "column_name": "applied_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "shifts",
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "shifts",
+      "column_name": "business_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "shifts",
+      "column_name": "branch_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "shifts",
+      "column_name": "cashier_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "shifts",
+      "column_name": "opened_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "shifts",
+      "column_name": "closed_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "shifts",
+      "column_name": "opening_float",
+      "data_type": "numeric",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "shifts",
+      "column_name": "expected_cash",
+      "data_type": "numeric",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "shifts",
+      "column_name": "actual_cash",
+      "data_type": "numeric",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "shifts",
+      "column_name": "discrepancy",
+      "data_type": "numeric",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "shifts",
+      "column_name": "status",
+      "data_type": "text",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "shifts",
+      "column_name": "notes",
+      "data_type": "text",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "shifts",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "shifts",
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "starter_catalog_templates",
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "starter_catalog_templates",
+      "column_name": "business_type",
+      "data_type": "text",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "starter_catalog_templates",
+      "column_name": "name",
+      "data_type": "text",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "starter_catalog_templates",
+      "column_name": "barcode",
+      "data_type": "text",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "starter_catalog_templates",
+      "column_name": "category",
+      "data_type": "text",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "starter_catalog_templates",
+      "column_name": "suggested_price",
+      "data_type": "numeric",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "starter_catalog_templates",
+      "column_name": "suggested_cost",
+      "data_type": "numeric",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "starter_catalog_templates",
+      "column_name": "unit",
+      "data_type": "text",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "starter_catalog_templates",
+      "column_name": "image_url",
+      "data_type": "text",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "starter_catalog_templates",
+      "column_name": "sort_order",
+      "data_type": "integer",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "suppliers",
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "suppliers",
+      "column_name": "business_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "suppliers",
+      "column_name": "name",
+      "data_type": "character varying",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "suppliers",
+      "column_name": "contact_email",
+      "data_type": "character varying",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "suppliers",
+      "column_name": "contact_phone",
+      "data_type": "character varying",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "suppliers",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "suppliers",
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "suppliers",
+      "column_name": "deleted_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "user_business_roles",
+      "column_name": "user_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "user_business_roles",
+      "column_name": "business_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "user_business_roles",
+      "column_name": "role_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "user_business_roles",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "user_business_roles",
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "user_business_roles",
+      "column_name": "branch_id",
+      "data_type": "uuid",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "v_inventory_snapshot",
+      "column_name": "business_id",
+      "data_type": "uuid",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "v_inventory_snapshot",
+      "column_name": "branch_id",
+      "data_type": "uuid",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "v_inventory_snapshot",
+      "column_name": "branch_name",
+      "data_type": "character varying",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "v_inventory_snapshot",
+      "column_name": "product_id",
+      "data_type": "uuid",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "v_inventory_snapshot",
+      "column_name": "product_name",
+      "data_type": "character varying",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "v_inventory_snapshot",
+      "column_name": "sku",
+      "data_type": "character varying",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "v_inventory_snapshot",
+      "column_name": "barcode",
+      "data_type": "character varying",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "v_inventory_snapshot",
+      "column_name": "selling_price",
+      "data_type": "numeric",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "v_inventory_snapshot",
+      "column_name": "cost_price",
+      "data_type": "numeric",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "v_inventory_snapshot",
+      "column_name": "supplier_id",
+      "data_type": "uuid",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "v_inventory_snapshot",
+      "column_name": "reorder_threshold",
+      "data_type": "integer",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "v_inventory_snapshot",
+      "column_name": "reorder_level",
+      "data_type": "integer",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "v_inventory_snapshot",
+      "column_name": "current_stock",
+      "data_type": "integer",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "v_inventory_snapshot",
+      "column_name": "unit_margin",
+      "data_type": "numeric",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "v_inventory_snapshot",
+      "column_name": "stock_value_margin",
+      "data_type": "numeric",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "webhook_receipts",
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "webhook_receipts",
+      "column_name": "provider",
+      "data_type": "character varying",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "webhook_receipts",
+      "column_name": "provider_event_id",
+      "data_type": "character varying",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "webhook_receipts",
+      "column_name": "event_type",
+      "data_type": "character varying",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "webhook_receipts",
+      "column_name": "signature_valid",
+      "data_type": "boolean",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "webhook_receipts",
+      "column_name": "payload_hash",
+      "data_type": "character varying",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "webhook_receipts",
+      "column_name": "raw_payload",
+      "data_type": "jsonb",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "webhook_receipts",
+      "column_name": "received_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "webhook_receipts",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "webhook_receipts",
+      "column_name": "business_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    }
+  ],
+  "extensions": [
+    {
+      "extname": "plpgsql",
+      "extversion": "1.0"
+    },
+    {
+      "extname": "uuid-ossp",
+      "extversion": "1.1"
+    }
+  ],
+  "indexes": [
+    {
+      "tablename": "activity_logs",
+      "indexname": "activity_logs_pkey",
+      "indexdef": "CREATE UNIQUE INDEX activity_logs_pkey ON public.activity_logs USING btree (id)"
+    },
+    {
+      "tablename": "activity_logs",
+      "indexname": "idx_activity_logs_actor",
+      "indexdef": "CREATE INDEX idx_activity_logs_actor ON public.activity_logs USING btree (actor_id)"
+    },
+    {
+      "tablename": "activity_logs",
+      "indexname": "idx_activity_logs_branch",
+      "indexdef": "CREATE INDEX idx_activity_logs_branch ON public.activity_logs USING btree (branch_id)"
+    },
+    {
+      "tablename": "activity_logs",
+      "indexname": "idx_activity_logs_business",
+      "indexdef": "CREATE INDEX idx_activity_logs_business ON public.activity_logs USING btree (business_id, created_at DESC)"
+    },
+    {
+      "tablename": "activity_logs",
+      "indexname": "idx_activity_logs_metadata",
+      "indexdef": "CREATE INDEX idx_activity_logs_metadata ON public.activity_logs USING gin (metadata jsonb_path_ops)"
+    },
+    {
+      "tablename": "ai_insights",
+      "indexname": "ai_insights_pkey",
+      "indexdef": "CREATE UNIQUE INDEX ai_insights_pkey ON public.ai_insights USING btree (id)"
+    },
+    {
+      "tablename": "ai_insights",
+      "indexname": "idx_ai_insights_business",
+      "indexdef": "CREATE INDEX idx_ai_insights_business ON public.ai_insights USING btree (business_id)"
+    },
+    {
+      "tablename": "ai_insights",
+      "indexname": "idx_ai_insights_business_branch",
+      "indexdef": "CREATE INDEX idx_ai_insights_business_branch ON public.ai_insights USING btree (business_id, branch_id)"
+    },
+    {
+      "tablename": "ai_insights",
+      "indexname": "idx_ai_insights_business_type_created",
+      "indexdef": "CREATE INDEX idx_ai_insights_business_type_created ON public.ai_insights USING btree (business_id, type, created_at DESC)"
+    },
+    {
+      "tablename": "ai_insights",
+      "indexname": "uq_ai_insights_dedupe_24h",
+      "indexdef": "CREATE UNIQUE INDEX uq_ai_insights_dedupe_24h ON public.ai_insights USING btree (business_id, branch_id, type, data_hash) WHERE (status = 'pending'::ai_insight_status)"
+    },
+    {
+      "tablename": "barcode_cache",
+      "indexname": "barcode_cache_pkey",
+      "indexdef": "CREATE UNIQUE INDEX barcode_cache_pkey ON public.barcode_cache USING btree (barcode)"
+    },
+    {
+      "tablename": "branches",
+      "indexname": "branches_business_id_name_key",
+      "indexdef": "CREATE UNIQUE INDEX branches_business_id_name_key ON public.branches USING btree (business_id, name)"
+    },
+    {
+      "tablename": "branches",
+      "indexname": "branches_pkey",
+      "indexdef": "CREATE UNIQUE INDEX branches_pkey ON public.branches USING btree (id)"
+    },
+    {
+      "tablename": "branches",
+      "indexname": "idx_branches_active",
+      "indexdef": "CREATE INDEX idx_branches_active ON public.branches USING btree (business_id) WHERE (deleted_at IS NULL)"
+    },
+    {
+      "tablename": "branches",
+      "indexname": "idx_branches_business",
+      "indexdef": "CREATE INDEX idx_branches_business ON public.branches USING btree (business_id)"
+    },
+    {
+      "tablename": "business_types",
+      "indexname": "business_types_pkey",
+      "indexdef": "CREATE UNIQUE INDEX business_types_pkey ON public.business_types USING btree (id)"
+    },
+    {
+      "tablename": "businesses",
+      "indexname": "businesses_pkey",
+      "indexdef": "CREATE UNIQUE INDEX businesses_pkey ON public.businesses USING btree (id)"
+    },
+    {
+      "tablename": "businesses",
+      "indexname": "idx_businesses_active",
+      "indexdef": "CREATE INDEX idx_businesses_active ON public.businesses USING btree (id) WHERE (deleted_at IS NULL)"
+    },
+    {
+      "tablename": "cart_items",
+      "indexname": "cart_items_pkey",
+      "indexdef": "CREATE UNIQUE INDEX cart_items_pkey ON public.cart_items USING btree (id)"
+    },
+    {
+      "tablename": "cart_items",
+      "indexname": "idx_cart_items_cart",
+      "indexdef": "CREATE INDEX idx_cart_items_cart ON public.cart_items USING btree (cart_id)"
+    },
+    {
+      "tablename": "cart_items",
+      "indexname": "idx_cart_items_product",
+      "indexdef": "CREATE INDEX idx_cart_items_product ON public.cart_items USING btree (product_id)"
+    },
+    {
+      "tablename": "carts",
+      "indexname": "carts_pkey",
+      "indexdef": "CREATE UNIQUE INDEX carts_pkey ON public.carts USING btree (id)"
+    },
+    {
+      "tablename": "carts",
+      "indexname": "idx_carts_branch",
+      "indexdef": "CREATE INDEX idx_carts_branch ON public.carts USING btree (branch_id)"
+    },
+    {
+      "tablename": "carts",
+      "indexname": "idx_carts_business",
+      "indexdef": "CREATE INDEX idx_carts_business ON public.carts USING btree (business_id)"
+    },
+    {
+      "tablename": "carts",
+      "indexname": "idx_carts_business_branch",
+      "indexdef": "CREATE INDEX idx_carts_business_branch ON public.carts USING btree (business_id, branch_id)"
+    },
+    {
+      "tablename": "carts",
+      "indexname": "idx_carts_cashier",
+      "indexdef": "CREATE INDEX idx_carts_cashier ON public.carts USING btree (cashier_id)"
+    },
+    {
+      "tablename": "carts",
+      "indexname": "idx_carts_status",
+      "indexdef": "CREATE INDEX idx_carts_status ON public.carts USING btree (status)"
+    },
+    {
+      "tablename": "categories",
+      "indexname": "categories_business_id_name_key",
+      "indexdef": "CREATE UNIQUE INDEX categories_business_id_name_key ON public.categories USING btree (business_id, name)"
+    },
+    {
+      "tablename": "categories",
+      "indexname": "categories_pkey",
+      "indexdef": "CREATE UNIQUE INDEX categories_pkey ON public.categories USING btree (id)"
+    },
+    {
+      "tablename": "categories",
+      "indexname": "idx_categories_business",
+      "indexdef": "CREATE INDEX idx_categories_business ON public.categories USING btree (business_id)"
+    },
+    {
+      "tablename": "custom_roles",
+      "indexname": "custom_roles_business_id_name_key",
+      "indexdef": "CREATE UNIQUE INDEX custom_roles_business_id_name_key ON public.custom_roles USING btree (business_id, name)"
+    },
+    {
+      "tablename": "custom_roles",
+      "indexname": "custom_roles_pkey",
+      "indexdef": "CREATE UNIQUE INDEX custom_roles_pkey ON public.custom_roles USING btree (id)"
+    },
+    {
+      "tablename": "custom_roles",
+      "indexname": "idx_custom_roles_business",
+      "indexdef": "CREATE INDEX idx_custom_roles_business ON public.custom_roles USING btree (business_id)"
+    },
+    {
+      "tablename": "inventory",
+      "indexname": "idx_inventory_branch",
+      "indexdef": "CREATE INDEX idx_inventory_branch ON public.inventory USING btree (branch_id)"
+    },
+    {
+      "tablename": "inventory",
+      "indexname": "idx_inventory_business",
+      "indexdef": "CREATE INDEX idx_inventory_business ON public.inventory USING btree (business_id)"
+    },
+    {
+      "tablename": "inventory",
+      "indexname": "idx_inventory_business_branch",
+      "indexdef": "CREATE INDEX idx_inventory_business_branch ON public.inventory USING btree (business_id, branch_id)"
+    },
+    {
+      "tablename": "inventory",
+      "indexname": "idx_inventory_reorder_level",
+      "indexdef": "CREATE INDEX idx_inventory_reorder_level ON public.inventory USING btree (reorder_level)"
+    },
+    {
+      "tablename": "inventory",
+      "indexname": "pk_inventory",
+      "indexdef": "CREATE UNIQUE INDEX pk_inventory ON public.inventory USING btree (product_id, branch_id)"
+    },
+    {
+      "tablename": "inventory_logs",
+      "indexname": "idx_inventory_logs_branch",
+      "indexdef": "CREATE INDEX idx_inventory_logs_branch ON public.inventory_logs USING btree (branch_id)"
+    },
+    {
+      "tablename": "inventory_logs",
+      "indexname": "idx_inventory_logs_business",
+      "indexdef": "CREATE INDEX idx_inventory_logs_business ON public.inventory_logs USING btree (business_id, created_at DESC)"
+    },
+    {
+      "tablename": "inventory_logs",
+      "indexname": "idx_inventory_logs_business_branch",
+      "indexdef": "CREATE INDEX idx_inventory_logs_business_branch ON public.inventory_logs USING btree (business_id, branch_id)"
+    },
+    {
+      "tablename": "inventory_logs",
+      "indexname": "idx_inventory_logs_idempotency",
+      "indexdef": "CREATE INDEX idx_inventory_logs_idempotency ON public.inventory_logs USING btree (idempotency_key) WHERE (idempotency_key IS NOT NULL)"
+    },
+    {
+      "tablename": "inventory_logs",
+      "indexname": "idx_inventory_logs_product",
+      "indexdef": "CREATE INDEX idx_inventory_logs_product ON public.inventory_logs USING btree (product_id)"
+    },
+    {
+      "tablename": "inventory_logs",
+      "indexname": "inventory_logs_pkey",
+      "indexdef": "CREATE UNIQUE INDEX inventory_logs_pkey ON public.inventory_logs USING btree (id)"
+    },
+    {
+      "tablename": "invoices",
+      "indexname": "idx_invoices_branch",
+      "indexdef": "CREATE INDEX idx_invoices_branch ON public.invoices USING btree (branch_id)"
+    },
+    {
+      "tablename": "invoices",
+      "indexname": "idx_invoices_business",
+      "indexdef": "CREATE INDEX idx_invoices_business ON public.invoices USING btree (business_id)"
+    },
+    {
+      "tablename": "invoices",
+      "indexname": "idx_invoices_business_branch",
+      "indexdef": "CREATE INDEX idx_invoices_business_branch ON public.invoices USING btree (business_id, branch_id)"
+    },
+    {
+      "tablename": "invoices",
+      "indexname": "idx_invoices_payment",
+      "indexdef": "CREATE INDEX idx_invoices_payment ON public.invoices USING btree (payment_id)"
+    },
+    {
+      "tablename": "invoices",
+      "indexname": "invoices_business_id_invoice_number_key",
+      "indexdef": "CREATE UNIQUE INDEX invoices_business_id_invoice_number_key ON public.invoices USING btree (business_id, invoice_number)"
+    },
+    {
+      "tablename": "invoices",
+      "indexname": "invoices_pkey",
+      "indexdef": "CREATE UNIQUE INDEX invoices_pkey ON public.invoices USING btree (id)"
+    },
+    {
+      "tablename": "mv_daily_sales",
+      "indexname": "idx_mv_daily_sales_lookup",
+      "indexdef": "CREATE INDEX idx_mv_daily_sales_lookup ON public.mv_daily_sales USING btree (business_id, branch_id, sale_date)"
+    },
+    {
+      "tablename": "mv_daily_sales",
+      "indexname": "idx_mv_daily_sales_uq",
+      "indexdef": "CREATE UNIQUE INDEX idx_mv_daily_sales_uq ON public.mv_daily_sales USING btree (business_id, branch_id, sale_date)"
+    },
+    {
+      "tablename": "mv_stock_velocity",
+      "indexname": "idx_mv_stock_velocity_stockout",
+      "indexdef": "CREATE INDEX idx_mv_stock_velocity_stockout ON public.mv_stock_velocity USING btree (business_id, days_until_stockout) WHERE ((days_until_stockout IS NOT NULL) AND (days_until_stockout <= (7)::numeric))"
+    },
+    {
+      "tablename": "mv_stock_velocity",
+      "indexname": "idx_mv_stock_velocity_uq",
+      "indexdef": "CREATE UNIQUE INDEX idx_mv_stock_velocity_uq ON public.mv_stock_velocity USING btree (business_id, branch_id, product_id)"
+    },
+    {
+      "tablename": "payment_events",
+      "indexname": "idx_payment_events_intent",
+      "indexdef": "CREATE INDEX idx_payment_events_intent ON public.payment_events USING btree (payment_intent_id)"
+    },
+    {
+      "tablename": "payment_events",
+      "indexname": "idx_payment_events_intent_occurred",
+      "indexdef": "CREATE INDEX idx_payment_events_intent_occurred ON public.payment_events USING btree (payment_intent_id, occurred_at)"
+    },
+    {
+      "tablename": "payment_events",
+      "indexname": "idx_payment_events_occurred",
+      "indexdef": "CREATE INDEX idx_payment_events_occurred ON public.payment_events USING btree (occurred_at)"
+    },
+    {
+      "tablename": "payment_events",
+      "indexname": "idx_payment_events_provider_event",
+      "indexdef": "CREATE UNIQUE INDEX idx_payment_events_provider_event ON public.payment_events USING btree (provider, provider_event_id) WHERE (provider_event_id IS NOT NULL)"
+    },
+    {
+      "tablename": "payment_events",
+      "indexname": "idx_payment_events_provider_ref",
+      "indexdef": "CREATE INDEX idx_payment_events_provider_ref ON public.payment_events USING btree (provider_reference)"
+    },
+    {
+      "tablename": "payment_events",
+      "indexname": "payment_events_pkey",
+      "indexdef": "CREATE UNIQUE INDEX payment_events_pkey ON public.payment_events USING btree (id)"
+    },
+    {
+      "tablename": "payment_intents",
+      "indexname": "idx_payment_intents_business",
+      "indexdef": "CREATE INDEX idx_payment_intents_business ON public.payment_intents USING btree (business_id)"
+    },
+    {
+      "tablename": "payment_intents",
+      "indexname": "idx_payment_intents_cart",
+      "indexdef": "CREATE INDEX idx_payment_intents_cart ON public.payment_intents USING btree (cart_id)"
+    },
+    {
+      "tablename": "payment_intents",
+      "indexname": "idx_payment_intents_idempotency",
+      "indexdef": "CREATE INDEX idx_payment_intents_idempotency ON public.payment_intents USING btree (idempotency_key)"
+    },
+    {
+      "tablename": "payment_intents",
+      "indexname": "idx_payment_intents_legacy_payment",
+      "indexdef": "CREATE INDEX idx_payment_intents_legacy_payment ON public.payment_intents USING btree (legacy_payment_id)"
+    },
+    {
+      "tablename": "payment_intents",
+      "indexname": "payment_intents_pkey",
+      "indexdef": "CREATE UNIQUE INDEX payment_intents_pkey ON public.payment_intents USING btree (id)"
+    },
+    {
+      "tablename": "payment_intents",
+      "indexname": "uq_payment_intents_idempotency",
+      "indexdef": "CREATE UNIQUE INDEX uq_payment_intents_idempotency ON public.payment_intents USING btree (idempotency_key)"
+    },
+    {
+      "tablename": "payment_processing_markers",
+      "indexname": "idx_payment_markers_event",
+      "indexdef": "CREATE INDEX idx_payment_markers_event ON public.payment_processing_markers USING btree (event_id)"
+    },
+    {
+      "tablename": "payment_processing_markers",
+      "indexname": "idx_payment_markers_intent",
+      "indexdef": "CREATE INDEX idx_payment_markers_intent ON public.payment_processing_markers USING btree (payment_intent_id)"
+    },
+    {
+      "tablename": "payment_processing_markers",
+      "indexname": "payment_processing_markers_pkey",
+      "indexdef": "CREATE UNIQUE INDEX payment_processing_markers_pkey ON public.payment_processing_markers USING btree (id)"
+    },
+    {
+      "tablename": "payment_processing_markers",
+      "indexname": "uq_payment_marker_intent",
+      "indexdef": "CREATE UNIQUE INDEX uq_payment_marker_intent ON public.payment_processing_markers USING btree (payment_intent_id)"
+    },
+    {
+      "tablename": "payments",
+      "indexname": "idx_payments_business",
+      "indexdef": "CREATE INDEX idx_payments_business ON public.payments USING btree (business_id)"
+    },
+    {
+      "tablename": "payments",
+      "indexname": "idx_payments_provider",
+      "indexdef": "CREATE INDEX idx_payments_provider ON public.payments USING btree (provider_reference) WHERE (provider_reference IS NOT NULL)"
+    },
+    {
+      "tablename": "payments",
+      "indexname": "idx_payments_status",
+      "indexdef": "CREATE INDEX idx_payments_status ON public.payments USING btree (status)"
+    },
+    {
+      "tablename": "payments",
+      "indexname": "payments_pkey",
+      "indexdef": "CREATE UNIQUE INDEX payments_pkey ON public.payments USING btree (id)"
+    },
+    {
+      "tablename": "products",
+      "indexname": "idx_products_barcode",
+      "indexdef": "CREATE INDEX idx_products_barcode ON public.products USING btree (business_id, barcode)"
+    },
+    {
+      "tablename": "products",
+      "indexname": "idx_products_business",
+      "indexdef": "CREATE INDEX idx_products_business ON public.products USING btree (business_id)"
+    },
+    {
+      "tablename": "products",
+      "indexname": "idx_products_deleted",
+      "indexdef": "CREATE INDEX idx_products_deleted ON public.products USING btree (business_id) WHERE (deleted_at IS NULL)"
+    },
+    {
+      "tablename": "products",
+      "indexname": "products_business_id_barcode_key",
+      "indexdef": "CREATE UNIQUE INDEX products_business_id_barcode_key ON public.products USING btree (business_id, barcode)"
+    },
+    {
+      "tablename": "products",
+      "indexname": "products_business_id_sku_key",
+      "indexdef": "CREATE UNIQUE INDEX products_business_id_sku_key ON public.products USING btree (business_id, sku)"
+    },
+    {
+      "tablename": "products",
+      "indexname": "products_pkey",
+      "indexdef": "CREATE UNIQUE INDEX products_pkey ON public.products USING btree (id)"
+    },
+    {
+      "tablename": "push_subscriptions",
+      "indexname": "idx_push_subscriptions_business",
+      "indexdef": "CREATE INDEX idx_push_subscriptions_business ON public.push_subscriptions USING btree (business_id)"
+    },
+    {
+      "tablename": "push_subscriptions",
+      "indexname": "idx_push_subscriptions_user",
+      "indexdef": "CREATE INDEX idx_push_subscriptions_user ON public.push_subscriptions USING btree (user_id)"
+    },
+    {
+      "tablename": "push_subscriptions",
+      "indexname": "push_subscriptions_pkey",
+      "indexdef": "CREATE UNIQUE INDEX push_subscriptions_pkey ON public.push_subscriptions USING btree (id)"
+    },
+    {
+      "tablename": "push_subscriptions",
+      "indexname": "push_subscriptions_user_id_endpoint_key",
+      "indexdef": "CREATE UNIQUE INDEX push_subscriptions_user_id_endpoint_key ON public.push_subscriptions USING btree (user_id, endpoint)"
+    },
+    {
+      "tablename": "refund_items",
+      "indexname": "idx_refund_items_refund",
+      "indexdef": "CREATE INDEX idx_refund_items_refund ON public.refund_items USING btree (refund_id)"
+    },
+    {
+      "tablename": "refund_items",
+      "indexname": "refund_items_pkey",
+      "indexdef": "CREATE UNIQUE INDEX refund_items_pkey ON public.refund_items USING btree (id)"
+    },
+    {
+      "tablename": "refunds",
+      "indexname": "idx_refunds_branch",
+      "indexdef": "CREATE INDEX idx_refunds_branch ON public.refunds USING btree (branch_id)"
+    },
+    {
+      "tablename": "refunds",
+      "indexname": "idx_refunds_business",
+      "indexdef": "CREATE INDEX idx_refunds_business ON public.refunds USING btree (business_id)"
+    },
+    {
+      "tablename": "refunds",
+      "indexname": "idx_refunds_sale",
+      "indexdef": "CREATE INDEX idx_refunds_sale ON public.refunds USING btree (sale_id)"
+    },
+    {
+      "tablename": "refunds",
+      "indexname": "refunds_pkey",
+      "indexdef": "CREATE UNIQUE INDEX refunds_pkey ON public.refunds USING btree (id)"
+    },
+    {
+      "tablename": "refunds",
+      "indexname": "uq_refunds_idempotency_key",
+      "indexdef": "CREATE UNIQUE INDEX uq_refunds_idempotency_key ON public.refunds USING btree (business_id, branch_id, sale_id, idempotency_key) WHERE (idempotency_key IS NOT NULL)"
+    },
+    {
+      "tablename": "sale_items",
+      "indexname": "idx_sale_items_product",
+      "indexdef": "CREATE INDEX idx_sale_items_product ON public.sale_items USING btree (product_id)"
+    },
+    {
+      "tablename": "sale_items",
+      "indexname": "idx_sale_items_sale",
+      "indexdef": "CREATE INDEX idx_sale_items_sale ON public.sale_items USING btree (sale_id)"
+    },
+    {
+      "tablename": "sale_items",
+      "indexname": "sale_items_pkey",
+      "indexdef": "CREATE UNIQUE INDEX sale_items_pkey ON public.sale_items USING btree (id)"
+    },
+    {
+      "tablename": "sales",
+      "indexname": "idx_sales_branch",
+      "indexdef": "CREATE INDEX idx_sales_branch ON public.sales USING btree (branch_id)"
+    },
+    {
+      "tablename": "sales",
+      "indexname": "idx_sales_business",
+      "indexdef": "CREATE INDEX idx_sales_business ON public.sales USING btree (business_id)"
+    },
+    {
+      "tablename": "sales",
+      "indexname": "idx_sales_business_branch",
+      "indexdef": "CREATE INDEX idx_sales_business_branch ON public.sales USING btree (business_id, branch_id)"
+    },
+    {
+      "tablename": "sales",
+      "indexname": "idx_sales_invoice",
+      "indexdef": "CREATE INDEX idx_sales_invoice ON public.sales USING btree (invoice_id)"
+    },
+    {
+      "tablename": "sales",
+      "indexname": "idx_sales_payment",
+      "indexdef": "CREATE INDEX idx_sales_payment ON public.sales USING btree (payment_id)"
+    },
+    {
+      "tablename": "sales",
+      "indexname": "sales_pkey",
+      "indexdef": "CREATE UNIQUE INDEX sales_pkey ON public.sales USING btree (id)"
+    },
+    {
+      "tablename": "schema_migrations",
+      "indexname": "schema_migrations_pkey",
+      "indexdef": "CREATE UNIQUE INDEX schema_migrations_pkey ON public.schema_migrations USING btree (filename)"
+    },
+    {
+      "tablename": "shifts",
+      "indexname": "idx_shifts_branch",
+      "indexdef": "CREATE INDEX idx_shifts_branch ON public.shifts USING btree (branch_id)"
+    },
+    {
+      "tablename": "shifts",
+      "indexname": "idx_shifts_business",
+      "indexdef": "CREATE INDEX idx_shifts_business ON public.shifts USING btree (business_id)"
+    },
+    {
+      "tablename": "shifts",
+      "indexname": "idx_shifts_cashier",
+      "indexdef": "CREATE INDEX idx_shifts_cashier ON public.shifts USING btree (cashier_id)"
+    },
+    {
+      "tablename": "shifts",
+      "indexname": "idx_shifts_status",
+      "indexdef": "CREATE INDEX idx_shifts_status ON public.shifts USING btree (status)"
+    },
+    {
+      "tablename": "shifts",
+      "indexname": "shifts_pkey",
+      "indexdef": "CREATE UNIQUE INDEX shifts_pkey ON public.shifts USING btree (id)"
+    },
+    {
+      "tablename": "starter_catalog_templates",
+      "indexname": "idx_starter_catalog_type",
+      "indexdef": "CREATE INDEX idx_starter_catalog_type ON public.starter_catalog_templates USING btree (business_type)"
+    },
+    {
+      "tablename": "starter_catalog_templates",
+      "indexname": "starter_catalog_templates_pkey",
+      "indexdef": "CREATE UNIQUE INDEX starter_catalog_templates_pkey ON public.starter_catalog_templates USING btree (id)"
+    },
+    {
+      "tablename": "starter_catalog_templates",
+      "indexname": "uq_starter_catalog_type_name",
+      "indexdef": "CREATE UNIQUE INDEX uq_starter_catalog_type_name ON public.starter_catalog_templates USING btree (business_type, name)"
+    },
+    {
+      "tablename": "suppliers",
+      "indexname": "idx_suppliers_business",
+      "indexdef": "CREATE INDEX idx_suppliers_business ON public.suppliers USING btree (business_id)"
+    },
+    {
+      "tablename": "suppliers",
+      "indexname": "suppliers_pkey",
+      "indexdef": "CREATE UNIQUE INDEX suppliers_pkey ON public.suppliers USING btree (id)"
+    },
+    {
+      "tablename": "user_business_roles",
+      "indexname": "idx_user_business_roles_branch",
+      "indexdef": "CREATE INDEX idx_user_business_roles_branch ON public.user_business_roles USING btree (business_id, branch_id) WHERE (branch_id IS NOT NULL)"
+    },
+    {
+      "tablename": "user_business_roles",
+      "indexname": "idx_user_business_roles_business",
+      "indexdef": "CREATE INDEX idx_user_business_roles_business ON public.user_business_roles USING btree (business_id)"
+    },
+    {
+      "tablename": "user_business_roles",
+      "indexname": "user_business_roles_pkey",
+      "indexdef": "CREATE UNIQUE INDEX user_business_roles_pkey ON public.user_business_roles USING btree (user_id, business_id)"
+    },
+    {
+      "tablename": "webhook_receipts",
+      "indexname": "idx_webhook_receipts_business",
+      "indexdef": "CREATE INDEX idx_webhook_receipts_business ON public.webhook_receipts USING btree (business_id)"
+    },
+    {
+      "tablename": "webhook_receipts",
+      "indexname": "idx_webhook_receipts_provider",
+      "indexdef": "CREATE INDEX idx_webhook_receipts_provider ON public.webhook_receipts USING btree (provider, provider_event_id)"
+    },
+    {
+      "tablename": "webhook_receipts",
+      "indexname": "idx_webhook_receipts_received",
+      "indexdef": "CREATE INDEX idx_webhook_receipts_received ON public.webhook_receipts USING btree (received_at)"
+    },
+    {
+      "tablename": "webhook_receipts",
+      "indexname": "uq_webhook_receipts_provider_event",
+      "indexdef": "CREATE UNIQUE INDEX uq_webhook_receipts_provider_event ON public.webhook_receipts USING btree (provider, provider_event_id, event_type)"
+    },
+    {
+      "tablename": "webhook_receipts",
+      "indexname": "webhook_receipts_pkey",
+      "indexdef": "CREATE UNIQUE INDEX webhook_receipts_pkey ON public.webhook_receipts USING btree (id)"
+    }
+  ],
+  "defaultPrivileges": [],
+  "functionDefinitions": [
+    {
+      "signature": "close_shift(uuid,numeric,text)",
+      "definition": "CREATE OR REPLACE FUNCTION public.close_shift(p_shift_id uuid, p_actual_cash numeric, p_notes text DEFAULT NULL::text)\n RETURNS void\n LANGUAGE plpgsql\n SECURITY DEFINER\nAS $function$\nDECLARE\n    v_shift RECORD;\n    v_expected NUMERIC(12,2);\nBEGIN\n    SELECT * INTO v_shift FROM shifts WHERE id = p_shift_id;\n    IF v_shift IS NULL THEN\n        RAISE EXCEPTION 'Shift not found';\n    END IF;\n\n    IF NOT user_belongs_to_business(v_shift.business_id) THEN\n        RAISE EXCEPTION 'User does not belong to shift business';\n    END IF;\n\n    IF v_shift.cashier_id <> current_user_id()\n       AND NOT user_has_permission(v_shift.business_id, 'manage_users') THEN\n        RAISE EXCEPTION 'Only the cashier or a manager can close this shift';\n    END IF;\n\n    IF v_shift.status <> 'open' THEN\n        RAISE EXCEPTION 'Shift is not open';\n    END IF;\n\n    SELECT COALESCE(SUM(p.amount), 0)\n    INTO v_expected\n    FROM sales s\n    JOIN payments p ON p.id = s.payment_id\n    WHERE s.cashier_id = v_shift.cashier_id\n      AND s.branch_id = v_shift.branch_id\n      AND s.created_at >= v_shift.opened_at\n      AND s.created_at <= now()\n      AND p.method = 'cash';\n\n    v_expected := v_expected + v_shift.opening_float;\n\n    UPDATE shifts\n    SET closed_at = now(),\n        actual_cash = p_actual_cash,\n        expected_cash = v_expected,\n        discrepancy = p_actual_cash - v_expected,\n        status = 'closed',\n        notes = p_notes,\n        updated_at = now()\n    WHERE id = p_shift_id;\n\n    INSERT INTO activity_logs (business_id, branch_id, actor_id, action, entity_table, entity_id, metadata)\n    VALUES (v_shift.business_id, v_shift.branch_id, v_shift.cashier_id, 'shift_closed', 'shifts', p_shift_id,\n            jsonb_build_object('expected_cash', v_expected,\n                               'actual_cash', p_actual_cash,\n                               'discrepancy', p_actual_cash - v_expected));\nEND;\n$function$\n"
+    },
+    {
+      "signature": "create_checkout_intent(uuid,uuid,uuid,uuid,jsonb,bigint,text)",
+      "definition": "CREATE OR REPLACE FUNCTION public.create_checkout_intent(p_business_id uuid, p_branch_id uuid, p_cashier_id uuid, p_idempotency_key uuid, p_items jsonb, p_total_amount bigint, p_method text DEFAULT 'card'::text)\n RETURNS TABLE(intent_id uuid, cart_id uuid, reference text)\n LANGUAGE plpgsql\n SECURITY DEFINER\nAS $function$\nDECLARE\n    v_user_id UUID := auth.uid();\n    v_cart_id UUID;\n    v_intent_id UUID;\n    v_reference TEXT;\n    v_item JSONB;\n    v_product_id UUID;\n    v_quantity INT;\n    v_unit_price DECIMAL(12, 2);\n    v_is_quick_sale BOOLEAN;\n    v_computed_total DECIMAL(12, 2) := 0;\nBEGIN\n    IF v_user_id IS NULL OR v_user_id != p_cashier_id THEN\n        RAISE EXCEPTION 'Caller must be the cashier';\n    END IF;\n\n    IF NOT user_belongs_to_business(p_business_id) THEN\n        RAISE EXCEPTION 'Cashier does not belong to business';\n    END IF;\n\n    IF NOT EXISTS (\n        SELECT 1\n        FROM branches\n        WHERE id = p_branch_id\n          AND business_id = p_business_id\n          AND deleted_at IS NULL\n    ) THEN\n        RAISE EXCEPTION 'Invalid branch';\n    END IF;\n\n    -- Idempotency: return existing intent if the caller retries.\n    SELECT pi.id, pi.cart_id, pi.provider_reference\n    INTO v_intent_id, v_cart_id, v_reference\n    FROM payment_intents pi\n    WHERE pi.idempotency_key = p_idempotency_key\n      AND pi.business_id = p_business_id;\n\n    IF v_intent_id IS NOT NULL THEN\n        RETURN QUERY SELECT v_intent_id, v_cart_id, v_reference;\n        RETURN;\n    END IF;\n\n    IF jsonb_array_length(p_items) = 0 THEN\n        RAISE EXCEPTION 'Cart is empty';\n    END IF;\n\n    FOR v_item IN SELECT * FROM jsonb_array_elements(p_items)\n    LOOP\n        v_quantity := (v_item->>'quantity')::INT;\n        v_is_quick_sale := COALESCE((v_item->>'is_quick_sale')::BOOLEAN, false);\n\n        IF v_quantity IS NULL OR v_quantity <= 0 THEN\n            RAISE EXCEPTION 'Invalid item: %', v_item;\n        END IF;\n\n        IF v_is_quick_sale THEN\n            v_unit_price := (v_item->>'unit_price')::DECIMAL(12, 2);\n            IF v_unit_price IS NULL OR v_unit_price < 0 THEN\n                RAISE EXCEPTION 'Quick sale item missing unit_price: %', v_item;\n            END IF;\n        ELSE\n            v_product_id := (v_item->>'product_id')::UUID;\n\n            IF v_product_id IS NULL THEN\n                RAISE EXCEPTION 'Invalid item: %', v_item;\n            END IF;\n\n            SELECT selling_price\n            INTO v_unit_price\n            FROM products\n            WHERE id = v_product_id\n              AND business_id = p_business_id\n              AND deleted_at IS NULL;\n\n            IF NOT FOUND THEN\n                RAISE EXCEPTION 'Product % not found', v_product_id;\n            END IF;\n\n            IF NOT EXISTS (\n                SELECT 1\n                FROM inventory\n                WHERE product_id = v_product_id\n                  AND branch_id = p_branch_id\n                  AND quantity >= v_quantity\n            ) THEN\n                RAISE EXCEPTION 'Insufficient stock for product %', v_product_id;\n            END IF;\n        END IF;\n\n        v_computed_total := v_computed_total + (v_unit_price * v_quantity);\n    END LOOP;\n\n    -- Compare in pesewas; v_computed_total is GHS decimals, p_total_amount is pesewas.\n    IF ROUND(v_computed_total * 100)::bigint != p_total_amount THEN\n        RAISE EXCEPTION 'Total amount mismatch: computed % pesewas, received %', ROUND(v_computed_total * 100)::bigint, p_total_amount;\n    END IF;\n\n    INSERT INTO carts (business_id, branch_id, cashier_id, status)\n    VALUES (p_business_id, p_branch_id, p_cashier_id, 'ACTIVE')\n    RETURNING id INTO v_cart_id;\n\n    FOR v_item IN SELECT * FROM jsonb_array_elements(p_items)\n    LOOP\n        v_quantity := (v_item->>'quantity')::INT;\n        v_is_quick_sale := COALESCE((v_item->>'is_quick_sale')::BOOLEAN, false);\n\n        IF v_is_quick_sale THEN\n            v_unit_price := (v_item->>'unit_price')::DECIMAL(12, 2);\n            v_product_id := NULL;\n        ELSE\n            v_product_id := (v_item->>'product_id')::UUID;\n            v_unit_price := (\n                SELECT selling_price\n                FROM products\n                WHERE id = v_product_id AND business_id = p_business_id\n            );\n        END IF;\n\n        INSERT INTO cart_items (cart_id, product_id, quantity, unit_price)\n        VALUES (v_cart_id, v_product_id, v_quantity, v_unit_price);\n    END LOOP;\n\n    v_reference := p_idempotency_key::text;\n\n    INSERT INTO payment_intents (\n        business_id, cart_id, amount, currency, idempotency_key,\n        provider, provider_reference, status, created_by\n    )\n    VALUES (\n        p_business_id, v_cart_id, v_computed_total, 'GHS', p_idempotency_key,\n        'paystack', v_reference, 'initiated', p_cashier_id\n    )\n    RETURNING id INTO v_intent_id;\n\n    RETURN QUERY SELECT v_intent_id, v_cart_id, v_reference;\nEND;\n$function$\n"
+    },
+    {
+      "signature": "create_default_roles_for_business()",
+      "definition": "CREATE OR REPLACE FUNCTION public.create_default_roles_for_business()\n RETURNS trigger\n LANGUAGE plpgsql\n SECURITY DEFINER\nAS $function$\nBEGIN\n    INSERT INTO custom_roles (business_id, name, permissions) VALUES\n        (NEW.id, 'owner', '{\"manage_products\": true, \"manage_inventory\": true, \"manage_users\": true, \"process_sales\": true, \"view_reports\": true, \"view_inventory\": true, \"view_sales\": true}'::jsonb),\n        (NEW.id, 'manager', '{\"manage_products\": true, \"manage_inventory\": true, \"manage_users\": true, \"process_sales\": true, \"view_reports\": true}'::jsonb),\n        (NEW.id, 'cashier', '{\"process_sales\": true, \"view_inventory\": true}'::jsonb),\n        (NEW.id, 'accountant', '{\"view_reports\": true, \"view_sales\": true, \"view_inventory\": true}'::jsonb)\n    ON CONFLICT (business_id, name) DO NOTHING;\n\n    RETURN NEW;\nEND;\n$function$\n"
+    },
+    {
+      "signature": "current_business_id()",
+      "definition": "CREATE OR REPLACE FUNCTION public.current_business_id()\n RETURNS uuid\n LANGUAGE plpgsql\n SECURITY DEFINER\nAS $function$\nBEGIN\n    RETURN (auth.jwt() ->> 'business_id')::UUID;\nEXCEPTION WHEN OTHERS THEN\n    RETURN NULL;\nEND;\n$function$\n"
+    },
+    {
+      "signature": "current_user_id()",
+      "definition": "CREATE OR REPLACE FUNCTION public.current_user_id()\n RETURNS uuid\n LANGUAGE plpgsql\n SECURITY DEFINER\nAS $function$\nBEGIN\n    RETURN auth.uid();\nEND;\n$function$\n"
+    },
+    {
+      "signature": "enforce_branch_write()",
+      "definition": "CREATE OR REPLACE FUNCTION public.enforce_branch_write()\n RETURNS trigger\n LANGUAGE plpgsql\n SECURITY DEFINER\nAS $function$\nBEGIN\n    -- Service-role / internal calls (Paystack webhook finalization) have no\n    -- auth.uid(); they are trusted and exempt.\n    IF auth.uid() IS NULL THEN\n        RETURN NEW;\n    END IF;\n    IF NEW.branch_id IS NOT NULL\n       AND NEW.branch_id NOT IN (SELECT user_accessible_branches(NEW.business_id)) THEN\n        RAISE EXCEPTION 'User % not authorized for branch %', auth.uid(), NEW.branch_id;\n    END IF;\n    RETURN NEW;\nEND;\n$function$\n"
+    },
+    {
+      "signature": "get_branch_catalog(uuid,uuid)",
+      "definition": "CREATE OR REPLACE FUNCTION public.get_branch_catalog(p_business_id uuid, p_branch_id uuid)\n RETURNS jsonb\n LANGUAGE plpgsql\n SECURITY DEFINER\nAS $function$\nBEGIN\n    IF NOT user_belongs_to_business(p_business_id) THEN\n        RAISE EXCEPTION 'Access denied';\n    END IF;\n\n    RETURN jsonb_build_object(\n        'categories', COALESCE(\n            (SELECT jsonb_agg(to_jsonb(c))\n             FROM categories c\n             WHERE c.business_id = p_business_id AND c.deleted_at IS NULL),\n            '[]'::jsonb\n        ),\n        'products', COALESCE(\n            (SELECT jsonb_agg(to_jsonb(p))\n             FROM products p\n             WHERE p.business_id = p_business_id AND p.deleted_at IS NULL),\n            '[]'::jsonb\n        ),\n        'inventory', COALESCE(\n            (SELECT jsonb_agg(to_jsonb(i))\n             FROM inventory i\n             WHERE i.business_id = p_business_id AND i.branch_id = p_branch_id),\n            '[]'::jsonb\n        )\n    );\nEND;\n$function$\n"
+    },
+    {
+      "signature": "get_catalog_delta(uuid,uuid,timestamp with time zone)",
+      "definition": "CREATE OR REPLACE FUNCTION public.get_catalog_delta(p_business_id uuid, p_branch_id uuid, p_since timestamp with time zone)\n RETURNS jsonb\n LANGUAGE plpgsql\n SECURITY DEFINER\nAS $function$\nBEGIN\n    IF NOT user_belongs_to_business(p_business_id) THEN\n        RAISE EXCEPTION 'Access denied';\n    END IF;\n\n    RETURN jsonb_build_object(\n        'categories', COALESCE(\n            (SELECT jsonb_agg(to_jsonb(c))\n             FROM categories c\n             WHERE c.business_id = p_business_id\n               AND c.updated_at > p_since\n               AND c.deleted_at IS NULL),\n            '[]'::jsonb\n        ),\n        'products', COALESCE(\n            (SELECT jsonb_agg(to_jsonb(p))\n             FROM products p\n             WHERE p.business_id = p_business_id\n               AND p.updated_at > p_since\n               AND p.deleted_at IS NULL),\n            '[]'::jsonb\n        ),\n        'inventory', COALESCE(\n            (SELECT jsonb_agg(to_jsonb(i))\n             FROM inventory i\n             WHERE i.business_id = p_business_id\n               AND i.branch_id = p_branch_id\n               AND i.updated_at > p_since),\n            '[]'::jsonb\n        ),\n        'since', p_since\n    );\nEND;\n$function$\n"
+    },
+    {
+      "signature": "get_daily_sales(uuid,uuid,date)",
+      "definition": "CREATE OR REPLACE FUNCTION public.get_daily_sales(p_business_id uuid, p_branch_id uuid, p_since date)\n RETURNS SETOF mv_daily_sales\n LANGUAGE plpgsql\n SECURITY DEFINER\nAS $function$\nBEGIN\n    IF NOT user_belongs_to_business(p_business_id) THEN\n        RAISE EXCEPTION 'Access denied';\n    END IF;\n    IF p_branch_id NOT IN (SELECT user_accessible_branches(p_business_id)) THEN\n        RAISE EXCEPTION 'Access denied for branch';\n    END IF;\n    RETURN QUERY\n        SELECT * FROM mv_daily_sales\n        WHERE business_id = p_business_id AND branch_id = p_branch_id\n          AND sale_date >= p_since;\nEND;\n$function$\n"
+    },
+    {
+      "signature": "get_inventory_snapshot(uuid,uuid)",
+      "definition": "CREATE OR REPLACE FUNCTION public.get_inventory_snapshot(p_business_id uuid, p_branch_id uuid)\n RETURNS SETOF v_inventory_snapshot\n LANGUAGE plpgsql\n SECURITY DEFINER\nAS $function$\nBEGIN\n    IF NOT user_belongs_to_business(p_business_id) THEN\n        RAISE EXCEPTION 'Access denied';\n    END IF;\n    IF p_branch_id NOT IN (SELECT user_accessible_branches(p_business_id)) THEN\n        RAISE EXCEPTION 'Access denied for branch';\n    END IF;\n    RETURN QUERY\n        SELECT * FROM v_inventory_snapshot\n        WHERE business_id = p_business_id AND branch_id = p_branch_id;\nEND;\n$function$\n"
+    },
+    {
+      "signature": "get_stock_velocity(uuid,uuid)",
+      "definition": "CREATE OR REPLACE FUNCTION public.get_stock_velocity(p_business_id uuid, p_branch_id uuid)\n RETURNS SETOF mv_stock_velocity\n LANGUAGE plpgsql\n SECURITY DEFINER\nAS $function$\nBEGIN\n    IF NOT user_belongs_to_business(p_business_id) THEN\n        RAISE EXCEPTION 'Access denied';\n    END IF;\n    IF p_branch_id NOT IN (SELECT user_accessible_branches(p_business_id)) THEN\n        RAISE EXCEPTION 'Access denied for branch';\n    END IF;\n    RETURN QUERY\n        SELECT * FROM mv_stock_velocity\n        WHERE business_id = p_business_id AND branch_id = p_branch_id;\nEND;\n$function$\n"
+    },
+    {
+      "signature": "open_shift(uuid,uuid,uuid,numeric)",
+      "definition": "CREATE OR REPLACE FUNCTION public.open_shift(p_business_id uuid, p_branch_id uuid, p_cashier_id uuid, p_opening_float numeric DEFAULT 0)\n RETURNS uuid\n LANGUAGE plpgsql\n SECURITY DEFINER\nAS $function$\nDECLARE\n    v_existing UUID;\n    v_shift_id UUID;\nBEGIN\n    IF NOT user_belongs_to_business(p_business_id) THEN\n        RAISE EXCEPTION 'User does not belong to business';\n    END IF;\n\n    IF auth.uid() IS NULL OR auth.uid() <> p_cashier_id THEN\n        RAISE EXCEPTION 'Unauthorized';\n    END IF;\n\n    SELECT id INTO v_existing\n    FROM shifts\n    WHERE cashier_id = p_cashier_id\n      AND branch_id = p_branch_id\n      AND status = 'open'\n    LIMIT 1;\n\n    IF v_existing IS NOT NULL THEN\n        RAISE EXCEPTION 'Cashier already has an open shift';\n    END IF;\n\n    INSERT INTO shifts (business_id, branch_id, cashier_id, opening_float)\n    VALUES (p_business_id, p_branch_id, p_cashier_id, p_opening_float)\n    RETURNING id INTO v_shift_id;\n\n    INSERT INTO activity_logs (business_id, branch_id, actor_id, action, entity_table, entity_id, metadata)\n    VALUES (p_business_id, p_branch_id, p_cashier_id, 'shift_opened', 'shifts', v_shift_id,\n            jsonb_build_object('opening_float', p_opening_float));\n\n    RETURN v_shift_id;\nEND;\n$function$\n"
+    },
+    {
+      "signature": "process_checkout_cash(uuid,uuid,uuid,uuid,jsonb,bigint)",
+      "definition": "CREATE OR REPLACE FUNCTION public.process_checkout_cash(p_business_id uuid, p_branch_id uuid, p_cashier_id uuid, p_idempotency_key uuid, p_items jsonb, p_total_amount bigint)\n RETURNS uuid\n LANGUAGE plpgsql\n SECURITY DEFINER\nAS $function$\nDECLARE\n    v_user_id UUID := auth.uid();\n    v_cart_id UUID;\n    v_intent_id UUID;\n    v_payment_id UUID;\n    v_invoice_id UUID;\n    v_sale_id UUID;\n    v_item JSONB;\n    v_product_id UUID;\n    v_quantity INT;\n    v_unit_price DECIMAL(12, 2);\n    v_is_quick_sale BOOLEAN;\n    v_quick_sale_name TEXT;\n    v_computed_total DECIMAL(12, 2) := 0;\n    v_existing_sale_id UUID;\n    v_invoice_number VARCHAR(100);\nBEGIN\n    -- Caller must be the authenticated cashier and belong to the business.\n    IF v_user_id IS NULL OR v_user_id != p_cashier_id THEN\n        RAISE EXCEPTION 'Caller must be the cashier';\n    END IF;\n\n    IF NOT user_belongs_to_business(p_business_id) THEN\n        RAISE EXCEPTION 'Cashier does not belong to business';\n    END IF;\n\n    -- Branch must be owned by the business and active.\n    IF NOT EXISTS (\n        SELECT 1\n        FROM branches\n        WHERE id = p_branch_id\n          AND business_id = p_business_id\n          AND deleted_at IS NULL\n    ) THEN\n        RAISE EXCEPTION 'Invalid branch';\n    END IF;\n\n    -- Idempotency: if a sale already exists for this key, return it.\n    SELECT s.id\n    INTO v_existing_sale_id\n    FROM payment_intents pi\n    LEFT JOIN sales s ON s.payment_id = pi.legacy_payment_id\n    WHERE pi.idempotency_key = p_idempotency_key\n      AND pi.business_id = p_business_id\n    LIMIT 1;\n\n    IF v_existing_sale_id IS NOT NULL THEN\n        RETURN v_existing_sale_id;\n    END IF;\n\n    IF jsonb_array_length(p_items) = 0 THEN\n        RAISE EXCEPTION 'Cart is empty';\n    END IF;\n\n    -- Validate items, resolve prices, and compute total.\n    FOR v_item IN SELECT * FROM jsonb_array_elements(p_items)\n    LOOP\n        v_quantity := (v_item->>'quantity')::INT;\n        v_is_quick_sale := COALESCE((v_item->>'is_quick_sale')::BOOLEAN, false);\n\n        IF v_quantity IS NULL OR v_quantity <= 0 THEN\n            RAISE EXCEPTION 'Invalid item: %', v_item;\n        END IF;\n\n        IF v_is_quick_sale THEN\n            -- Quick sale: use the client-supplied price; no product/inventory lookup.\n            v_unit_price := (v_item->>'unit_price')::DECIMAL(12, 2);\n            IF v_unit_price IS NULL OR v_unit_price < 0 THEN\n                RAISE EXCEPTION 'Quick sale item missing unit_price: %', v_item;\n            END IF;\n        ELSE\n            -- Catalog item: resolve price from the products table.\n            v_product_id := (v_item->>'product_id')::UUID;\n\n            IF v_product_id IS NULL THEN\n                RAISE EXCEPTION 'Invalid item: %', v_item;\n            END IF;\n\n            SELECT selling_price\n            INTO v_unit_price\n            FROM products\n            WHERE id = v_product_id\n              AND business_id = p_business_id\n              AND deleted_at IS NULL;\n\n            IF NOT FOUND THEN\n                RAISE EXCEPTION 'Product % not found', v_product_id;\n            END IF;\n\n            -- Prevent oversell at checkout time.\n            IF NOT EXISTS (\n                SELECT 1\n                FROM inventory\n                WHERE product_id = v_product_id\n                  AND branch_id = p_branch_id\n                  AND quantity >= v_quantity\n            ) THEN\n                RAISE EXCEPTION 'Insufficient stock for product %', v_product_id;\n            END IF;\n        END IF;\n\n        v_computed_total := v_computed_total + (v_unit_price * v_quantity);\n    END LOOP;\n\n    -- Compare in pesewas; v_computed_total is GHS decimals, p_total_amount is pesewas.\n    IF ROUND(v_computed_total * 100)::bigint != p_total_amount THEN\n        RAISE EXCEPTION 'Total amount mismatch: computed % pesewas, received %', ROUND(v_computed_total * 100)::bigint, p_total_amount;\n    END IF;\n\n    -- Persist cart.\n    INSERT INTO carts (business_id, branch_id, cashier_id, status)\n    VALUES (p_business_id, p_branch_id, p_cashier_id, 'CHECKED_OUT')\n    RETURNING id INTO v_cart_id;\n\n    -- Persist cart items.\n    FOR v_item IN SELECT * FROM jsonb_array_elements(p_items)\n    LOOP\n        v_quantity := (v_item->>'quantity')::INT;\n        v_is_quick_sale := COALESCE((v_item->>'is_quick_sale')::BOOLEAN, false);\n\n        IF v_is_quick_sale THEN\n            v_unit_price := (v_item->>'unit_price')::DECIMAL(12, 2);\n            v_product_id := NULL;\n        ELSE\n            v_product_id := (v_item->>'product_id')::UUID;\n            v_unit_price := (\n                SELECT selling_price\n                FROM products\n                WHERE id = v_product_id AND business_id = p_business_id\n            );\n        END IF;\n\n        INSERT INTO cart_items (cart_id, product_id, quantity, unit_price)\n        VALUES (v_cart_id, v_product_id, v_quantity, v_unit_price);\n    END LOOP;\n\n    -- Create a completed payment intent for the cash sale.\n    INSERT INTO payment_intents (\n        business_id, cart_id, amount, currency, idempotency_key,\n        provider, status, created_by\n    )\n    VALUES (\n        p_business_id, v_cart_id, v_computed_total, 'GHS', p_idempotency_key,\n        'cash', 'completed', p_cashier_id\n    )\n    RETURNING id INTO v_intent_id;\n\n    -- Append the capture event to the immutable ledger.\n    INSERT INTO payment_events (payment_intent_id, event_type, provider, occurred_at)\n    VALUES (v_intent_id, 'payment_captured', 'cash', NOW());\n\n    -- Keep the legacy payment table in sync for receipts and dashboards.\n    INSERT INTO payments (business_id, cashier_id, method, amount, status, provider_reference)\n    VALUES (p_business_id, p_cashier_id, 'cash', v_computed_total, 'COMPLETED', p_idempotency_key::text)\n    RETURNING id INTO v_payment_id;\n\n    UPDATE payment_intents\n    SET legacy_payment_id = v_payment_id\n    WHERE id = v_intent_id;\n\n    -- Invoice and sale records.\n    v_invoice_number := 'INV-' || to_char(NOW(), 'YYYYMMDD') || '-' || substr(v_intent_id::text, 1, 8);\n\n    INSERT INTO invoices (business_id, branch_id, invoice_number, cashier_id, payment_id, subtotal, tax, total)\n    VALUES (p_business_id, p_branch_id, v_invoice_number, p_cashier_id, v_payment_id, v_computed_total, 0, v_computed_total)\n    RETURNING id INTO v_invoice_id;\n\n    INSERT INTO sales (business_id, branch_id, invoice_id, payment_id, cashier_id)\n    VALUES (p_business_id, p_branch_id, v_invoice_id, v_payment_id, p_cashier_id)\n    RETURNING id INTO v_sale_id;\n\n    -- Decrement stock and write audit logs (catalog items only).\n    FOR v_item IN SELECT * FROM jsonb_array_elements(p_items)\n    LOOP\n        v_quantity := (v_item->>'quantity')::INT;\n        v_is_quick_sale := COALESCE((v_item->>'is_quick_sale')::BOOLEAN, false);\n        v_quick_sale_name := v_item->>'quick_sale_name';\n\n        IF v_is_quick_sale THEN\n            v_unit_price := (v_item->>'unit_price')::DECIMAL(12, 2);\n            -- Quick sale: no product_id, no inventory decrement.\n            INSERT INTO sale_items (sale_id, product_id, quantity, unit_price, subtotal, is_quick_sale, quick_sale_name)\n            VALUES (v_sale_id, NULL, v_quantity, v_unit_price, v_unit_price * v_quantity, true, v_quick_sale_name);\n        ELSE\n            v_product_id := (v_item->>'product_id')::UUID;\n            v_unit_price := (\n                SELECT selling_price\n                FROM products\n                WHERE id = v_product_id AND business_id = p_business_id\n            );\n\n            INSERT INTO sale_items (sale_id, product_id, quantity, unit_price, subtotal)\n            VALUES (v_sale_id, v_product_id, v_quantity, v_unit_price, v_unit_price * v_quantity);\n\n            UPDATE inventory\n            SET quantity = quantity - v_quantity\n            WHERE product_id = v_product_id AND branch_id = p_branch_id;\n\n            INSERT INTO inventory_logs (business_id, branch_id, product_id, old_quantity, new_quantity, change_amount, reason, actor_id)\n            SELECT business_id, branch_id, product_id, quantity + v_quantity, quantity, -v_quantity, 'sale', p_cashier_id\n            FROM inventory\n            WHERE product_id = v_product_id AND branch_id = p_branch_id;\n        END IF;\n    END LOOP;\n\n    INSERT INTO activity_logs (business_id, actor_id, action, entity_table, entity_id, metadata)\n    VALUES (\n        p_business_id, p_cashier_id, 'sale_completed', 'sales', v_sale_id,\n        jsonb_build_object('payment_intent_id', v_intent_id, 'total', v_computed_total, 'method', 'cash')\n    );\n\n    RETURN v_sale_id;\nEND;\n$function$\n"
+    },
+    {
+      "signature": "process_payment_capture(uuid,uuid)",
+      "definition": "CREATE OR REPLACE FUNCTION public.process_payment_capture(p_payment_intent_id uuid, p_event_id uuid)\n RETURNS boolean\n LANGUAGE plpgsql\n SECURITY DEFINER\nAS $function$\nDECLARE\n    v_pi RECORD;\nBEGIN\n    -- Lock the intent to serialize concurrent webhooks.\n    SELECT * INTO v_pi\n    FROM payment_intents WHERE id = p_payment_intent_id\n    FOR UPDATE;\n\n    IF NOT FOUND THEN\n        RAISE EXCEPTION 'Payment intent % not found', p_payment_intent_id;\n    END IF;\n\n    -- The unique index on payment_processing_markers(payment_intent_id) ensures\n    -- only the first caller wins; subsequent calls return false.\n    BEGIN\n        INSERT INTO payment_processing_markers (payment_intent_id, event_id)\n        VALUES (p_payment_intent_id, p_event_id);\n    EXCEPTION WHEN unique_violation THEN\n        RETURN false;\n    END;\n\n    RETURN true;\nEND;\n$function$\n"
+    },
+    {
+      "signature": "process_refund(uuid,uuid,uuid,uuid,jsonb,text,text)",
+      "definition": "CREATE OR REPLACE FUNCTION public.process_refund(p_business_id uuid, p_branch_id uuid, p_cashier_id uuid, p_sale_id uuid, p_items jsonb, p_reason text DEFAULT NULL::text, p_idempotency_key text DEFAULT NULL::text)\n RETURNS uuid\n LANGUAGE plpgsql\n SECURITY DEFINER\nAS $function$\nDECLARE\n    v_refund_id UUID;\n    v_total NUMERIC(12,2) := 0;\n    item JSONB;\n    v_sale_item RECORD;\n    v_sale_item_id UUID;\n    v_product_id UUID;\n    v_quantity INTEGER;\n    v_unit_price NUMERIC(12,2);\n    v_subtotal NUMERIC(12,2);\n    v_already_refunded INTEGER;\n    v_old_quantity INTEGER;\n    v_existing_refund_id UUID;\nBEGIN\n    -- Authorization and ownership checks\n    IF NOT user_belongs_to_business(p_business_id) THEN\n        RAISE EXCEPTION 'User does not belong to business';\n    END IF;\n\n    IF auth.uid() IS NULL OR auth.uid() <> p_cashier_id THEN\n        RAISE EXCEPTION 'Unauthorized cashier';\n    END IF;\n\n    -- Verify sale exists and belongs to business/branch\n    PERFORM 1 FROM sales\n    WHERE id = p_sale_id\n      AND business_id = p_business_id\n      AND branch_id = p_branch_id;\n\n    IF NOT FOUND THEN\n        RAISE EXCEPTION 'Sale not found in branch';\n    END IF;\n\n    -- Idempotency replay: if a refund already exists for this key, return it\n    -- without re-processing items or restocking inventory.\n    IF p_idempotency_key IS NOT NULL THEN\n        SELECT id INTO v_existing_refund_id\n        FROM refunds\n        WHERE business_id = p_business_id\n          AND branch_id = p_branch_id\n          AND sale_id = p_sale_id\n          AND idempotency_key = p_idempotency_key\n        LIMIT 1;\n\n        IF v_existing_refund_id IS NOT NULL THEN\n            RETURN v_existing_refund_id;\n        END IF;\n    END IF;\n\n    -- Create refund record\n    INSERT INTO refunds (business_id, branch_id, sale_id, cashier_id, reason, total_amount, idempotency_key)\n    VALUES (p_business_id, p_branch_id, p_sale_id, p_cashier_id, p_reason, 0, p_idempotency_key)\n    RETURNING id INTO v_refund_id;\n\n    -- Process each item\n    FOR item IN SELECT * FROM jsonb_array_elements(p_items) LOOP\n        v_sale_item_id := (item->>'sale_item_id')::UUID;\n        v_quantity := (item->>'quantity')::INTEGER;\n\n        SELECT si.id, si.product_id, si.quantity, si.unit_price\n        INTO v_sale_item\n        FROM sale_items si\n        JOIN sales s ON s.id = si.sale_id\n        WHERE si.id = v_sale_item_id\n          AND s.id = p_sale_id\n          AND s.business_id = p_business_id;\n\n        IF v_sale_item.id IS NULL THEN\n            RAISE EXCEPTION 'Invalid sale item: %', v_sale_item_id;\n        END IF;\n\n        v_already_refunded := refunded_quantity(v_sale_item_id);\n        IF v_already_refunded + v_quantity > v_sale_item.quantity THEN\n            RAISE EXCEPTION 'Refund quantity exceeds sold quantity for item %', v_sale_item_id;\n        END IF;\n\n        v_product_id := v_sale_item.product_id;\n        v_unit_price := v_sale_item.unit_price;\n        v_subtotal := v_unit_price * v_quantity;\n        v_total := v_total + v_subtotal;\n\n        INSERT INTO refund_items (refund_id, sale_item_id, product_id, quantity, unit_price, subtotal)\n        VALUES (v_refund_id, v_sale_item_id, v_product_id, v_quantity, v_unit_price, v_subtotal);\n\n        -- Return inventory to stock\n        SELECT quantity INTO v_old_quantity\n        FROM inventory\n        WHERE product_id = v_product_id\n          AND branch_id = p_branch_id;\n\n        UPDATE inventory\n        SET quantity = quantity + v_quantity,\n            updated_at = now()\n        WHERE product_id = v_product_id\n          AND branch_id = p_branch_id;\n\n        -- Insert inventory log\n        INSERT INTO inventory_logs (business_id, branch_id, product_id, old_quantity, new_quantity, change_amount, reason, actor_id)\n        VALUES (p_business_id, p_branch_id, v_product_id, v_old_quantity, v_old_quantity + v_quantity, v_quantity, 'refund', p_cashier_id);\n    END LOOP;\n\n    -- Update refund total\n    UPDATE refunds\n    SET total_amount = v_total,\n        updated_at = now()\n    WHERE id = v_refund_id;\n\n    -- Audit log\n    INSERT INTO activity_logs (business_id, branch_id, actor_id, action, entity_table, entity_id, metadata)\n    VALUES (p_business_id, p_branch_id, p_cashier_id, 'refund_created', 'refunds', v_refund_id,\n            jsonb_build_object('sale_id', p_sale_id, 'amount', v_total));\n\n    RETURN v_refund_id;\nEND;\n$function$\n"
+    },
+    {
+      "signature": "process_stock_in(uuid,uuid,integer,text,text)",
+      "definition": "CREATE OR REPLACE FUNCTION public.process_stock_in(p_branch_id uuid, p_product_id uuid, p_quantity integer, p_reason text DEFAULT 'delivery'::text, p_idempotency_key text DEFAULT (gen_random_uuid())::text)\n RETURNS void\n LANGUAGE plpgsql\n SECURITY DEFINER\nAS $function$\nDECLARE\n    v_business_id  UUID;\n    v_current_qty  INT;\nBEGIN\n    SELECT business_id INTO v_business_id\n    FROM branches WHERE id = p_branch_id AND deleted_at IS NULL;\n    IF v_business_id IS NULL THEN\n        RAISE EXCEPTION 'Branch not found';\n    END IF;\n\n    -- Authorization: caller must belong to the business, hold manage_inventory,\n    -- and be scoped to this branch (owners/accountants see all branches).\n    IF NOT user_belongs_to_business(v_business_id) THEN\n        RAISE EXCEPTION 'User does not belong to business';\n    END IF;\n    IF NOT user_has_permission(v_business_id, 'manage_inventory') THEN\n        RAISE EXCEPTION 'Missing manage_inventory permission';\n    END IF;\n    IF p_branch_id NOT IN (SELECT user_accessible_branches(v_business_id)) THEN\n        RAISE EXCEPTION 'User not authorized for this branch';\n    END IF;\n\n    IF p_quantity IS NULL OR p_quantity <= 0 THEN\n        RAISE EXCEPTION 'Quantity must be positive';\n    END IF;\n\n    -- Idempotency: skip if this key was already processed.\n    IF EXISTS (SELECT 1 FROM inventory_logs WHERE idempotency_key = p_idempotency_key) THEN\n        RETURN;\n    END IF;\n\n    SELECT quantity INTO v_current_qty\n    FROM inventory WHERE product_id = p_product_id AND branch_id = p_branch_id;\n\n    IF v_current_qty IS NULL THEN\n        INSERT INTO inventory (product_id, branch_id, business_id, quantity, reorder_level)\n        VALUES (p_product_id, p_branch_id, v_business_id, p_quantity, 5);\n        v_current_qty := 0;\n    ELSE\n        UPDATE inventory\n        SET quantity = v_current_qty + p_quantity, updated_at = now()\n        WHERE product_id = p_product_id AND branch_id = p_branch_id;\n    END IF;\n\n    INSERT INTO inventory_logs (\n        id, business_id, branch_id, product_id,\n        old_quantity, new_quantity, change_amount,\n        reason, actor_id, idempotency_key\n    ) VALUES (\n        gen_random_uuid(), v_business_id, p_branch_id, p_product_id,\n        v_current_qty, v_current_qty + p_quantity, p_quantity,\n        p_reason, auth.uid(), p_idempotency_key\n    );\nEND;\n$function$\n"
+    },
+    {
+      "signature": "refresh_ledmi_aggregations()",
+      "definition": "CREATE OR REPLACE FUNCTION public.refresh_ledmi_aggregations()\n RETURNS void\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\nBEGIN\n    REFRESH MATERIALIZED VIEW CONCURRENTLY mv_daily_sales;\n    REFRESH MATERIALIZED VIEW CONCURRENTLY mv_stock_velocity;\nEND;\n$function$\n"
+    },
+    {
+      "signature": "refunded_quantity(uuid)",
+      "definition": "CREATE OR REPLACE FUNCTION public.refunded_quantity(p_sale_item_id uuid)\n RETURNS integer\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public', 'pg_temp'\nAS $function$\nDECLARE\n    total INTEGER;\nBEGIN\n    SELECT COALESCE(SUM(ri.quantity), 0)\n    INTO total\n    FROM refund_items ri\n    JOIN refunds r ON r.id = ri.refund_id\n    WHERE ri.sale_item_id = p_sale_item_id\n      AND r.status = 'completed';\n\n    RETURN total;\nEND;\n$function$\n"
+    },
+    {
+      "signature": "safe_finalize_sale(uuid)",
+      "definition": "CREATE OR REPLACE FUNCTION public.safe_finalize_sale(p_payment_intent_id uuid)\n RETURNS uuid\n LANGUAGE plpgsql\n SECURITY DEFINER\nAS $function$\nDECLARE\n    v_pi RECORD;\n    v_cart RECORD;\n    v_item RECORD;\n    v_branch_id UUID;\n    v_subtotal DECIMAL := 0;\n    v_old_qty INT;\n    v_new_qty INT;\n    v_payment_id UUID;\n    v_invoice_id UUID;\n    v_sale_id UUID;\n    v_invoice_number VARCHAR;\n    v_seq INT;\n    v_channel TEXT;\n    v_method VARCHAR(50);\nBEGIN\n    -- Fetch and lock the intent.\n    SELECT * INTO v_pi\n    FROM payment_intents WHERE id = p_payment_intent_id\n    FOR UPDATE;\n\n    IF NOT FOUND THEN\n        RAISE EXCEPTION 'Payment intent % not found', p_payment_intent_id;\n    END IF;\n\n    -- Idempotently attach the capture marker inside this transaction.\n    BEGIN\n        INSERT INTO payment_processing_markers (payment_intent_id, event_id)\n        SELECT p_payment_intent_id, id\n        FROM payment_events\n        WHERE payment_intent_id = p_payment_intent_id\n          AND event_type = 'payment_captured'\n        LIMIT 1;\n    EXCEPTION WHEN unique_violation THEN\n        NULL;\n    END;\n\n    IF NOT EXISTS (\n        SELECT 1 FROM payment_processing_markers WHERE payment_intent_id = p_payment_intent_id\n    ) THEN\n        RAISE EXCEPTION 'No payment_captured event found for payment intent %', p_payment_intent_id;\n    END IF;\n\n    -- Lock the cart; fail loudly if it is missing or not active.\n    SELECT * INTO v_cart FROM carts WHERE id = v_pi.cart_id FOR UPDATE;\n\n    IF NOT FOUND THEN\n        RAISE EXCEPTION 'Cart % not found for payment intent %', v_pi.cart_id, p_payment_intent_id;\n    END IF;\n\n    IF v_cart.status != 'ACTIVE' THEN\n        RAISE EXCEPTION 'Cart % is not active. Already processed?', v_pi.cart_id;\n    END IF;\n\n    v_branch_id := v_cart.branch_id;\n\n    -- Decrement branch inventory for each cart item and write immutable inventory logs.\n    FOR v_item IN\n        SELECT product_id, quantity, unit_price FROM cart_items\n        WHERE cart_id = v_pi.cart_id ORDER BY product_id\n    LOOP\n        v_subtotal := v_subtotal + (v_item.quantity * v_item.unit_price);\n\n        SELECT quantity INTO v_old_qty FROM inventory\n        WHERE product_id = v_item.product_id AND branch_id = v_branch_id\n        FOR UPDATE;\n\n        IF NOT FOUND OR v_old_qty < v_item.quantity THEN\n            RAISE EXCEPTION 'Insufficient stock or missing inventory for product %', v_item.product_id;\n        END IF;\n\n        UPDATE inventory\n        SET quantity = quantity - v_item.quantity, updated_at = NOW()\n        WHERE product_id = v_item.product_id AND branch_id = v_branch_id\n        RETURNING quantity INTO v_new_qty;\n\n        INSERT INTO inventory_logs (\n            business_id, branch_id, product_id, old_quantity, new_quantity,\n            change_amount, reason, actor_id\n        ) VALUES (\n            v_pi.business_id, v_branch_id, v_item.product_id, v_old_qty, v_new_qty,\n            -v_item.quantity, 'SALE_EVENT', v_pi.created_by\n        );\n    END LOOP;\n\n    -- Validate the cart amount matches the intent amount before mutating anything else.\n    IF TRUNC(v_subtotal, 2) != TRUNC(v_pi.amount, 2) THEN\n        RAISE EXCEPTION 'Cart amount (%) does not match payment intent amount (%)', v_subtotal, v_pi.amount;\n    END IF;\n\n    -- Create the legacy payment record. We deliberately NEVER store full PAN or CVV.\n    -- Derive the legacy method from the Paystack channel captured on the\n    -- payment_captured event payload (Paystack sends data.channel: card,\n    -- mobile_money, ussd, bank_transfer, bank, ...). This prevents MoMo and\n    -- bank-transfer payments from being misreported as CARD on dashboards.\n    -- payments.method is VARCHAR(50) with no CHECK constraint (see 001), so we\n    -- map to the legacy CARD/MOMO/BANK_TRANSFER values without widening anything.\n    SELECT COALESCE(\n        NULLIF(payload->'data'->>'channel', ''),\n        NULLIF(payload->>'channel', '')\n    ) INTO v_channel\n    FROM payment_events\n    WHERE payment_intent_id = p_payment_intent_id\n      AND event_type = 'payment_captured'\n    ORDER BY occurred_at DESC\n    LIMIT 1;\n\n    v_method := CASE\n        WHEN v_channel = 'card'              THEN 'CARD'\n        WHEN v_channel = 'mobile_money'      THEN 'MOMO'\n        WHEN v_channel = 'ussd'              THEN 'MOMO'\n        WHEN v_channel IN ('bank_transfer', 'bank', 'bank_account') THEN 'BANK_TRANSFER'\n        ELSE 'CARD'\n    END;\n\n    INSERT INTO payments (\n        business_id, cashier_id, method, amount, status, provider_reference\n    ) VALUES (\n        v_pi.business_id, v_pi.created_by, v_method, v_pi.amount, 'SUCCESS', v_pi.provider_reference\n    ) RETURNING id INTO v_payment_id;\n\n    -- Link the legacy payment and mark the intent completed.\n    UPDATE payment_intents\n    SET legacy_payment_id = v_payment_id, status = 'completed'\n    WHERE id = p_payment_intent_id;\n\n    -- Generate a collision-resistant invoice number scoped by branch.\n    SELECT COALESCE(MAX(CAST(SPLIT_PART(invoice_number, '-', 4) AS INT)), 0) + 1\n    INTO v_seq FROM invoices\n    WHERE branch_id = v_branch_id\n      AND invoice_number LIKE 'INV-' || TO_CHAR(NOW(), 'YYYYMMDD') || '%';\n\n    v_invoice_number := 'INV-' || TO_CHAR(NOW(), 'YYYYMMDD') || '-' || LPAD(v_seq::TEXT, 6, '0');\n\n    INSERT INTO invoices (\n        business_id, branch_id, invoice_number, cashier_id, payment_id, subtotal, tax, total\n    ) VALUES (\n        v_pi.business_id, v_branch_id, v_invoice_number, v_pi.created_by, v_payment_id,\n        v_subtotal, 0, v_subtotal\n    ) RETURNING id INTO v_invoice_id;\n\n    -- Create the sale.\n    INSERT INTO sales (business_id, branch_id, invoice_id, payment_id, cashier_id)\n    VALUES (v_pi.business_id, v_branch_id, v_invoice_id, v_payment_id, v_pi.created_by)\n    RETURNING id INTO v_sale_id;\n\n    -- Persist line items.\n    INSERT INTO sale_items (sale_id, product_id, quantity, unit_price, subtotal)\n    SELECT v_sale_id, product_id, quantity, unit_price, (quantity * unit_price)\n    FROM cart_items WHERE cart_id = v_pi.cart_id;\n\n    -- Mark the cart completed.\n    UPDATE carts\n    SET status = 'COMPLETED', updated_at = NOW()\n    WHERE id = v_pi.cart_id;\n\n    RETURN v_sale_id;\nEND;\n$function$\n"
+    },
+    {
+      "signature": "seed_default_roles()",
+      "definition": "CREATE OR REPLACE FUNCTION public.seed_default_roles()\n RETURNS void\n LANGUAGE plpgsql\n SECURITY DEFINER\nAS $function$\nDECLARE\n    b businesses%ROWTYPE;\nBEGIN\n    FOR b IN SELECT * FROM businesses LOOP\n        INSERT INTO custom_roles (business_id, name, permissions) VALUES\n            (b.id, 'owner', '{\"manage_products\": true, \"manage_inventory\": true, \"manage_users\": true, \"process_sales\": true, \"view_reports\": true, \"view_inventory\": true, \"view_sales\": true}'::jsonb),\n            (b.id, 'manager', '{\"manage_products\": true, \"manage_inventory\": true, \"manage_users\": true, \"process_sales\": true, \"view_reports\": true}'::jsonb),\n            (b.id, 'cashier', '{\"process_sales\": true, \"view_inventory\": true}'::jsonb),\n            (b.id, 'accountant', '{\"view_reports\": true, \"view_sales\": true, \"view_inventory\": true}'::jsonb)\n        ON CONFLICT (business_id, name) DO NOTHING;\n    END LOOP;\nEND;\n$function$\n"
+    },
+    {
+      "signature": "update_updated_at_column()",
+      "definition": "CREATE OR REPLACE FUNCTION public.update_updated_at_column()\n RETURNS trigger\n LANGUAGE plpgsql\nAS $function$\nBEGIN\n    NEW.updated_at = NOW();\n    RETURN NEW;\nEND;\n$function$\n"
+    },
+    {
+      "signature": "user_accessible_branches(uuid)",
+      "definition": "CREATE OR REPLACE FUNCTION public.user_accessible_branches(p_business_id uuid)\n RETURNS SETOF uuid\n LANGUAGE plpgsql\n SECURITY DEFINER\nAS $function$\nDECLARE\n    v_user UUID := current_user_id();\n    v_has_unscoped BOOLEAN;\nBEGIN\n    IF v_user IS NULL OR p_business_id IS NULL THEN\n        RETURN;\n    END IF;\n\n    -- If the user has ANY role row with NULL branch_id for this business,\n    -- they have cross-branch access (owner / accountant). Return NULL set\n    -- is not directly expressible in SETOF, so we return all branch IDs\n    -- of the business instead — callers treat \"all branches\" as no filter.\n    SELECT EXISTS (\n        SELECT 1 FROM user_business_roles\n        WHERE user_id = v_user\n          AND business_id = p_business_id\n          AND branch_id IS NULL\n    ) INTO v_has_unscoped;\n\n    IF v_has_unscoped THEN\n        RETURN QUERY SELECT id FROM branches\n                     WHERE business_id = p_business_id AND deleted_at IS NULL;\n        RETURN;\n    END IF;\n\n    -- Otherwise return only the explicitly assigned branches.\n    RETURN QUERY\n        SELECT ubr.branch_id\n        FROM user_business_roles ubr\n        WHERE ubr.user_id = v_user\n          AND ubr.business_id = p_business_id\n          AND ubr.branch_id IS NOT NULL;\nEND;\n$function$\n"
+    },
+    {
+      "signature": "user_belongs_to_business(uuid)",
+      "definition": "CREATE OR REPLACE FUNCTION public.user_belongs_to_business(p_business_id uuid)\n RETURNS boolean\n LANGUAGE plpgsql\n SECURITY DEFINER\nAS $function$\nBEGIN\n    IF current_user_id() IS NULL OR p_business_id IS NULL THEN\n        RETURN false;\n    END IF;\n\n    RETURN EXISTS (\n        SELECT 1\n        FROM user_business_roles\n        WHERE user_id = current_user_id()\n        AND business_id = p_business_id\n    );\nEND;\n$function$\n"
+    },
+    {
+      "signature": "user_has_permission(uuid,text)",
+      "definition": "CREATE OR REPLACE FUNCTION public.user_has_permission(p_business_id uuid, p_permission text)\n RETURNS boolean\n LANGUAGE plpgsql\n SECURITY DEFINER\nAS $function$\nBEGIN\n    IF current_user_id() IS NULL OR p_business_id IS NULL OR p_permission IS NULL THEN\n        RETURN false;\n    END IF;\n\n    RETURN EXISTS (\n        SELECT 1\n        FROM user_business_roles ubr\n        JOIN custom_roles cr ON ubr.role_id = cr.id\n        WHERE ubr.user_id = current_user_id()\n        AND ubr.business_id = p_business_id\n        AND cr.permissions ? p_permission\n        AND (cr.permissions ->> p_permission)::boolean = true\n    );\nEND;\n$function$\n"
+    },
+    {
+      "signature": "user_is_owner(uuid)",
+      "definition": "CREATE OR REPLACE FUNCTION public.user_is_owner(p_business_id uuid)\n RETURNS boolean\n LANGUAGE plpgsql\n SECURITY DEFINER\nAS $function$\nBEGIN\n    IF current_user_id() IS NULL OR p_business_id IS NULL THEN\n        RETURN false;\n    END IF;\n\n    RETURN EXISTS (\n        SELECT 1\n        FROM user_business_roles ubr\n        JOIN custom_roles cr ON ubr.role_id = cr.id\n        WHERE ubr.user_id = current_user_id()\n        AND ubr.business_id = p_business_id\n        AND cr.name = 'owner'\n    );\nEND;\n$function$\n"
+    },
+    {
+      "signature": "uuid_generate_v1()",
+      "definition": "CREATE OR REPLACE FUNCTION public.uuid_generate_v1()\n RETURNS uuid\n LANGUAGE c\n PARALLEL SAFE STRICT\nAS '$libdir/uuid-ossp', $function$uuid_generate_v1$function$\n"
+    },
+    {
+      "signature": "uuid_generate_v1mc()",
+      "definition": "CREATE OR REPLACE FUNCTION public.uuid_generate_v1mc()\n RETURNS uuid\n LANGUAGE c\n PARALLEL SAFE STRICT\nAS '$libdir/uuid-ossp', $function$uuid_generate_v1mc$function$\n"
+    },
+    {
+      "signature": "uuid_generate_v3(uuid,text)",
+      "definition": "CREATE OR REPLACE FUNCTION public.uuid_generate_v3(namespace uuid, name text)\n RETURNS uuid\n LANGUAGE c\n IMMUTABLE PARALLEL SAFE STRICT\nAS '$libdir/uuid-ossp', $function$uuid_generate_v3$function$\n"
+    },
+    {
+      "signature": "uuid_generate_v4()",
+      "definition": "CREATE OR REPLACE FUNCTION public.uuid_generate_v4()\n RETURNS uuid\n LANGUAGE c\n PARALLEL SAFE STRICT\nAS '$libdir/uuid-ossp', $function$uuid_generate_v4$function$\n"
+    },
+    {
+      "signature": "uuid_generate_v5(uuid,text)",
+      "definition": "CREATE OR REPLACE FUNCTION public.uuid_generate_v5(namespace uuid, name text)\n RETURNS uuid\n LANGUAGE c\n IMMUTABLE PARALLEL SAFE STRICT\nAS '$libdir/uuid-ossp', $function$uuid_generate_v5$function$\n"
+    },
+    {
+      "signature": "uuid_nil()",
+      "definition": "CREATE OR REPLACE FUNCTION public.uuid_nil()\n RETURNS uuid\n LANGUAGE c\n IMMUTABLE PARALLEL SAFE STRICT\nAS '$libdir/uuid-ossp', $function$uuid_nil$function$\n"
+    },
+    {
+      "signature": "uuid_ns_dns()",
+      "definition": "CREATE OR REPLACE FUNCTION public.uuid_ns_dns()\n RETURNS uuid\n LANGUAGE c\n IMMUTABLE PARALLEL SAFE STRICT\nAS '$libdir/uuid-ossp', $function$uuid_ns_dns$function$\n"
+    },
+    {
+      "signature": "uuid_ns_oid()",
+      "definition": "CREATE OR REPLACE FUNCTION public.uuid_ns_oid()\n RETURNS uuid\n LANGUAGE c\n IMMUTABLE PARALLEL SAFE STRICT\nAS '$libdir/uuid-ossp', $function$uuid_ns_oid$function$\n"
+    },
+    {
+      "signature": "uuid_ns_url()",
+      "definition": "CREATE OR REPLACE FUNCTION public.uuid_ns_url()\n RETURNS uuid\n LANGUAGE c\n IMMUTABLE PARALLEL SAFE STRICT\nAS '$libdir/uuid-ossp', $function$uuid_ns_url$function$\n"
+    },
+    {
+      "signature": "uuid_ns_x500()",
+      "definition": "CREATE OR REPLACE FUNCTION public.uuid_ns_x500()\n RETURNS uuid\n LANGUAGE c\n IMMUTABLE PARALLEL SAFE STRICT\nAS '$libdir/uuid-ossp', $function$uuid_ns_x500$function$\n"
+    }
+  ],
+  "history": [
+    {
+      "filename": "001_core_schema.sql"
+    },
+    {
+      "filename": "001_default_roles.sql"
+    },
+    {
+      "filename": "002_branch_model.sql"
+    },
+    {
+      "filename": "003_auth_helpers.sql"
+    },
+    {
+      "filename": "004_rls_policies.sql"
+    },
+    {
+      "filename": "005_paystack_webhook_rpc.sql"
+    },
+    {
+      "filename": "006_checkout_rpc.sql"
+    },
+    {
+      "filename": "007_refunds.sql"
+    },
+    {
+      "filename": "008_push_subscriptions.sql"
+    },
+    {
+      "filename": "009_shifts.sql"
+    },
+    {
+      "filename": "010_inventory_reorder_level.sql"
+    },
+    {
+      "filename": "011_fix_activity_inventory_logs.sql"
+    },
+    {
+      "filename": "012_webhook_receipts_business.sql"
+    },
+    {
+      "filename": "013_ai_insights.sql"
+    },
+    {
+      "filename": "014_ledmi_aggregations.sql"
+    },
+    {
+      "filename": "015_manager_branch_assignment.sql"
+    },
+    {
+      "filename": "016_branch_shop_fields.sql"
+    },
+    {
+      "filename": "017_onboarding_quick_sale_starter_catalogs.sql"
+    },
+    {
+      "filename": "018_starter_catalog_seed.sql"
+    },
+    {
+      "filename": "019_quick_sale_rpc.sql"
+    },
+    {
+      "filename": "020_security_hardening.sql"
+    },
+    {
+      "filename": "021_branch_scope_enforcement.sql"
+    },
+    {
+      "filename": "022_ledmi_read_rpcs.sql"
+    }
+  ]
+}

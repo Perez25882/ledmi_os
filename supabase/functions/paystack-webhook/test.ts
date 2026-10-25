@@ -35,12 +35,27 @@ function createFakeClient(
   const intent = {
     id: "pi-1",
     business_id: "b-1",
-    amount: 50_000,
+    amount: 500,
     cart_id: "cart-1",
   };
 
   const fakeClient = {
     from: (table: string) => ({
+      update: (data: unknown) => {
+        const filters: unknown[] = [];
+        calls.push({ op: "update", table, data, filters });
+        return {
+          eq: (column: string, value: unknown) => {
+            filters.push({ column, value });
+            return {
+              is: (column: string, value: unknown) => {
+                filters.push({ column, value });
+                return Promise.resolve({ data: null, error: null });
+              },
+            };
+          },
+        };
+      },
       insert: (data: unknown) => {
         calls.push({ op: "insert", table, data });
         const error =
@@ -111,6 +126,13 @@ Deno.test("charge.success is verified, stored, captured and finalized", async ()
   const receiptCall = calls.find((c: any) => c.op === "insert" && c.table === "webhook_receipts");
   assertEquals(receiptCall?.data?.provider, "paystack");
   assertEquals(receiptCall?.data?.signature_valid, true);
+
+  const receiptUpdate = calls.find((c: any) => c.op === "update" && c.table === "webhook_receipts");
+  assertEquals(receiptUpdate?.data, { business_id: "b-1" });
+  assertEquals(receiptUpdate?.filters, [
+    { column: "id", value: "wr-1" },
+    { column: "business_id", value: null },
+  ]);
 
   // Canonical payment event inserted.
   const eventCall = calls.find((c: any) => c.op === "insert" && c.table === "payment_events");

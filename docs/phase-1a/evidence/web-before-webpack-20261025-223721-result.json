@@ -1,0 +1,18 @@
+﻿{
+    "run":  "web-before-webpack-20261025-223721",
+    "startedUtc":  "2026-10-25T22:37:21.7325136Z",
+    "source":  "C:\\Users\\DELL\\Desktop\\POS\\ledgermindv1-main",
+    "bundler":  "Webpack",
+    "nextVersion":  "16.1.6",
+    "environmentFilesCopied":  0,
+    "checks":  [
+                   {
+                       "name":  "build",
+                       "command":  "npm run build -- --webpack",
+                       "exitCode":  1,
+                       "log":  "web-before-webpack-20261025-223721-build.log"
+                   }
+               ],
+    "finishedUtc":  "2026-10-25T22:45:06.7345474Z",
+    "exitCode":  1
+}

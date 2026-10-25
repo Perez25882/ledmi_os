@@ -1,0 +1,8 @@
+running 5 tests from ./test.ts
+returns authorization URL and updates intent ... ok (235ms)
+MoMo flow sends mobile_money channel and phone ... ok (2ms)
+rejects missing intent_id ... ok (7ms)
+rejects non-owner caller ... ok (1ms)
+rejects already-processed intent ... ok (6ms)
+
+ok | 5 passed | 0 failed (673ms)

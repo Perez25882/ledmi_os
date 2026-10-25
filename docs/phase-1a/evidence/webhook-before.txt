@@ -1,0 +1,35 @@
+running 5 tests from ./test.ts
+charge.success is verified, stored, captured and finalized ... FAILED (65ms)
+invalid signature returns 400 and does not touch the database ...
+------- output -------
+Paystack signature mismatch
+----- output end -----
+invalid signature returns 400 and does not touch the database ... ok (7ms)
+duplicate charge.success event is idempotent ... FAILED (7ms)
+Paystack event mapping ... ok (1ms)
+signature helper produces Paystack-compatible HMAC ... ok (1ms)
+
+ ERRORS
+
+charge.success is verified, stored, captured and finalized => ./test.ts:95:6
+error: TypeError: supabase.from(...).update is not a function
+      .update({ business_id: intent.business_id })
+       ^
+    at handleWebhook (file:///C:/Users/DELL/Desktop/POS/infra/supabase/functions/paystack-webhook/index.ts:260:8)
+    at async file:///C:/Users/DELL/Desktop/POS/infra/supabase/functions/paystack-webhook/test.ts:101:15
+
+duplicate charge.success event is idempotent => ./test.ts:138:6
+error: TypeError: supabase.from(...).update is not a function
+      .update({ business_id: intent.business_id })
+       ^
+    at handleWebhook (file:///C:/Users/DELL/Desktop/POS/infra/supabase/functions/paystack-webhook/index.ts:260:8)
+    at async file:///C:/Users/DELL/Desktop/POS/infra/supabase/functions/paystack-webhook/test.ts:146:15
+
+ FAILURES
+
+charge.success is verified, stored, captured and finalized => ./test.ts:95:6
+duplicate charge.success event is idempotent => ./test.ts:138:6
+
+FAILED | 3 passed | 2 failed (109ms)
+
+error: Test failed

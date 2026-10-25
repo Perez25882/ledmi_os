@@ -1,0 +1,204 @@
+﻿Command: npm run lint
+
+> ledgermind-supabase@0.1.0 lint
+> eslint .
+
+
+C:\Users\DELL\AppData\Local\Temp\ledmi-phase1a-web-31a824ede53544ad8dbdc0d8e90172ba\app\app\api\ledmi\chat\route.ts
+   6:38  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   8:52  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  11:54  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  14:48  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  46:74  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  58:55  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  65:55  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  72:62  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\DELL\AppData\Local\Temp\ledmi-phase1a-web-31a824ede53544ad8dbdc0d8e90172ba\app\app\api\ledmi\snapshot\route.ts
+   66:25  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  103:25  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\DELL\AppData\Local\Temp\ledmi-phase1a-web-31a824ede53544ad8dbdc0d8e90172ba\app\app\api\ledmi\stock-predictions\route.ts
+   67:40  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   68:39  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   85:37  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  150:47  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\DELL\AppData\Local\Temp\ledmi-phase1a-web-31a824ede53544ad8dbdc0d8e90172ba\app\app\auth\callback\route.ts
+  49:37  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\DELL\AppData\Local\Temp\ledmi-phase1a-web-31a824ede53544ad8dbdc0d8e90172ba\app\app\auth\login\page.tsx
+  59:37  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\DELL\AppData\Local\Temp\ledmi-phase1a-web-31a824ede53544ad8dbdc0d8e90172ba\app\app\auth\sign-in\page.tsx
+  67:37  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\DELL\AppData\Local\Temp\ledmi-phase1a-web-31a824ede53544ad8dbdc0d8e90172ba\app\app\dashboard\users\page.tsx
+  30:35  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  36:39  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\DELL\AppData\Local\Temp\ledmi-phase1a-web-31a824ede53544ad8dbdc0d8e90172ba\app\components\ai-chat.tsx
+  29:44  warning  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/no-explicit-any
+  71:7   warning  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\DELL\AppData\Local\Temp\ledmi-phase1a-web-31a824ede53544ad8dbdc0d8e90172ba\app\components\ai-chat.tsx:71:7
+  69 |   useEffect(() => {
+  70 |     if (isOpen) {
+> 71 |       loadInsights()
+     |       ^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  72 |     }
+  73 |   }, [isOpen, loadInsights])
+  74 |  react-hooks/set-state-in-effect
+
+C:\Users\DELL\AppData\Local\Temp\ledmi-phase1a-web-31a824ede53544ad8dbdc0d8e90172ba\app\components\dashboard\business-snapshot.tsx
+  36:5  warning  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\DELL\AppData\Local\Temp\ledmi-phase1a-web-31a824ede53544ad8dbdc0d8e90172ba\app\components\dashboard\business-snapshot.tsx:36:5
+  34 |   // through handleRefresh, which restores the spinner first.
+  35 |   useEffect(() => {
+> 36 |     fetchSnapshot()
+     |     ^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  37 |   }, [fetchSnapshot])
+  38 |
+  39 |   const handleRefresh = useCallback(() => {  react-hooks/set-state-in-effect
+
+C:\Users\DELL\AppData\Local\Temp\ledmi-phase1a-web-31a824ede53544ad8dbdc0d8e90172ba\app\components\navigation-progress.tsx
+  13:5  warning  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\DELL\AppData\Local\Temp\ledmi-phase1a-web-31a824ede53544ad8dbdc0d8e90172ba\app\components\navigation-progress.tsx:13:5
+  11 |
+  12 |   useEffect(() => {
+> 13 |     setIsLoading(true)
+     |     ^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  14 |     setProgress(10)
+  15 |
+  16 |     const timer1 = setTimeout(() => setProgress(50), 100)  react-hooks/set-state-in-effect
+
+C:\Users\DELL\AppData\Local\Temp\ledmi-phase1a-web-31a824ede53544ad8dbdc0d8e90172ba\app\components\push-notifications.tsx
+  15:7  warning  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\DELL\AppData\Local\Temp\ledmi-phase1a-web-31a824ede53544ad8dbdc0d8e90172ba\app\components\push-notifications.tsx:15:7
+  13 |   useEffect(() => {
+  14 |     if ("serviceWorker" in navigator && "PushManager" in window) {
+> 15 |       setIsSupported(true)
+     |       ^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  16 |       navigator.serviceWorker.ready.then((registration) => {
+  17 |         registration.pushManager.getSubscription().then((sub) => {
+  18 |           setSubscribed(!!sub)  react-hooks/set-state-in-effect
+
+C:\Users\DELL\AppData\Local\Temp\ledmi-phase1a-web-31a824ede53544ad8dbdc0d8e90172ba\app\components\ui\carousel.tsx
+  98:5  warning  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\DELL\AppData\Local\Temp\ledmi-phase1a-web-31a824ede53544ad8dbdc0d8e90172ba\app\components\ui\carousel.tsx:98:5
+   96 |   useEffect(() => {
+   97 |     if (!api) return
+>  98 |     onSelect(api)
+      |     ^^^^^^^^ Avoid calling setState() directly within an effect
+   99 |     api.on("reInit", onSelect)
+  100 |     api.on("select", onSelect)
+  101 |  react-hooks/set-state-in-effect
+
+C:\Users\DELL\AppData\Local\Temp\ledmi-phase1a-web-31a824ede53544ad8dbdc0d8e90172ba\app\components\ui\chart.tsx
+  279:44  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\DELL\AppData\Local\Temp\ledmi-phase1a-web-31a824ede53544ad8dbdc0d8e90172ba\app\components\ui\sidebar.tsx
+  611:26  warning  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+C:\Users\DELL\AppData\Local\Temp\ledmi-phase1a-web-31a824ede53544ad8dbdc0d8e90172ba\app\components\ui\sidebar.tsx:611:26
+  609 |   // Random width between 50 to 90%.
+  610 |   const width = React.useMemo(() => {
+> 611 |     return `${Math.floor(Math.random() * 40) + 50}%`
+      |                          ^^^^^^^^^^^^^ Cannot call impure function
+  612 |   }, [])
+  613 |
+  614 |   return (  react-hooks/purity
+
+C:\Users\DELL\AppData\Local\Temp\ledmi-phase1a-web-31a824ede53544ad8dbdc0d8e90172ba\app\hooks\use-mobile.ts
+  14:5  warning  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\DELL\AppData\Local\Temp\ledmi-phase1a-web-31a824ede53544ad8dbdc0d8e90172ba\app\hooks\use-mobile.ts:14:5
+  12 |     }
+  13 |     mql.addEventListener("change", onChange)
+> 14 |     setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)
+     |     ^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  15 |     return () => mql.removeEventListener("change", onChange)
+  16 |   }, [])
+  17 |  react-hooks/set-state-in-effect
+
+C:\Users\DELL\AppData\Local\Temp\ledmi-phase1a-web-31a824ede53544ad8dbdc0d8e90172ba\app\lib\supabase\data\catalog.ts
+  52:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\DELL\AppData\Local\Temp\ledmi-phase1a-web-31a824ede53544ad8dbdc0d8e90172ba\app\lib\supabase\data\insights.ts
+  241:34  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  444:43  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\DELL\AppData\Local\Temp\ledmi-phase1a-web-31a824ede53544ad8dbdc0d8e90172ba\app\lib\supabase\data\inventory.ts
+  22:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  88:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\DELL\AppData\Local\Temp\ledmi-phase1a-web-31a824ede53544ad8dbdc0d8e90172ba\app\lib\supabase\data\quick-sales.ts
+  49:25  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  54:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\DELL\AppData\Local\Temp\ledmi-phase1a-web-31a824ede53544ad8dbdc0d8e90172ba\app\lib\supabase\data\refunds.ts
+   44:37  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   49:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  128:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\DELL\AppData\Local\Temp\ledmi-phase1a-web-31a824ede53544ad8dbdc0d8e90172ba\app\lib\supabase\data\sales.ts
+   77:24  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   87:29  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  123:30  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  183:24  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  187:43  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\DELL\AppData\Local\Temp\ledmi-phase1a-web-31a824ede53544ad8dbdc0d8e90172ba\app\lib\supabase\data\shifts.ts
+  50:24  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\DELL\AppData\Local\Temp\ledmi-phase1a-web-31a824ede53544ad8dbdc0d8e90172ba\app\lib\supabase\data\user-context.ts
+  48:24  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\DELL\AppData\Local\Temp\ledmi-phase1a-web-31a824ede53544ad8dbdc0d8e90172ba\app\lib\supabase\middleware.ts
+  87:35  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+✖ 46 problems (0 errors, 46 warnings)
+
+Exit code: 0

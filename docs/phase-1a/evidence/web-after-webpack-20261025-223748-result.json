@@ -1,0 +1,30 @@
+﻿{
+    "run":  "web-after-webpack-20261025-223748",
+    "startedUtc":  "2026-10-25T22:37:48.2670696Z",
+    "source":  "C:\\Users\\DELL\\Desktop\\POS\\ledgermindv1-main",
+    "bundler":  "Webpack",
+    "nextVersion":  "16.1.6",
+    "environmentFilesCopied":  0,
+    "checks":  [
+                   {
+                       "name":  "lint",
+                       "command":  "npm run lint",
+                       "exitCode":  0,
+                       "log":  "web-after-webpack-20261025-223748-lint.log"
+                   },
+                   {
+                       "name":  "build",
+                       "command":  "npm run build -- --webpack",
+                       "exitCode":  0,
+                       "log":  "web-after-webpack-20261025-223748-build.log"
+                   },
+                   {
+                       "name":  "typecheck",
+                       "command":  "npm run typecheck",
+                       "exitCode":  0,
+                       "log":  "web-after-webpack-20261025-223748-typecheck.log"
+                   }
+               ],
+    "finishedUtc":  "2026-10-25T22:49:05.2144249Z",
+    "exitCode":  0
+}

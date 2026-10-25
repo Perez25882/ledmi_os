@@ -1,0 +1,11 @@
+{
+  "expectedApplicationTables": 28,
+  "missingTables": [],
+  "missingFunctions": [],
+  "missingConstraints": [],
+  "missingIndexes": [],
+  "migrationHistoryRows": 23,
+  "policyCount": 51,
+  "triggerCount": 19,
+  "passed": true
+}

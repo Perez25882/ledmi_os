@@ -17,8 +17,9 @@ import { SalesTable } from "./sales-table"
 export default async function SalesPage({
   searchParams,
 }: {
-  searchParams?: { branch?: string; from?: string; to?: string }
+  searchParams?: Promise<{ branch?: string; from?: string; to?: string }>
 }) {
+  const filters = await searchParams
   const context = await requirePageAccess("sales")
 
   const selectedBranchId = await getSelectedBranchId(context)
@@ -26,14 +27,14 @@ export default async function SalesPage({
     context,
     selectedBranchId
   )
-  const requestedBranch = allBranches ? searchParams?.branch : scopedBranchId
+  const requestedBranch = allBranches ? filters?.branch : scopedBranchId
   const effectiveBranchId = allBranches ? requestedBranch : scopedBranchId
 
   const sales = await getSales(
     context.businessId,
     effectiveBranchId,
-    searchParams?.from,
-    searchParams?.to
+    filters?.from,
+    filters?.to
   )
 
   const totalRevenue = sales.reduce((sum, sale) => sum + sale.total, 0)
@@ -80,7 +81,7 @@ export default async function SalesPage({
             </div>
             <div className="flex flex-col sm:flex-row gap-2">
               <SalesFilter />
-              <ExportSalesButton from={searchParams?.from} to={searchParams?.to} />
+              <ExportSalesButton from={filters?.from} to={filters?.to} />
             </div>
           </div>
         </CardHeader>

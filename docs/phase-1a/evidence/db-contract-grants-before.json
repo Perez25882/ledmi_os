@@ -1,0 +1,147 @@
+[
+  {
+    "relname": "activity_logs",
+    "can_select": false,
+    "can_insert": false
+  },
+  {
+    "relname": "ai_insights",
+    "can_select": false,
+    "can_insert": false
+  },
+  {
+    "relname": "barcode_cache",
+    "can_select": false,
+    "can_insert": false
+  },
+  {
+    "relname": "branches",
+    "can_select": false,
+    "can_insert": false
+  },
+  {
+    "relname": "business_types",
+    "can_select": false,
+    "can_insert": false
+  },
+  {
+    "relname": "businesses",
+    "can_select": false,
+    "can_insert": false
+  },
+  {
+    "relname": "cart_items",
+    "can_select": false,
+    "can_insert": false
+  },
+  {
+    "relname": "carts",
+    "can_select": false,
+    "can_insert": false
+  },
+  {
+    "relname": "categories",
+    "can_select": false,
+    "can_insert": false
+  },
+  {
+    "relname": "custom_roles",
+    "can_select": false,
+    "can_insert": false
+  },
+  {
+    "relname": "inventory",
+    "can_select": false,
+    "can_insert": false
+  },
+  {
+    "relname": "inventory_logs",
+    "can_select": false,
+    "can_insert": false
+  },
+  {
+    "relname": "invoices",
+    "can_select": false,
+    "can_insert": false
+  },
+  {
+    "relname": "payment_events",
+    "can_select": false,
+    "can_insert": false
+  },
+  {
+    "relname": "payment_intents",
+    "can_select": false,
+    "can_insert": false
+  },
+  {
+    "relname": "payment_processing_markers",
+    "can_select": false,
+    "can_insert": false
+  },
+  {
+    "relname": "payments",
+    "can_select": false,
+    "can_insert": false
+  },
+  {
+    "relname": "products",
+    "can_select": false,
+    "can_insert": false
+  },
+  {
+    "relname": "push_subscriptions",
+    "can_select": false,
+    "can_insert": false
+  },
+  {
+    "relname": "refund_items",
+    "can_select": false,
+    "can_insert": false
+  },
+  {
+    "relname": "refunds",
+    "can_select": false,
+    "can_insert": false
+  },
+  {
+    "relname": "sale_items",
+    "can_select": false,
+    "can_insert": false
+  },
+  {
+    "relname": "sales",
+    "can_select": false,
+    "can_insert": false
+  },
+  {
+    "relname": "schema_migrations",
+    "can_select": false,
+    "can_insert": false
+  },
+  {
+    "relname": "shifts",
+    "can_select": false,
+    "can_insert": false
+  },
+  {
+    "relname": "starter_catalog_templates",
+    "can_select": false,
+    "can_insert": false
+  },
+  {
+    "relname": "suppliers",
+    "can_select": false,
+    "can_insert": false
+  },
+  {
+    "relname": "user_business_roles",
+    "can_select": false,
+    "can_insert": false
+  },
+  {
+    "relname": "webhook_receipts",
+    "can_select": false,
+    "can_insert": false
+  }
+]

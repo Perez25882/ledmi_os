@@ -1,0 +1,144 @@
+00:00 +0: loading C:/Users/DELL/Desktop/POS/flutter_billing_app-main/test/phase1a/mobile_financial.contract.dart
+00:00 +0: Fixture controls installed SDK decodes scalar UUID without a legacy response wrapper
+00:01 +1: Fixture controls installed SDK decodes RETURNS TABLE as a row list
+00:01 +2: M-01 decoded RPC contracts cash checkout returns the successful server UUID
+00:01 +2 -1: M-01 decoded RPC contracts cash checkout returns the successful server UUID [E]
+  Expected: null
+    Actual: NoSuchMethodError:<NoSuchMethodError: Class 'String' has no instance getter 'error'.
+            Receiver: "10000000-0000-4000-8000-000000000004"
+            Tried calling: error>
+  Decoded UUID must be consumed directly: NoSuchMethodError: Class 'String' has no instance getter 'error'.
+  Receiver: "10000000-0000-4000-8000-000000000004"
+  Tried calling: error
+
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test\phase1a\mobile_financial.contract.dart 217:7   main.<fn>.<fn>
+
+00:01 +2 -1: M-01 decoded RPC contracts checkout intent consumes the single decoded TABLE row
+00:01 +2 -2: M-01 decoded RPC contracts checkout intent consumes the single decoded TABLE row [E]
+  Expected: null
+    Actual: NoSuchMethodError:<NoSuchMethodError: Class 'List<dynamic>' has no instance getter 'error'.
+            Receiver: Instance(length:1) of '_GrowableList'
+            Tried calling: error>
+  Decoded row list must be accepted: NoSuchMethodError: Class 'List<dynamic>' has no instance getter 'error'.
+  Receiver: Instance(length:1) of '_GrowableList'
+  Tried calling: error
+
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test\phase1a\mobile_financial.contract.dart 230:7   main.<fn>.<fn>
+
+00:01 +2 -2: M-01 decoded RPC contracts refund returns the successful decoded server UUID
+00:01 +2 -3: M-01 decoded RPC contracts refund returns the successful decoded server UUID [E]
+  Expected: null
+    Actual: NoSuchMethodError:<NoSuchMethodError: Class 'String' has no instance getter 'error'.
+            Receiver: "10000000-0000-4000-8000-000000000006"
+            Tried calling: error>
+  Decoded refund UUID must be accepted: NoSuchMethodError: Class 'String' has no instance getter 'error'.
+  Receiver: "10000000-0000-4000-8000-000000000006"
+  Tried calling: error
+
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test\phase1a\mobile_financial.contract.dart 243:7   main.<fn>.<fn>
+
+00:01 +2 -3: M-01 decoded RPC contracts open shift returns the successful decoded server UUID
+00:01 +2 -4: M-01 decoded RPC contracts open shift returns the successful decoded server UUID [E]
+  Expected: null
+    Actual: NoSuchMethodError:<NoSuchMethodError: Class 'String' has no instance getter 'error'.
+            Receiver: "10000000-0000-4000-8000-000000000007"
+            Tried calling: error>
+  Decoded shift UUID must be accepted: NoSuchMethodError: Class 'String' has no instance getter 'error'.
+  Receiver: "10000000-0000-4000-8000-000000000007"
+  Tried calling: error
+
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test\phase1a\mobile_financial.contract.dart 253:7   main.<fn>.<fn>
+
+00:01 +2 -4: M-01 decoded RPC contracts close shift accepts a successful decoded void response
+00:02 +2 -5: M-01 decoded RPC contracts close shift accepts a successful decoded void response [E]
+  Expected: null
+    Actual: NoSuchMethodError:<NoSuchMethodError: The getter 'error' was called on null.
+            Receiver: null
+            Tried calling: error>
+  Successful void response must be accepted: NoSuchMethodError: The getter 'error' was called on null.
+  Receiver: null
+  Tried calling: error
+
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test\phase1a\mobile_financial.contract.dart 265:7   main.<fn>.<fn>
+
+00:02 +2 -5: M-02 ambiguous cash response durable fallback retains the first transmitted idempotency key
+00:02 +2 -6: M-02 ambiguous cash response durable fallback retains the first transmitted idempotency key [E]
+  Expected: '13a8fe88-5190-463f-a65d-71df70c9767e'
+    Actual: '8ceb2d6a-049f-4723-a04d-720fce2e9b02'
+     Which: is different.
+            Expected: 13a8fe88-5 ...
+              Actual: 8ceb2d6a-0 ...
+                      ^
+             Differ at offset 0
+  An ambiguous committed request must replay with its original identity, including after storage reopen
+
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test\phase1a\mobile_financial.contract.dart 292:7   main.<fn>.<fn>
+
+00:02 +2 -6: M-05 split tender contracts 4 cash plus 6 MoMo never invokes full-total cash finalization
+00:02 +2 -7: M-05 split tender contracts 4 cash plus 6 MoMo never invokes full-total cash finalization [E]
+  Expected: empty
+    Actual: WhereIterable<Request>:[
+              Request:POST https://phase1a.invalid/rest/v1/rpc/process_checkout_cash
+            ]
+  Only GHS4 was tendered in cash. Full GHS10 cash RPC has already been sent before any subsequent decode error (NoSuchMethodError: Class 'String' has no instance getter 'error'.
+  Receiver: "10000000-0000-4000-8000-000000000004"
+  Tried calling: error)
+
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test\phase1a\mobile_financial.contract.dart 317:7   main.<fn>.<fn>
+
+00:02 +2 -7: M-05 split tender contracts offline split retains allocations or rejects without a cash queue
+00:02 +2 -8: M-05 split tender contracts offline split retains allocations or rejects without a cash queue [E]
+  Expected: contains 'momo'
+    Actual: '{"items":[{"product_id":"10000000-0000-4000-8000-000000000010","quantity":1,"unit_price":10.0,"is_quick_sale":false}],"discount":0.0,"total":10.0}'
+     Which: does not contain 'momo'
+  Durable split data must retain the noncash tender. A plain sale queue item will replay as a full cash sale
+
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test\phase1a\mobile_financial.contract.dart 346:7   main.<fn>.<fn>
+
+00:02 +2 -8: M-09 refund idempotency contracts online response-loss fallback persists its first transmitted key
+00:02 +2 -9: M-09 refund idempotency contracts online response-loss fallback persists its first transmitted key [E]
+  Expected: 'fc81431b-9c0c-4b30-80b1-4b6f0bc404f7'
+    Actual: <null>
+     Which: not an <Instance of 'String'>
+  The first refund attempt and durable retry must share a non-null idempotency key
+
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test\phase1a\mobile_financial.contract.dart 369:7   main.<fn>.<fn>
+
+00:02 +2 -9: M-09 refund idempotency contracts two replays of one persisted refund transmit the same captured key
+00:03 +2 -10: M-09 refund idempotency contracts two replays of one persisted refund transmit the same captured key [E]
+  Expected: ['234512aa-ae52-40e6-8784-61c5d903c738', '234512aa-ae52-40e6-8784-61c5d903c738']
+    Actual: [null, null]
+     Which: at location [0] is <null> instead of '234512aa-ae52-40e6-8784-61c5d903c738'
+  The persisted refund identity must reach SQL on every retry
+
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test\phase1a\mobile_financial.contract.dart 403:7   main.<fn>.<fn>
+
+00:03 +2 -10: Some tests failed.
+
+Failing tests:
+  C:/Users/DELL/Desktop/POS/flutter_billing_app-main/test/phase1a/mobile_financial.contract.dart: M-01 decoded RPC contracts cash checkout returns the successful server UUID
+  C:/Users/DELL/Desktop/POS/flutter_billing_app-main/test/phase1a/mobile_financial.contract.dart: M-01 decoded RPC contracts checkout intent consumes the single decoded TABLE row
+  C:/Users/DELL/Desktop/POS/flutter_billing_app-main/test/phase1a/mobile_financial.contract.dart: M-01 decoded RPC contracts close shift accepts a successful decoded void response
+  C:/Users/DELL/Desktop/POS/flutter_billing_app-main/test/phase1a/mobile_financial.contract.dart: M-01 decoded RPC contracts open shift returns the successful decoded server UUID
+  ... and 6 more
+CONTRACT_EXIT_CODE=1

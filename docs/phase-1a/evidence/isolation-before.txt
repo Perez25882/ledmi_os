@@ -1,0 +1,43 @@
+TAP version 13
+# node:internal/modules/cjs/loader:1215
+#   throw err;
+#   ^
+# Error: Cannot find module './isolation.cjs'
+# Require stack:
+# - C:\\Users\\DELL\\Desktop\\POS\\scripts\\phase-1a\\isolation.test.cjs
+#     at Module._resolveFilename (node:internal/modules/cjs/loader:1212:15)
+#     at Module._load (node:internal/modules/cjs/loader:1043:27)
+#     at Module.require (node:internal/modules/cjs/loader:1298:19)
+#     at require (node:internal/modules/helpers:182:18)
+#     at Object.<anonymous> (C:\\Users\\DELL\\Desktop\\POS\\scripts\\phase-1a\\isolation.test.cjs:5:52)
+#     at Module._compile (node:internal/modules/cjs/loader:1529:14)
+#     at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+#     at Module.load (node:internal/modules/cjs/loader:1275:32)
+#     at Module._load (node:internal/modules/cjs/loader:1096:12)
+#     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12) {
+#   code: 'MODULE_NOT_FOUND',
+#   requireStack: [
+#     'C:\\\\Users\\\\DELL\\\\Desktop\\\\POS\\\\scripts\\\\phase-1a\\\\isolation.test.cjs'
+#   ]
+# }
+# Node.js v20.19.0
+# Subtest: C:\\Users\\DELL\\Desktop\\POS\\scripts\\phase-1a\\isolation.test.cjs
+not ok 1 - C:\\Users\\DELL\\Desktop\\POS\\scripts\\phase-1a\\isolation.test.cjs
+  ---
+  duration_ms: 835.2206
+  location: 'C:\\Users\\DELL\\Desktop\\POS\\scripts\\phase-1a\\isolation.test.cjs:1:1'
+  failureType: 'testCodeFailure'
+  exitCode: 1
+  signal: ~
+  error: 'test failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 901.6854

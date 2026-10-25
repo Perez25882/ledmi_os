@@ -1,0 +1,3 @@
+Analyzing phase1a...
+No issues found! (ran in 260.9s)
+CONTRACT_ANALYZE_EXIT_CODE=0

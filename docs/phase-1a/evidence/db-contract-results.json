@@ -1,0 +1,253 @@
+{
+  "runId": "6564104b-5730-45f7-8bae-7e20263bd064",
+  "profile": "Explicit base-table DML grant fixture; views/function revocations preserved. Not a production ACL claim.",
+  "testTenants": "fictional only; committed fixture data retained inside the owned cluster",
+  "results": [
+    {
+      "id": "CONTROL-cash-idempotency",
+      "description": "Cash RPC replays one stable key without a second deduction",
+      "status": "verified passing behavior",
+      "expected": {
+        "sameSale": true,
+        "stock": 9
+      },
+      "actual": {
+        "sameSale": true,
+        "stock": 9
+      }
+    },
+    {
+      "id": "B-01",
+      "description": "Second captured sale in one branch/day finalizes",
+      "status": "reproduced failure",
+      "expected": "finalized",
+      "actual": "22P02",
+      "databaseMessage": "invalid input syntax for type integer: \"\"",
+      "firstCaptureFinalized": true,
+      "error": {
+        "code": "ERR_ASSERTION",
+        "message": "Second captured sale in one branch/day finalizes\n+ actual - expected\n\n+ '22P02'\n- 'finalized'"
+      }
+    },
+    {
+      "id": "B-02",
+      "description": "Captured quick-sale intent finalizes without catalog stock",
+      "status": "reproduced failure",
+      "expected": "finalized",
+      "actual": "P0001",
+      "databaseMessage": "Insufficient stock or missing inventory for product <NULL>",
+      "quickIntentCreated": true,
+      "error": {
+        "code": "ERR_ASSERTION",
+        "message": "Captured quick-sale intent finalizes without catalog stock\n+ actual - expected\n\n+ 'P0001'\n- 'finalized'"
+      }
+    },
+    {
+      "id": "B-04",
+      "description": "Concurrent receiving preserves both deliveries",
+      "status": "reproduced failure",
+      "expected": {
+        "stock": 22
+      },
+      "actual": {
+        "stock": 15
+      },
+      "observedStock": 15,
+      "observedLogs": 2,
+      "lockBarrier": [
+        {
+          "pid": 8032,
+          "blockers": [
+            12744
+          ]
+        },
+        {
+          "pid": 12744,
+          "blockers": [
+            10652
+          ]
+        }
+      ],
+      "error": {
+        "code": "ERR_ASSERTION",
+        "message": "Concurrent receiving preserves both deliveries\n+ actual - expected\n\n  {\n+   stock: 15\n-   stock: 22\n  }"
+      }
+    },
+    {
+      "id": "B-05",
+      "description": "Concurrent stock receiving deduplicates the same operation",
+      "status": "reproduced failure",
+      "expected": {
+        "logs": 1,
+        "stock": 15
+      },
+      "actual": {
+        "logs": 2,
+        "stock": 15
+      },
+      "observedStock": 15,
+      "observedLogs": 2,
+      "lockBarrier": [
+        {
+          "pid": 15168,
+          "blockers": [
+            1352
+          ]
+        },
+        {
+          "pid": 2572,
+          "blockers": [
+            15168
+          ]
+        }
+      ],
+      "error": {
+        "code": "ERR_ASSERTION",
+        "message": "Concurrent stock receiving deduplicates the same operation\n+ actual - expected\n\n  {\n+   logs: 2,\n-   logs: 1,\n    stock: 15\n  }"
+      }
+    },
+    {
+      "id": "B-06",
+      "description": "Concurrent refunds cannot exceed original sold quantity",
+      "status": "reproduced failure",
+      "expected": 1,
+      "actual": 2,
+      "originalSoldQuantity": 1,
+      "lockBarrier": [
+        {
+          "pid": 16272,
+          "blockers": [
+            2900
+          ]
+        },
+        {
+          "pid": 2900,
+          "blockers": [
+            11160
+          ]
+        }
+      ],
+      "error": {
+        "code": "ERR_ASSERTION",
+        "message": "Concurrent refunds cannot exceed original sold quantity\n\n2 !== 1\n"
+      }
+    },
+    {
+      "id": "B-07",
+      "description": "Cashier cannot directly forge a successful payment",
+      "status": "reproduced failure",
+      "expected": true,
+      "actual": false,
+      "independentlyInsertedPayments": 1,
+      "error": {
+        "code": "ERR_ASSERTION",
+        "message": "Cashier cannot directly forge a successful payment\n\nfalse !== true\n"
+      }
+    },
+    {
+      "id": "B-08-cart",
+      "description": "Branch-scoped cashier cannot relocate an active cart",
+      "status": "reproduced failure",
+      "expected": true,
+      "actual": false,
+      "actualBranch": "ee860a99-1508-445f-8584-f4c96bdf496c",
+      "assignedBranch": "15df699b-d5d2-40dc-b02d-016868eb7989",
+      "error": {
+        "code": "ERR_ASSERTION",
+        "message": "Branch-scoped cashier cannot relocate an active cart\n\nfalse !== true\n"
+      }
+    },
+    {
+      "id": "B-08-inventory",
+      "description": "Branch-scoped manager cannot relocate inventory",
+      "status": "verified passing behavior",
+      "expected": true,
+      "actual": true,
+      "actualBranch": "5f5bebdc-db3b-45ab-bf17-7a023c899e3b",
+      "assignedBranch": "5f5bebdc-db3b-45ab-bf17-7a023c899e3b"
+    },
+    {
+      "id": "B-09",
+      "description": "Accountant without process_sales cannot run cash checkout",
+      "status": "reproduced failure",
+      "expected": true,
+      "actual": false,
+      "error": {
+        "code": "ERR_ASSERTION",
+        "message": "Accountant without process_sales cannot run cash checkout\n\nfalse !== true\n"
+      }
+    },
+    {
+      "id": "B-09-refund",
+      "description": "Accountant without process_sales cannot refund a sale",
+      "status": "reproduced failure",
+      "expected": true,
+      "actual": false,
+      "error": {
+        "code": "ERR_ASSERTION",
+        "message": "Accountant without process_sales cannot refund a sale\n\nfalse !== true\n"
+      }
+    },
+    {
+      "id": "B-16",
+      "description": "Stock receiving rejects another tenant product UUID",
+      "status": "reproduced failure",
+      "expected": true,
+      "actual": false,
+      "ownBusiness": "e8be092b-de99-4d6a-b58a-44863843369c",
+      "productBusiness": "5bd640c6-a2d7-49bd-9a3e-ab5dad9f8930",
+      "foreignProductInventoryRows": 1,
+      "error": {
+        "code": "ERR_ASSERTION",
+        "message": "Stock receiving rejects another tenant product UUID\n\nfalse !== true\n"
+      }
+    },
+    {
+      "id": "CONTROL-tenant-read",
+      "description": "Cashier cannot read another tenant inventory",
+      "status": "verified passing behavior",
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "id": "CONTROL-branch-read",
+      "description": "Cashier cannot read another assigned business branch inventory",
+      "status": "verified passing behavior",
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "id": "CONTROL-outsider-stock",
+      "description": "Nonmember cannot receive another business stock",
+      "status": "verified passing behavior",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "CONTROL-service-boundary",
+      "description": "Authenticated user cannot execute service-only finalizer",
+      "status": "verified passing behavior",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "CONTROL-anonymous-stock",
+      "description": "Anonymous role cannot receive inventory",
+      "status": "verified passing behavior",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "CONTROL-owner-stock",
+      "description": "Owner can receive valid same-tenant inventory",
+      "status": "verified passing behavior",
+      "expected": 12,
+      "actual": 12
+    }
+  ],
+  "counts": {
+    "reproduced failure": 10,
+    "verified passing behavior": 8,
+    "test implemented but blocked": 0
+  }
+}

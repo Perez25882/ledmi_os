@@ -1,0 +1,18 @@
+﻿{
+    "run":  "web-before-default-20261025-223506",
+    "startedUtc":  "2026-10-25T22:35:06.6216150Z",
+    "source":  "C:\\Users\\DELL\\Desktop\\POS\\ledgermindv1-main",
+    "bundler":  "Default",
+    "nextVersion":  "16.1.6",
+    "environmentFilesCopied":  0,
+    "checks":  [
+                   {
+                       "name":  "build",
+                       "command":  "npm run build",
+                       "exitCode":  1,
+                       "log":  "web-before-default-20261025-223506-build.log"
+                   }
+               ],
+    "finishedUtc":  "2026-10-25T22:37:07.9737899Z",
+    "exitCode":  1
+}

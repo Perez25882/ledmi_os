@@ -1,0 +1,305 @@
+
+┌─────────────────────────────────────────────────────────┐
+│ A new version of Flutter is available!                  │
+│                                                         │
+│ To update to the latest version, run "flutter upgrade". │
+└─────────────────────────────────────────────────────────┘
+00:00 +0: loading C:/Users/DELL/Desktop/POS/flutter_billing_app-main/test/phase1a/mobile_financial.contract.dart
+00:00 +0: Fixture controls installed SDK decodes scalar UUID without a legacy response wrapper
+00:01 +0 -1: Fixture controls installed SDK decodes scalar UUID without a legacy response wrapper [E]
+  Null check operator used on a null value
+  package:postgrest/src/postgrest_builder.dart 243:27  PostgrestBuilder._parseResponse
+  package:postgrest/src/postgrest_builder.dart 198:18  PostgrestBuilder._execute
+
+  MissingPluginException(No implementation found for method getAll on channel plugins.flutter.io/shared_preferences)
+  dart:async                                                           _Completer.completeError
+  package:shared_preferences/src/shared_preferences_legacy.dart 90:19  SharedPreferences.getInstance
+  ===== asynchronous gap ===========================
+  dart:async                                                           _CustomZone.registerBinaryCallback
+  package:shared_preferences/src/shared_preferences_legacy.dart 85:13  SharedPreferences.getInstance
+  package:supabase_flutter/src/local_storage.dart 132:46               SharedPreferencesGotrueAsyncStorage._initialize
+  package:supabase_flutter/src/local_storage.dart 122:15               new SharedPreferencesGotrueAsyncStorage
+  package:supabase_flutter/src/supabase.dart 123:27                    Supabase.initialize
+  test\phase1a\mobile_financial.contract.dart 125:20                   main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                                           _CustomZone.registerUnaryCallback
+  test\phase1a\mobile_financial.contract.dart 105:17                   main.<fn>
+
+00:01 +0 -1: Fixture controls installed SDK decodes RETURNS TABLE as a row list
+00:01 +0 -2: Fixture controls installed SDK decodes RETURNS TABLE as a row list [E]
+  Null check operator used on a null value
+  package:postgrest/src/postgrest_builder.dart 243:27  PostgrestBuilder._parseResponse
+  package:postgrest/src/postgrest_builder.dart 198:18  PostgrestBuilder._execute
+
+  MissingPluginException(No implementation found for method getAll on channel plugins.flutter.io/shared_preferences)
+  dart:async                                                           _Completer.completeError
+  package:shared_preferences/src/shared_preferences_legacy.dart 90:19  SharedPreferences.getInstance
+  ===== asynchronous gap ===========================
+  dart:async                                                           _CustomZone.registerBinaryCallback
+  package:shared_preferences/src/shared_preferences_legacy.dart 85:13  SharedPreferences.getInstance
+  package:supabase_flutter/src/local_storage.dart 132:46               SharedPreferencesGotrueAsyncStorage._initialize
+  package:supabase_flutter/src/local_storage.dart 122:15               new SharedPreferencesGotrueAsyncStorage
+  package:supabase_flutter/src/supabase.dart 123:27                    Supabase.initialize
+  test\phase1a\mobile_financial.contract.dart 125:20                   main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                                           _CustomZone.registerUnaryCallback
+  test\phase1a\mobile_financial.contract.dart 105:17                   main.<fn>
+
+00:01 +0 -2: M-01 decoded RPC contracts cash checkout returns the successful server UUID
+00:01 +0 -3: M-01 decoded RPC contracts cash checkout returns the successful server UUID [E]
+  Expected: null
+    Actual: _TypeError:<Null check operator used on a null value>
+  Decoded UUID must be consumed directly: Null check operator used on a null value
+
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test\phase1a\mobile_financial.contract.dart 184:7   main.<fn>.<fn>
+
+  MissingPluginException(No implementation found for method getAll on channel plugins.flutter.io/shared_preferences)
+  dart:async                                                           _Completer.completeError
+  package:shared_preferences/src/shared_preferences_legacy.dart 90:19  SharedPreferences.getInstance
+  ===== asynchronous gap ===========================
+  dart:async                                                           _CustomZone.registerBinaryCallback
+  package:shared_preferences/src/shared_preferences_legacy.dart 85:13  SharedPreferences.getInstance
+  package:supabase_flutter/src/local_storage.dart 132:46               SharedPreferencesGotrueAsyncStorage._initialize
+  package:supabase_flutter/src/local_storage.dart 122:15               new SharedPreferencesGotrueAsyncStorage
+  package:supabase_flutter/src/supabase.dart 123:27                    Supabase.initialize
+  test\phase1a\mobile_financial.contract.dart 125:20                   main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                                           _CustomZone.registerUnaryCallback
+  test\phase1a\mobile_financial.contract.dart 105:17                   main.<fn>
+
+00:01 +0 -3: M-01 decoded RPC contracts checkout intent consumes the single decoded TABLE row
+00:01 +0 -4: M-01 decoded RPC contracts checkout intent consumes the single decoded TABLE row [E]
+  Expected: null
+    Actual: _TypeError:<Null check operator used on a null value>
+  Decoded row list must be accepted: Null check operator used on a null value
+
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test\phase1a\mobile_financial.contract.dart 197:7   main.<fn>.<fn>
+
+  MissingPluginException(No implementation found for method getAll on channel plugins.flutter.io/shared_preferences)
+  dart:async                                                           _Completer.completeError
+  package:shared_preferences/src/shared_preferences_legacy.dart 90:19  SharedPreferences.getInstance
+  ===== asynchronous gap ===========================
+  dart:async                                                           _CustomZone.registerBinaryCallback
+  package:shared_preferences/src/shared_preferences_legacy.dart 85:13  SharedPreferences.getInstance
+  package:supabase_flutter/src/local_storage.dart 132:46               SharedPreferencesGotrueAsyncStorage._initialize
+  package:supabase_flutter/src/local_storage.dart 122:15               new SharedPreferencesGotrueAsyncStorage
+  package:supabase_flutter/src/supabase.dart 123:27                    Supabase.initialize
+  test\phase1a\mobile_financial.contract.dart 125:20                   main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                                           _CustomZone.registerUnaryCallback
+  test\phase1a\mobile_financial.contract.dart 105:17                   main.<fn>
+
+00:02 +0 -4: M-01 decoded RPC contracts refund returns the successful decoded server UUID
+00:02 +0 -5: M-01 decoded RPC contracts refund returns the successful decoded server UUID [E]
+  Expected: null
+    Actual: _TypeError:<Null check operator used on a null value>
+  Decoded refund UUID must be accepted: Null check operator used on a null value
+
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test\phase1a\mobile_financial.contract.dart 210:7   main.<fn>.<fn>
+
+  MissingPluginException(No implementation found for method getAll on channel plugins.flutter.io/shared_preferences)
+  dart:async                                                           _Completer.completeError
+  package:shared_preferences/src/shared_preferences_legacy.dart 90:19  SharedPreferences.getInstance
+  ===== asynchronous gap ===========================
+  dart:async                                                           _CustomZone.registerBinaryCallback
+  package:shared_preferences/src/shared_preferences_legacy.dart 85:13  SharedPreferences.getInstance
+  package:supabase_flutter/src/local_storage.dart 132:46               SharedPreferencesGotrueAsyncStorage._initialize
+  package:supabase_flutter/src/local_storage.dart 122:15               new SharedPreferencesGotrueAsyncStorage
+  package:supabase_flutter/src/supabase.dart 123:27                    Supabase.initialize
+  test\phase1a\mobile_financial.contract.dart 125:20                   main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                                           _CustomZone.registerUnaryCallback
+  test\phase1a\mobile_financial.contract.dart 105:17                   main.<fn>
+
+00:02 +0 -5: M-01 decoded RPC contracts open shift returns the successful decoded server UUID
+00:02 +0 -6: M-01 decoded RPC contracts open shift returns the successful decoded server UUID [E]
+  Expected: null
+    Actual: _TypeError:<Null check operator used on a null value>
+  Decoded shift UUID must be accepted: Null check operator used on a null value
+
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test\phase1a\mobile_financial.contract.dart 220:7   main.<fn>.<fn>
+
+  MissingPluginException(No implementation found for method getAll on channel plugins.flutter.io/shared_preferences)
+  dart:async                                                           _Completer.completeError
+  package:shared_preferences/src/shared_preferences_legacy.dart 90:19  SharedPreferences.getInstance
+  ===== asynchronous gap ===========================
+  dart:async                                                           _CustomZone.registerBinaryCallback
+  package:shared_preferences/src/shared_preferences_legacy.dart 85:13  SharedPreferences.getInstance
+  package:supabase_flutter/src/local_storage.dart 132:46               SharedPreferencesGotrueAsyncStorage._initialize
+  package:supabase_flutter/src/local_storage.dart 122:15               new SharedPreferencesGotrueAsyncStorage
+  package:supabase_flutter/src/supabase.dart 123:27                    Supabase.initialize
+  test\phase1a\mobile_financial.contract.dart 125:20                   main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                                           _CustomZone.registerUnaryCallback
+  test\phase1a\mobile_financial.contract.dart 105:17                   main.<fn>
+
+00:03 +0 -6: M-01 decoded RPC contracts close shift accepts a successful decoded void response
+00:03 +0 -7: M-01 decoded RPC contracts close shift accepts a successful decoded void response [E]
+  Expected: null
+    Actual: _TypeError:<Null check operator used on a null value>
+  Successful void response must be accepted: Null check operator used on a null value
+
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test\phase1a\mobile_financial.contract.dart 232:7   main.<fn>.<fn>
+
+  MissingPluginException(No implementation found for method getAll on channel plugins.flutter.io/shared_preferences)
+  dart:async                                                           _Completer.completeError
+  package:shared_preferences/src/shared_preferences_legacy.dart 90:19  SharedPreferences.getInstance
+  ===== asynchronous gap ===========================
+  dart:async                                                           _CustomZone.registerBinaryCallback
+  package:shared_preferences/src/shared_preferences_legacy.dart 85:13  SharedPreferences.getInstance
+  package:supabase_flutter/src/local_storage.dart 132:46               SharedPreferencesGotrueAsyncStorage._initialize
+  package:supabase_flutter/src/local_storage.dart 122:15               new SharedPreferencesGotrueAsyncStorage
+  package:supabase_flutter/src/supabase.dart 123:27                    Supabase.initialize
+  test\phase1a\mobile_financial.contract.dart 125:20                   main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                                           _CustomZone.registerUnaryCallback
+  test\phase1a\mobile_financial.contract.dart 105:17                   main.<fn>
+
+00:03 +0 -7: M-02 ambiguous cash response durable fallback retains the first transmitted idempotency key
+00:03 +0 -8: M-02 ambiguous cash response durable fallback retains the first transmitted idempotency key [E]
+  MissingPluginException(No implementation found for method getAll on channel plugins.flutter.io/shared_preferences)
+  dart:async                                                           _Completer.completeError
+  package:shared_preferences/src/shared_preferences_legacy.dart 90:19  SharedPreferences.getInstance
+  ===== asynchronous gap ===========================
+  dart:async                                                           _CustomZone.registerBinaryCallback
+  package:shared_preferences/src/shared_preferences_legacy.dart 85:13  SharedPreferences.getInstance
+  package:supabase_flutter/src/local_storage.dart 132:46               SharedPreferencesGotrueAsyncStorage._initialize
+  package:supabase_flutter/src/local_storage.dart 122:15               new SharedPreferencesGotrueAsyncStorage
+  package:supabase_flutter/src/supabase.dart 123:27                    Supabase.initialize
+  test\phase1a\mobile_financial.contract.dart 125:20                   main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                                           _CustomZone.registerUnaryCallback
+  test\phase1a\mobile_financial.contract.dart 105:17                   main.<fn>
+
+  Expected: '6e6f6fa8-bbad-4ef6-9184-73df3264f152'
+    Actual: '2a0c02ca-3473-4673-984b-e1ca98a71195'
+     Which: is different.
+            Expected: 6e6f6fa8-b ...
+              Actual: 2a0c02ca-3 ...
+                      ^
+             Differ at offset 0
+  An ambiguous committed request must replay with its original identity, including after storage reopen
+
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test\phase1a\mobile_financial.contract.dart 259:7   main.<fn>.<fn>
+
+00:04 +0 -8: M-05 split tender contracts 4 cash plus 6 MoMo never invokes full-total cash finalization
+00:04 +0 -9: M-05 split tender contracts 4 cash plus 6 MoMo never invokes full-total cash finalization [E]
+  Expected: empty
+    Actual: WhereIterable<Request>:[
+              Request:POST https://phase1a.invalid/rest/v1/rpc/process_checkout_cash
+            ]
+  Only GHS4 was tendered in cash. Full GHS10 cash RPC has already been sent before any subsequent decode error (Null check operator used on a null value)
+
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test\phase1a\mobile_financial.contract.dart 284:7   main.<fn>.<fn>
+
+  MissingPluginException(No implementation found for method getAll on channel plugins.flutter.io/shared_preferences)
+  dart:async                                                           _Completer.completeError
+  package:shared_preferences/src/shared_preferences_legacy.dart 90:19  SharedPreferences.getInstance
+  ===== asynchronous gap ===========================
+  dart:async                                                           _CustomZone.registerBinaryCallback
+  package:shared_preferences/src/shared_preferences_legacy.dart 85:13  SharedPreferences.getInstance
+  package:supabase_flutter/src/local_storage.dart 132:46               SharedPreferencesGotrueAsyncStorage._initialize
+  package:supabase_flutter/src/local_storage.dart 122:15               new SharedPreferencesGotrueAsyncStorage
+  package:supabase_flutter/src/supabase.dart 123:27                    Supabase.initialize
+  test\phase1a\mobile_financial.contract.dart 125:20                   main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                                           _CustomZone.registerUnaryCallback
+  test\phase1a\mobile_financial.contract.dart 105:17                   main.<fn>
+
+00:04 +0 -9: M-05 split tender contracts offline queue must never erase noncash allocations into a cash sale
+00:06 +0 -10: M-05 split tender contracts offline queue must never erase noncash allocations into a cash sale [E]
+  MissingPluginException(No implementation found for method getAll on channel plugins.flutter.io/shared_preferences)
+  dart:async                                                           _Completer.completeError
+  package:shared_preferences/src/shared_preferences_legacy.dart 90:19  SharedPreferences.getInstance
+  ===== asynchronous gap ===========================
+  dart:async                                                           _CustomZone.registerBinaryCallback
+  package:shared_preferences/src/shared_preferences_legacy.dart 85:13  SharedPreferences.getInstance
+  package:supabase_flutter/src/local_storage.dart 132:46               SharedPreferencesGotrueAsyncStorage._initialize
+  package:supabase_flutter/src/local_storage.dart 122:15               new SharedPreferencesGotrueAsyncStorage
+  package:supabase_flutter/src/supabase.dart 123:27                    Supabase.initialize
+  test\phase1a\mobile_financial.contract.dart 125:20                   main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                                           _CustomZone.registerUnaryCallback
+  test\phase1a\mobile_financial.contract.dart 105:17                   main.<fn>
+
+  Expected: contains 'momo'
+    Actual: '{"items":[{"product_id":"10000000-0000-4000-8000-000000000010","quantity":1,"unit_price":10.0,"is_quick_sale":false}],"discount":0.0,"total":10.0}'
+     Which: does not contain 'momo'
+  Durable split data must retain the noncash tender. A plain sale queue item will replay as a full cash sale
+
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test\phase1a\mobile_financial.contract.dart 307:7   main.<fn>.<fn>
+
+00:06 +0 -10: M-09 refund idempotency contracts online response-loss fallback persists its first transmitted key
+00:06 +0 -11: M-09 refund idempotency contracts online response-loss fallback persists its first transmitted key [E]
+  MissingPluginException(No implementation found for method getAll on channel plugins.flutter.io/shared_preferences)
+  dart:async                                                           _Completer.completeError
+  package:shared_preferences/src/shared_preferences_legacy.dart 90:19  SharedPreferences.getInstance
+  ===== asynchronous gap ===========================
+  dart:async                                                           _CustomZone.registerBinaryCallback
+  package:shared_preferences/src/shared_preferences_legacy.dart 85:13  SharedPreferences.getInstance
+  package:supabase_flutter/src/local_storage.dart 132:46               SharedPreferencesGotrueAsyncStorage._initialize
+  package:supabase_flutter/src/local_storage.dart 122:15               new SharedPreferencesGotrueAsyncStorage
+  package:supabase_flutter/src/supabase.dart 123:27                    Supabase.initialize
+  test\phase1a\mobile_financial.contract.dart 125:20                   main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                                           _CustomZone.registerUnaryCallback
+  test\phase1a\mobile_financial.contract.dart 105:17                   main.<fn>
+
+  Expected: '28ba572e-3cf6-455f-ac3c-a515927867bb'
+    Actual: <null>
+     Which: not an <Instance of 'String'>
+  The first refund attempt and durable retry must share a non-null idempotency key
+
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test\phase1a\mobile_financial.contract.dart 330:7   main.<fn>.<fn>
+
+00:06 +0 -11: M-09 refund idempotency contracts two replays of one persisted refund transmit the same captured key
+00:06 +0 -12: M-09 refund idempotency contracts two replays of one persisted refund transmit the same captured key [E]
+  MissingPluginException(No implementation found for method getAll on channel plugins.flutter.io/shared_preferences)
+  dart:async                                                           _Completer.completeError
+  package:shared_preferences/src/shared_preferences_legacy.dart 90:19  SharedPreferences.getInstance
+  ===== asynchronous gap ===========================
+  dart:async                                                           _CustomZone.registerBinaryCallback
+  package:shared_preferences/src/shared_preferences_legacy.dart 85:13  SharedPreferences.getInstance
+  package:supabase_flutter/src/local_storage.dart 132:46               SharedPreferencesGotrueAsyncStorage._initialize
+  package:supabase_flutter/src/local_storage.dart 122:15               new SharedPreferencesGotrueAsyncStorage
+  package:supabase_flutter/src/supabase.dart 123:27                    Supabase.initialize
+  test\phase1a\mobile_financial.contract.dart 125:20                   main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                                           _CustomZone.registerUnaryCallback
+  test\phase1a\mobile_financial.contract.dart 105:17                   main.<fn>
+
+  Expected: ['30e0efcd-3e9b-420d-b2cc-a60d355a28ba', '30e0efcd-3e9b-420d-b2cc-a60d355a28ba']
+    Actual: [null, null]
+     Which: at location [0] is <null> instead of '30e0efcd-3e9b-420d-b2cc-a60d355a28ba'
+  The persisted refund identity must reach SQL on every retry
+
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test\phase1a\mobile_financial.contract.dart 364:7   main.<fn>.<fn>
+
+00:06 +0 -12: Some tests failed.
+
+Failing tests:
+  C:/Users/DELL/Desktop/POS/flutter_billing_app-main/test/phase1a/mobile_financial.contract.dart: Fixture controls installed SDK decodes RETURNS TABLE as a row list
+  C:/Users/DELL/Desktop/POS/flutter_billing_app-main/test/phase1a/mobile_financial.contract.dart: Fixture controls installed SDK decodes scalar UUID without a legacy response wrapper
+  C:/Users/DELL/Desktop/POS/flutter_billing_app-main/test/phase1a/mobile_financial.contract.dart: M-01 decoded RPC contracts cash checkout returns the successful server UUID
+  C:/Users/DELL/Desktop/POS/flutter_billing_app-main/test/phase1a/mobile_financial.contract.dart: M-01 decoded RPC contracts checkout intent consumes the single decoded TABLE row
+  ... and 8 more

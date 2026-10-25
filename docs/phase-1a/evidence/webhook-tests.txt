@@ -1,0 +1,21 @@
+Check test.ts
+running 5 tests from ./test.ts
+charge.success is verified, stored, captured and finalized ...
+------- output -------
+Sale finalized { saleId: "sale-uuid", intentId: "pi-1", eventId: "ev-1" }
+----- output end -----
+charge.success is verified, stored, captured and finalized ... ok (67ms)
+invalid signature returns 400 and does not touch the database ...
+------- output -------
+Paystack signature mismatch
+----- output end -----
+invalid signature returns 400 and does not touch the database ... ok (2ms)
+duplicate charge.success event is idempotent ...
+------- output -------
+Sale already finalized or not capturable; ignoring. { intentId: "pi-1", eventId: "ev-existing" }
+----- output end -----
+duplicate charge.success event is idempotent ... ok (2ms)
+Paystack event mapping ... ok (1ms)
+signature helper produces Paystack-compatible HMAC ... ok (1ms)
+
+ok | 5 passed | 0 failed (290ms)

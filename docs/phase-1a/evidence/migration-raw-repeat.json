@@ -1,0 +1,92 @@
+[
+  {
+    "file": "001_core_schema.sql",
+    "status": "reapplication succeeds (rolled back)"
+  },
+  {
+    "file": "002_branch_model.sql",
+    "status": "reapplication succeeds (rolled back)"
+  },
+  {
+    "file": "003_auth_helpers.sql",
+    "status": "reapplication succeeds (rolled back)"
+  },
+  {
+    "file": "004_rls_policies.sql",
+    "status": "reapplication succeeds (rolled back)"
+  },
+  {
+    "file": "005_paystack_webhook_rpc.sql",
+    "status": "reapplication succeeds (rolled back)"
+  },
+  {
+    "file": "006_checkout_rpc.sql",
+    "status": "reapplication succeeds (rolled back)"
+  },
+  {
+    "file": "007_refunds.sql",
+    "status": "reapplication succeeds (rolled back)"
+  },
+  {
+    "file": "008_push_subscriptions.sql",
+    "status": "reapplication succeeds (rolled back)"
+  },
+  {
+    "file": "009_shifts.sql",
+    "status": "reapplication succeeds (rolled back)"
+  },
+  {
+    "file": "010_inventory_reorder_level.sql",
+    "status": "reapplication succeeds (rolled back)"
+  },
+  {
+    "file": "011_fix_activity_inventory_logs.sql",
+    "status": "reapplication succeeds (rolled back)"
+  },
+  {
+    "file": "012_webhook_receipts_business.sql",
+    "status": "reapplication succeeds (rolled back)"
+  },
+  {
+    "file": "013_ai_insights.sql",
+    "status": "reapplication succeeds (rolled back)"
+  },
+  {
+    "file": "014_ledmi_aggregations.sql",
+    "status": "reapplication succeeds (rolled back)"
+  },
+  {
+    "file": "015_manager_branch_assignment.sql",
+    "status": "reapplication succeeds (rolled back)"
+  },
+  {
+    "file": "016_branch_shop_fields.sql",
+    "status": "reapplication succeeds (rolled back)"
+  },
+  {
+    "file": "017_onboarding_quick_sale_starter_catalogs.sql",
+    "status": "reapplication succeeds (rolled back)"
+  },
+  {
+    "file": "018_starter_catalog_seed.sql",
+    "status": "reapplication succeeds (rolled back)"
+  },
+  {
+    "file": "019_quick_sale_rpc.sql",
+    "status": "reapplication succeeds (rolled back)"
+  },
+  {
+    "file": "020_security_hardening.sql",
+    "status": "reapplication succeeds (rolled back)"
+  },
+  {
+    "file": "021_branch_scope_enforcement.sql",
+    "status": "reapplication fails (rolled back)",
+    "code": "42710",
+    "message": "policy \"shifts_select\" for table \"shifts\" already exists"
+  },
+  {
+    "file": "022_ledmi_read_rpcs.sql",
+    "status": "reapplication succeeds (rolled back)"
+  }
+]

@@ -1,0 +1,39 @@
+00:00 +0: loading C:/Users/DELL/Desktop/POS/flutter_billing_app-main/test/auth_error_test.dart
+00:00 +0: C:/Users/DELL/Desktop/POS/flutter_billing_app-main/test/auth_error_test.dart: AuthErrorMapper.message never leaks the raw exception object to the user
+00:00 +1: C:/Users/DELL/Desktop/POS/flutter_billing_app-main/test/auth_error_test.dart: AuthErrorMapper.message never leaks the raw exception object to the user
+00:00 +2: C:/Users/DELL/Desktop/POS/flutter_billing_app-main/test/billing_totals_test.dart: CartItem.total subtracts the line-level discount
+00:00 +3: C:/Users/DELL/Desktop/POS/flutter_billing_app-main/test/auth_error_test.dart: AuthErrorMapper.message falls back to the server message when code is absent
+00:00 +4: C:/Users/DELL/Desktop/POS/flutter_billing_app-main/test/billing_totals_test.dart: CartItem.total never returns a negative line total when the discount exceeds it
+00:00 +5: C:/Users/DELL/Desktop/POS/flutter_billing_app-main/test/auth_error_test.dart: AuthErrorMapper.message maps unconfirmed email to a next step
+00:00 +6: C:/Users/DELL/Desktop/POS/flutter_billing_app-main/test/billing_totals_test.dart: CartItem.displayName uses the catalog product name for normal lines
+00:00 +7: C:/Users/DELL/Desktop/POS/flutter_billing_app-main/test/auth_error_test.dart: AuthErrorMapper.message maps rate limiting to a wait instruction
+00:00 +8: C:/Users/DELL/Desktop/POS/flutter_billing_app-main/test/billing_totals_test.dart: CartItem.displayName uses the quick-sale label for quick-sale lines
+00:00 +9: C:/Users/DELL/Desktop/POS/flutter_billing_app-main/test/auth_error_test.dart: AuthErrorMapper.message reports retryable fetch failures as being offline
+00:00 +10: C:/Users/DELL/Desktop/POS/flutter_billing_app-main/test/billing_totals_test.dart: CartItem.displayName falls back to the product name when a quick-sale line has no label
+00:00 +11: C:/Users/DELL/Desktop/POS/flutter_billing_app-main/test/auth_error_test.dart: AuthErrorMapper.message reports timeouts as being offline
+00:00 +12: C:/Users/DELL/Desktop/POS/flutter_billing_app-main/test/billing_totals_test.dart: BillingState money math subtotal sums every line total
+00:00 +13: C:/Users/DELL/Desktop/POS/flutter_billing_app-main/test/auth_error_test.dart: AuthErrorMapper.message maps 5xx responses to a temporary outage
+00:00 +14: C:/Users/DELL/Desktop/POS/flutter_billing_app-main/test/billing_totals_test.dart: BillingState money math totalAmount applies the cart-level discount to the subtotal
+00:00 +15: C:/Users/DELL/Desktop/POS/flutter_billing_app-main/test/auth_error_test.dart: AuthErrorMapper.message maps a missing session to a re-login prompt
+00:00 +16: C:/Users/DELL/Desktop/POS/flutter_billing_app-main/test/billing_totals_test.dart: BillingState money math totalAmount never goes negative when the discount exceeds the cart
+00:00 +17: C:/Users/DELL/Desktop/POS/flutter_billing_app-main/test/auth_error_test.dart: AuthErrorMapper.message falls back to generic copy for unknown errors
+00:00 +18: C:/Users/DELL/Desktop/POS/flutter_billing_app-main/test/billing_totals_test.dart: BillingState money math change is what is owed back once tendered covers the total
+00:00 +19: C:/Users/DELL/Desktop/POS/flutter_billing_app-main/test/auth_error_test.dart: AuthErrorMapper.message uses the caller fallback for untranslatable errors
+00:00 +20: C:/Users/DELL/Desktop/POS/flutter_billing_app-main/test/billing_totals_test.dart: BillingState money math change is zero when the cashier is still short
+00:00 +21: C:/Users/DELL/Desktop/POS/flutter_billing_app-main/test/auth_error_test.dart: AuthErrorMapper.message offline detection wins over the caller fallback
+00:00 +22: C:/Users/DELL/Desktop/POS/flutter_billing_app-main/test/billing_totals_test.dart: BillingState money math an empty cart totals zero
+00:00 +23: C:/Users/DELL/Desktop/POS/flutter_billing_app-main/test/auth_error_test.dart: AppValidators.email rejects an empty email
+00:00 +24: C:/Users/DELL/Desktop/POS/flutter_billing_app-main/test/billing_totals_test.dart: BillingState split payments splitTotal sums every allocation
+00:00 +25: C:/Users/DELL/Desktop/POS/flutter_billing_app-main/test/auth_error_test.dart: AppValidators.email rejects addresses with a dot instead of an @
+00:00 +26: C:/Users/DELL/Desktop/POS/flutter_billing_app-main/test/billing_totals_test.dart: BillingState split payments remainingBalance reports what is still unallocated
+00:00 +27: C:/Users/DELL/Desktop/POS/flutter_billing_app-main/test/auth_error_test.dart: AppValidators.email rejects addresses with no domain suffix
+00:00 +28: C:/Users/DELL/Desktop/POS/flutter_billing_app-main/test/billing_totals_test.dart: BillingState split payments remainingBalance clamps to zero when over-allocated
+00:00 +29: C:/Users/DELL/Desktop/POS/flutter_billing_app-main/test/auth_error_test.dart: AppValidators.email rejects addresses containing spaces
+00:00 +30: C:/Users/DELL/Desktop/POS/flutter_billing_app-main/test/billing_totals_test.dart: BillingState split payments isSplitPayment only once a second method is added
+00:00 +31: C:/Users/DELL/Desktop/POS/flutter_billing_app-main/test/auth_error_test.dart: AppValidators.email accepts ordinary addresses
+00:00 +32: C:/Users/DELL/Desktop/POS/flutter_billing_app-main/test/billing_totals_test.dart: BillingState split payments splitBalanced is true when allocations cover the total
+00:00 +33: C:/Users/DELL/Desktop/POS/flutter_billing_app-main/test/billing_totals_test.dart: BillingState split payments splitBalanced tolerates sub-pesewa floating point drift
+00:00 +34: C:/Users/DELL/Desktop/POS/flutter_billing_app-main/test/billing_totals_test.dart: BillingState split payments splitBalanced is false when allocations fall short
+00:00 +35: C:/Users/DELL/Desktop/POS/flutter_billing_app-main/test/billing_totals_test.dart: BillingState split payments splitBalanced is false with no allocations at all
+00:00 +36: All tests passed!
+EXISTING_TEST_EXIT_CODE=0

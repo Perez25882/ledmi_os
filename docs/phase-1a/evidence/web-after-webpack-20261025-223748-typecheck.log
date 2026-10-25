@@ -1,0 +1,6 @@
+﻿Command: npm run typecheck
+
+> ledgermind-supabase@0.1.0 typecheck
+> tsc --noEmit
+
+Exit code: 0

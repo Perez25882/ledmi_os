@@ -1,0 +1,143 @@
+{
+  "results": [
+    {
+      "kind": "migration",
+      "file": "001_core_schema.sql",
+      "sha256": "ec088670dd25ad4e41646eecdf48482fa6e6a502789de0a351c38f6299b9ed3d",
+      "status": "already applied"
+    },
+    {
+      "kind": "migration",
+      "file": "002_branch_model.sql",
+      "sha256": "d9ae9df813f16c87b0ba4c63a46cb4d09fd295a60219c7e7d8a1a65126ab34f2",
+      "status": "already applied"
+    },
+    {
+      "kind": "migration",
+      "file": "003_auth_helpers.sql",
+      "sha256": "1a0b00e25219ed25f62ad6fe331ccf6edf711487c21d0fdaf934b181f3202fc8",
+      "status": "already applied"
+    },
+    {
+      "kind": "migration",
+      "file": "004_rls_policies.sql",
+      "sha256": "03d218cd1d3950a2d937970b5e2567edba6a1efbb1282ee94b35a5c21a350878",
+      "status": "already applied"
+    },
+    {
+      "kind": "migration",
+      "file": "005_paystack_webhook_rpc.sql",
+      "sha256": "b1e4990c6e62fab3ce79330fd430028f4be206c5322f4a2848d116caadfc564e",
+      "status": "already applied"
+    },
+    {
+      "kind": "migration",
+      "file": "006_checkout_rpc.sql",
+      "sha256": "24d93883fbd5803e7f2fb3874758021ce2c05d109ffe6c23d6ab905e258a5544",
+      "status": "already applied"
+    },
+    {
+      "kind": "migration",
+      "file": "007_refunds.sql",
+      "sha256": "a477ae6ac3616bf5524478cb7288943d0f0142ef9a7226ad2470deea9f4a6d2a",
+      "status": "already applied"
+    },
+    {
+      "kind": "migration",
+      "file": "008_push_subscriptions.sql",
+      "sha256": "cf4152d858342bd189bac1e325b59445264ff68c085c45118c3e926afbe7a4a5",
+      "status": "already applied"
+    },
+    {
+      "kind": "migration",
+      "file": "009_shifts.sql",
+      "sha256": "d8c8d828f365de7508e18b0201cdae72412ce01e2503704628f6ff85572d0c86",
+      "status": "already applied"
+    },
+    {
+      "kind": "migration",
+      "file": "010_inventory_reorder_level.sql",
+      "sha256": "e31345a0b7357a3bb4be3fa9a77df8083c8966ebc813eb67660dd8f3a1b60ada",
+      "status": "already applied"
+    },
+    {
+      "kind": "migration",
+      "file": "011_fix_activity_inventory_logs.sql",
+      "sha256": "ca70007064ffcaa47c36804cca7b70a8a2ff094c147e68b2344998b2814dc6de",
+      "status": "already applied"
+    },
+    {
+      "kind": "migration",
+      "file": "012_webhook_receipts_business.sql",
+      "sha256": "0a4035b3f983f523b91036e5d96d7dd9c48edecf7916e90e32c7eccc9754503c",
+      "status": "already applied"
+    },
+    {
+      "kind": "migration",
+      "file": "013_ai_insights.sql",
+      "sha256": "1fd0de3cd3935762acc70eaf77842c2e26281d09091990ca1d46c9b86f4a1282",
+      "status": "already applied"
+    },
+    {
+      "kind": "migration",
+      "file": "014_ledmi_aggregations.sql",
+      "sha256": "b05da2c7ec86ad5936332e34813c6e9d9a5457f18a9191123af8c2cd4579d2a0",
+      "status": "already applied"
+    },
+    {
+      "kind": "migration",
+      "file": "015_manager_branch_assignment.sql",
+      "sha256": "fc0f45b5a0a2c6db193aaefb26f52c24ec077d8dc4edce90d459fd3cffe1459e",
+      "status": "already applied"
+    },
+    {
+      "kind": "migration",
+      "file": "016_branch_shop_fields.sql",
+      "sha256": "78de5dae3722a3d43217911aaf16b120ac9dde6866bfcfbb582c24af90e80276",
+      "status": "already applied"
+    },
+    {
+      "kind": "migration",
+      "file": "017_onboarding_quick_sale_starter_catalogs.sql",
+      "sha256": "41ed6cafcd8b84c554076ad3f35712a22dc2d96378107e7e7b665887e9b93fc2",
+      "status": "already applied"
+    },
+    {
+      "kind": "migration",
+      "file": "018_starter_catalog_seed.sql",
+      "sha256": "0afd0a1731dae9dd596dc48b785c724e7c0da0b2422e4b51efc0690bd4fabf54",
+      "status": "already applied"
+    },
+    {
+      "kind": "migration",
+      "file": "019_quick_sale_rpc.sql",
+      "sha256": "0595f138e2a3274940ca7aeb8e182e43ca99702492c2b816b450943484f604d3",
+      "status": "already applied"
+    },
+    {
+      "kind": "migration",
+      "file": "020_security_hardening.sql",
+      "sha256": "6dc9039523ae37700130e893e7fdb36a8e7c2e5404d94fcdb8022cde5ff566bb",
+      "status": "already applied"
+    },
+    {
+      "kind": "migration",
+      "file": "021_branch_scope_enforcement.sql",
+      "sha256": "3a185d135042463b90526b36583b3b0e9734bf8349789b2a396342c6a0406b05",
+      "status": "already applied"
+    },
+    {
+      "kind": "migration",
+      "file": "022_ledmi_read_rpcs.sql",
+      "sha256": "7ea5bdaa0e600ecd63260d84adbc8a0ef22b93f1041183edc61128a412c777a2",
+      "status": "already applied"
+    },
+    {
+      "kind": "seed",
+      "file": "001_default_roles.sql",
+      "sha256": "656de6c63350da9be9a0141bba900654046cc0b29cd314c983e15b5eaaaa63e5",
+      "status": "already applied"
+    }
+  ],
+  "success": true
+}

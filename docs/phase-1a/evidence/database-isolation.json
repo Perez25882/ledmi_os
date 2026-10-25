@@ -1,0 +1,13 @@
+{
+  "mode": "native-postgres",
+  "runId": "6564104b-5730-45f7-8bae-7e20263bd064",
+  "host": "127.0.0.1",
+  "port": 61474,
+  "database": "phase1a_6564104b573045f78bae7e20263bd064",
+  "user": "phase1a_admin",
+  "dataDirectory": "C:\\Users\\DELL\\AppData\\Local\\Temp\\ledgermind-phase1a-6564104b-5730-45f7-8bae-7e20263bd064\\data",
+  "postgres": "PostgreSQL 17.10 on x86_64-windows, compiled by msvc-19.44.35227, 64-bit",
+  "authFixture": "minimal auth.users/auth.uid/auth.jwt and DB roles only; no Supabase Auth/PostgREST/Realtime/Storage service",
+  "productionEnvironmentRead": false,
+  "defaultDmlGrants": "vanilla PostgreSQL; no Supabase implicit grants modeled yet"
+}

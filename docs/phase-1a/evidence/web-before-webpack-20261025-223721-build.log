@@ -1,0 +1,43 @@
+﻿Command: npm run build -- --webpack
+
+> ledgermind-supabase@0.1.0 build
+> next build --webpack
+
+⚠ No build cache found. Please configure build caching for faster rebuilds. Read more: https://nextjs.org/docs/messages/no-cache
+▲ Next.js 16.1.6 (webpack)
+
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+  Creating an optimized production build ...
+<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (106kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (253kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+⚠ Compiled with warnings in 20.5s
+System.Management.Automation.RemoteException
+../../../../../Desktop/POS/ledgermindv1-main/node_modules/@supabase/supabase-js/dist/index.mjs
+A Node.js API is used (process.version at line: 27) which is not supported in the Edge Runtime.
+Learn more: https://nextjs.org/docs/api-reference/edge-runtime
+System.Management.Automation.RemoteException
+Import trace for requested module:
+../../../../../Desktop/POS/ledgermindv1-main/node_modules/@supabase/supabase-js/dist/index.mjs
+../../../../../Desktop/POS/ledgermindv1-main/node_modules/@supabase/ssr/dist/module/createBrowserClient.js
+../../../../../Desktop/POS/ledgermindv1-main/node_modules/@supabase/ssr/dist/module/index.js
+./lib/supabase/middleware.ts
+System.Management.Automation.RemoteException
+✓ Compiled successfully in 4.2min
+  Running TypeScript ...
+Failed to compile.
+System.Management.Automation.RemoteException
+.next/types/app/dashboard/sales/page.ts:36:29
+Type error: Type '{ searchParams?: { branch?: string | undefined; from?: string | undefined; to?: string | undefined; } | undefined; }' does not satisfy the constraint 'PageProps'.
+  Types of property 'searchParams' are incompatible.
+    Type '{ branch?: string | undefined; from?: string | undefined; to?: string | undefined; } | undefined' is not assignable to type 'Promise<any> | undefined'.
+      Type '{ branch?: string | undefined; from?: string | undefined; to?: string | undefined; }' is missing the following properties from type 'Promise<any>': then, catch, finally, [Symbol.toStringTag]
+System.Management.Automation.RemoteException
+[0m [90m 34 |[39m
+ [90m 35 |[39m [90m// Check the prop type of the entry function[39m
+[31m[1m>[22m[39m[90m 36 |[39m checkFields[33m<[39m[33mDiff[39m[33m<[39m[33mPageProps[39m[33m,[39m [33mFirstArg[39m[33m<[39m[33mTEntry[39m[[32m'default'[39m][33m>[39m[33m,[39m [32m'default'[39m[33m>>[39m()
+ [90m    |[39m                             [31m[1m^[22m[39m
+ [90m 37 |[39m
+ [90m 38 |[39m [90m// Check the arguments and return type of the generateMetadata function[39m
+ [90m 39 |[39m [36mif[39m ([32m'generateMetadata'[39m [36min[39m entry) {[0m
+Next.js build worker exited with code: 1 and signal: null
+Exit code: 1

@@ -1,0 +1,1 @@
+Owned loopback database initialized. Manifest: C:\Users\DELL\AppData\Local\Temp\ledgermind-phase1a-29404c1e-35c5-4546-8bed-67071e5b46b4\manifest.json
